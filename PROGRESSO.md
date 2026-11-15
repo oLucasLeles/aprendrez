@@ -55,3 +55,9 @@ escrita direto fora de `tokens.css`, e outro calcula o contraste das cores
 **Próximo turno:** F03 · Rotas e páginas vazias. Vai precisar de uma biblioteca de
 rotas (por exemplo, `react-router`) ou de uma solução simples feita à mão. Lembre de
 registrar a licença se instalar algo.
+
+## Nota de supervisão 2026-11-15 · ajuste no harness (feito por uma pessoa, não é uma funcionalidade)
+O turno da F02 foi revisado e aprovado. O motor de turnos (`scripts/rodar-turnos.ps1`)
+agora guarda a trilha completa de cada turno em `logs/turno_*.jsonl` e registra o
+consumo em `logs/consumo.csv`. Nada muda na rotina do turno.
+**Próximo turno:** F03 · Rotas e páginas vazias (veja as dicas na entrada da F02).

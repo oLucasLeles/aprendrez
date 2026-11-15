@@ -42,21 +42,49 @@ for ($i = 1; $i -le $Turnos; $i++) {
 
   $assinaturaAntes = node scripts/features.mjs assinatura
   $carimbo = Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'
-  $logTurno = "logs/turno_$carimbo.log"
+  $logTurno = "logs/turno_$carimbo.log"          # resumo final do agente (legivel)
+  $logTrilha = "logs/turno_$carimbo.jsonl"       # trilha completa: cada acao do agente
+  $logErros = "logs/turno_${carimbo}_erros.log"
   $logVerificacao = "logs/verificacao_$carimbo.log"
   $statusAntes = (node scripts/features.mjs status) -join ' '
+  $funcionalidade = if ($statusAntes -match '(F\d+)') { $Matches[1] } else { '?' }
   Write-Host ''
   Write-Host "=== Turno $i de $Turnos  |  $statusAntes"
   Write-Host "    Modelo: $Modelo ($Esforco)  |  Log: $logTurno"
 
   # 2. O turno do agente
   $inicio = Get-Date
-  & claude -p $prompt --model $Modelo --effort $Esforco --permission-mode auto --permission-prompts none --output-format text 2>&1 |
-    Out-File -Encoding utf8 $logTurno
+  & claude -p $prompt --model $Modelo --effort $Esforco --permission-mode auto --permission-prompts none --output-format stream-json --verbose 2> $logErros |
+    Out-File -Encoding utf8 $logTrilha
   $codigo = $LASTEXITCODE
   $minutos = [math]::Round(((Get-Date) - $inicio).TotalMinutes, 1)
-  Write-Host "    Turno terminou em $minutos min (codigo de saida: $codigo). Resumo do agente:"
-  Get-Content $logTurno -Tail 6 | ForEach-Object { Write-Host "      $_" }
+
+  # O ultimo evento da trilha ("result") traz o resumo e o consumo do turno
+  $resultado = $null
+  Get-Content $logTrilha -Encoding utf8 | Where-Object { $_ -match '"type":"result"' } | Select-Object -Last 1 |
+    ForEach-Object { try { $resultado = $_ | ConvertFrom-Json } catch { } }
+
+  if ($resultado) {
+    $resultado.result | Out-File -Encoding utf8 $logTurno
+    $u = $resultado.usage
+    $tokensEntrada = [int64]$u.input_tokens + [int64]$u.cache_read_input_tokens + [int64]$u.cache_creation_input_tokens
+    $custo = [math]::Round([double]$resultado.total_cost_usd, 2)
+    $concluiu = [int](node scripts/features.mjs restantes) -lt $restantes
+
+    # Planilha de consumo: base para comparar modelos (Fase 3) e estimar a rodada longa
+    if (-not (Test-Path logs/consumo.csv)) {
+      'data;funcionalidade;concluiu;modelo;esforco;minutos;passos_do_agente;tokens_entrada;tokens_saida;custo_api_usd' |
+        Out-File -Encoding utf8 logs/consumo.csv
+    }
+    "$carimbo;$funcionalidade;$concluiu;$Modelo;$Esforco;$minutos;$($resultado.num_turns);$tokensEntrada;$($u.output_tokens);$custo" |
+      Out-File -Encoding utf8 -Append logs/consumo.csv
+
+    Write-Host "    Turno terminou em $minutos min, $($resultado.num_turns) passos, ~US`$ $custo em precos de API (codigo: $codigo)."
+    Write-Host '    Resumo do agente:'
+    Get-Content $logTurno -Encoding utf8 | ForEach-Object { Write-Host "      $_" }
+  } else {
+    Write-Host "    Turno terminou em $minutos min (codigo: $codigo), sem resumo. Veja $logErros e $logTrilha."
+  }
 
   if ($codigo -ne 0) {
     Write-Warning 'O agente terminou com erro (talvez limite de uso ou falha de rede). Parando.'
