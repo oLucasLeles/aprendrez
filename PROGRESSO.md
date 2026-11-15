@@ -93,3 +93,29 @@ Testes novos: `src/App.test.tsx` (unidade) e `e2e/rotas.spec.ts` (navegador).
 - Capturas de tela em `docs/capturas/f03-*-desktop.png` e `f03-*-celular.png`.
 **Próximo turno:** F04 · Leitura da base de aberturas do Lichess (módulo para Node,
 usado só nos testes, que lê os TSV de `data/lichess-openings/`).
+
+## Turno 2026-11-15 21:00 · [F04] Leitura da base de aberturas do Lichess
+**Status:** concluída
+**O que fiz:** Criei `src/chess/lichessOpenings.ts`, um módulo que lê os arquivos
+`a.tsv` a `e.tsv` de `data/lichess-openings/` e transforma cada linha em uma entrada
+(código ECO, nome e lista de lances sem os números). Ele tem funções para buscar
+entradas pelo nome exato e para conferir se uma sequência de lances começa com a
+linha de uma entrada (`startsWithOpening` e `startsWithNamedOpening`). O validador
+de conteúdo (F06) vai usar essa última em cada linha de abertura. Os testes em
+`src/chess/lichessOpenings.test.ts` cobrem os dois passos de verificação (Italian
+Game: Giuoco Piano = `e4 e5 Nf3 Nc6 Bc4 Bc5`; com `c3` no fim conta, com `Bb5` não)
+e mais alguns casos de borda (nome inexistente, sequência curta demais, linha quebrada).
+**Decisões:**
+- A busca por nome devolve uma **lista**, não uma entrada só: a base repete alguns
+  nomes (por exemplo "Alekhine Defense"), porque a mesma abertura pode ser alcançada
+  por ordens de lances diferentes. `startsWithNamedOpening` aceita se a sequência
+  começar com **qualquer** uma das entradas desse nome.
+- O módulo usa `node:fs`, então só pode ser importado por testes e scripts, nunca pelo
+  código do navegador (está avisado no comentário do topo do arquivo). Fica em
+  `src/chess/` porque o CLAUDE.md pede lógica de xadrez ali. Os testes dele rodam
+  com `@vitest-environment node`, como o de tokens.
+- Nenhuma dependência nova.
+**Problemas e pendências:** nenhum. Esta funcionalidade é só lógica, sem interface,
+então não houve captura de tela.
+**Próximo turno:** F05 · Modelo de dados da árvore de abertura (tipos em `src/chess/`
+e funções para percorrer a árvore).

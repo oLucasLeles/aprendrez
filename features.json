@@ -44,7 +44,7 @@
       "Teste de unidade: a busca por 'Italian Game: Giuoco Piano' retorna a linha 1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5",
       "Teste de unidade: a sequência e4 e5 Nf3 Nc6 Bc4 Bc5 c3 é reconhecida como começando com essa entrada, e e4 e5 Nf3 Nc6 Bb5 não é"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F05",
