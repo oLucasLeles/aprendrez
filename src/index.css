@@ -89,3 +89,13 @@ textarea {
   margin-inline: auto;
   padding-inline: var(--grid-margin);
 }
+
+/* Filho do grid que ocupa a largura toda (todas as colunas) */
+.grid-full {
+  grid-column: 1 / -1;
+}
+
+/* Respiro no topo e no pé de cada tela */
+.page {
+  padding-block: var(--space-4);
+}

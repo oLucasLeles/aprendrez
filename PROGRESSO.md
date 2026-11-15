@@ -61,3 +61,35 @@ O turno da F02 foi revisado e aprovado. O motor de turnos (`scripts/rodar-turnos
 agora guarda a trilha completa de cada turno em `logs/turno_*.jsonl` e registra o
 consumo em `logs/consumo.csv`. Nada muda na rotina do turno.
 **Próximo turno:** F03 · Rotas e páginas vazias (veja as dicas na entrada da F02).
+
+## Turno 2026-11-15 20:50 · [F03] Rotas e páginas vazias
+**Status:** concluída
+**O que fiz:** O app agora tem três telas, cada uma no seu endereço: Início (`/`),
+Lição (`/abertura/:id`, onde `:id` é o nome curto da abertura, como `italiana`) e
+Página não encontrada (qualquer outro endereço). As telas ficam em `src/screens/` e
+ainda são só esqueletos, com título e um link para voltar ao início. Criei o
+`vercel.json`, que diz à Vercel para entregar o `index.html` em qualquer endereço,
+porque quem decide qual tela mostrar é o próprio app (é um "app de página única").
+Testes novos: `src/App.test.tsx` (unidade) e `e2e/rotas.spec.ts` (navegador).
+**Decisões:**
+- Nova dependência: `react-router` (v7.18.5), **licença MIT**. É a biblioteca de
+  rotas mais usada com React e já traz links, leitura do `:id` do endereço e
+  navegação, que as próximas telas vão usar. Usei o modo simples (`BrowserRouter` +
+  `Routes`), sem os recursos de "framework" dela.
+- A tabela de rotas (`AppRoutes`) fica separada do `BrowserRouter` em `src/App.tsx`,
+  para os testes de unidade usarem um roteador "de mentira" (`MemoryRouter`).
+- A Lição aceita qualquer `:id` por enquanto e só mostra o texto "Abertura: <id>".
+  Mostrar "não encontrada" para um id que não existe fica para quando houver o
+  catálogo de aberturas.
+- O título da aba do navegador muda em cada tela (com a tag `<title>`, que o React 19
+  aceita dentro dos componentes).
+- Duas classes globais novas em `src/index.css`: `.grid-full` (ocupa todas as colunas
+  do grid) e `.page` (respiro no topo e no pé da tela), usando só tokens.
+- Conferi o passo 3 (recarregar em `/abertura/italiana` no `npm run preview`) com um
+  script do Playwright rodado à mão contra o build de produção: status 200 e a tela da
+  Lição aparece. O teste e2e de recarregar roda no servidor de desenvolvimento, porque
+  é nele que todos os testes e2e rodam hoje.
+**Problemas e pendências:**
+- Capturas de tela em `docs/capturas/f03-*-desktop.png` e `f03-*-celular.png`.
+**Próximo turno:** F04 · Leitura da base de aberturas do Lichess (módulo para Node,
+usado só nos testes, que lê os TSV de `data/lichess-openings/`).

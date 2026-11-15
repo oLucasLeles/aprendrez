@@ -33,7 +33,7 @@
       "vercel.json existe e redireciona as rotas para index.html",
       "Recarregar a página em /abertura/italiana (no npm run preview) continua mostrando a lição"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F04",
