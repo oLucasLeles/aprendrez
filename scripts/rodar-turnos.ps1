@@ -23,6 +23,12 @@ Set-Location (Split-Path $PSScriptRoot -Parent)
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 New-Item -ItemType Directory -Force logs | Out-Null
 
+# Pede ao Windows para nao suspender o computador enquanto este script roda.
+# E um pedido temporario do proprio processo (nao muda nenhuma configuracao):
+# acaba sozinho quando o script termina. Tampa fechada ainda suspende.
+Add-Type -Namespace Aprendrez -Name Energia -MemberDefinition '[DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint esFlags);'
+[void][Aprendrez.Energia]::SetThreadExecutionState([uint32]'0x80000001')  # continuo + sistema acordado
+
 $prompt = 'Leia o arquivo scripts/prompt-turno.md e execute exatamente um turno, seguindo a rotina descrita nele.'
 $falhasSeguidas = 0
 
@@ -117,5 +123,6 @@ for ($i = 1; $i -le $Turnos; $i++) {
   }
 }
 
+[void][Aprendrez.Energia]::SetThreadExecutionState([uint32]'0x80000000')  # libera a suspensao
 Write-Host ''
 Write-Host "=== Fim. $((node scripts/features.mjs status) -join ' ')"
