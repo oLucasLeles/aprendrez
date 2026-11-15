@@ -15,6 +15,7 @@
     "turnos": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/rodar-turnos.ps1"
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
     "chess.js": "^1.4.0",
     "react": "^19.3.1",
     "react-chessboard": "^5.12.1",

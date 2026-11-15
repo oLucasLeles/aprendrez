@@ -1,0 +1,119 @@
+/*
+  Tokens de design do Aprendrez.
+
+  Este é o ÚNICO lugar do projeto onde cores, fontes, espaçamentos e grid são
+  definidos. Todo o resto do app usa estas variáveis com var(--nome).
+  Um teste (src/styles/tokens.test.ts) falha se aparecer uma cor escrita direto
+  em qualquer outro arquivo de src/, e outro confere o contraste das cores.
+
+  Regra 60/30/10 (SPEC, seção 9):
+    60% superfícies ....... branco e cinzas muito claros
+    30% estrutura e texto . neutro primário (escuro) e neutro secundário (claro)
+    10% destaque .......... vermelho, só para ação principal, guia, seleção e foco
+*/
+
+:root {
+  /* ---------- Cores: paleta base ---------- */
+  /* Os nomes descrevem a cor. Os componentes NÃO usam estes diretamente:
+     usam os papéis logo abaixo, que dizem para que a cor serve. */
+  --palette-white: #ffffff;
+  --palette-gray-50: #f6f6f6;
+  --palette-gray-100: #ececec;
+  --palette-gray-300: #c8c8c8;
+  --palette-gray-500: #9e9e9e;
+  --palette-gray-600: #5c5c5c;
+  --palette-gray-900: #1a1a1a;
+  --palette-red-50: #fbeaec;
+  --palette-red-600: #c8102e;
+  --palette-red-700: #a50d26;
+
+  /* ---------- Cores: papéis ---------- */
+  /* 60%: superfícies */
+  --color-surface: var(--palette-white);
+  --color-surface-subtle: var(--palette-gray-50);
+  --color-surface-muted: var(--palette-gray-100);
+
+  /* 30%: texto e estrutura */
+  --color-text: var(--palette-gray-900); /* neutro primário */
+  --color-text-secondary: var(--palette-gray-600);
+  --color-border: var(--palette-gray-300); /* neutro secundário */
+  --color-border-strong: var(--palette-gray-900);
+
+  /* 10%: destaque (nunca usado para indicar erro, veja SPEC seção 13) */
+  --color-accent: var(--palette-red-600);
+  --color-accent-hover: var(--palette-red-700);
+  --color-accent-soft: var(--palette-red-50);
+  --color-on-accent: var(--palette-white); /* texto em cima do destaque */
+  --color-focus: var(--palette-red-600);
+
+  /* Tabuleiro: dois neutros com bom contraste entre si */
+  --color-board-light: var(--palette-gray-100);
+  --color-board-dark: var(--palette-gray-500);
+
+  /* ---------- Tipografia ---------- */
+  /* Inter: grotesca sem serifa, licença SIL Open Font License 1.1.
+     Os arquivos da fonte vêm do pacote @fontsource-variable/inter e são
+     servidos pelo próprio app (nada de servidor externo). */
+  --font-family-base: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* Escala com grande contraste entre títulos e texto (design suíço) */
+  --font-size-sm: 0.875rem; /* 14 px: legendas, notação */
+  --font-size-md: 1rem; /* 16 px: texto corrido */
+  --font-size-lg: 1.25rem; /* 20 px: destaque de parágrafo */
+  --font-size-xl: 1.75rem; /* 28 px: título de seção */
+  --font-size-2xl: 2.5rem; /* 40 px: título de tela */
+  --font-size-3xl: 4rem; /* 64 px: título principal no desktop */
+
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.3;
+  --line-height-base: 1.5;
+
+  --letter-spacing-tight: -0.02em;
+
+  /* ---------- Espaçamentos (múltiplos de 8 px) ---------- */
+  --space-1: 0.5rem; /* 8 px */
+  --space-2: 1rem; /* 16 px */
+  --space-3: 1.5rem; /* 24 px */
+  --space-4: 2rem; /* 32 px */
+  --space-5: 2.5rem; /* 40 px */
+  --space-6: 3rem; /* 48 px */
+  --space-8: 4rem; /* 64 px */
+  --space-12: 6rem; /* 96 px */
+
+  /* ---------- Grid ---------- */
+  /* 4 colunas no celular; 12 a partir de 768 px (media query abaixo).
+     Variáveis CSS não funcionam dentro de @media, por isso o ponto de
+     quebra (768 px) está escrito na própria media query. */
+  --grid-columns: 4;
+  --grid-gutter: var(--space-2); /* espaço entre colunas */
+  --grid-margin: var(--space-2); /* margem nas laterais da tela */
+  --grid-max-width: 80rem; /* 1280 px */
+
+  /* ---------- Formas e movimento ---------- */
+  --border-width: 1px;
+  --border-width-strong: 2px;
+  --radius-sm: 2px; /* cantos retos ou levemente arredondados */
+  --radius-md: 4px;
+  --focus-ring-width: 3px;
+  --duration-fast: 150ms; /* animações sempre até 200 ms */
+  --easing-standard: ease-out;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --grid-columns: 12;
+    --grid-gutter: var(--space-3);
+    --grid-margin: var(--space-4);
+  }
+}
+
+/* Quem pede menos movimento no sistema não vê animações */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+  }
+}

@@ -1,12 +1,91 @@
-/* Estilos globais mínimos. Os tokens de design (cores, tipografia,
-   espaçamentos) entram na funcionalidade F02, em src/styles/tokens.css. */
+/* Estilos globais do app. Todos os valores vêm de src/styles/tokens.css. */
+@import './styles/tokens.css';
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+html {
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-size: 100%; /* respeita o tamanho de fonte escolhido no navegador */
+  line-height: var(--line-height-base);
+  -webkit-font-smoothing: antialiased;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  font-size: var(--font-size-md);
+}
+
+/* Hierarquia pela tipografia: títulos grandes, pesados e justos */
+h1,
+h2,
+h3 {
+  margin: 0 0 var(--space-2);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+h1 {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-tight);
+}
+
+h2 {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-snug);
+}
+
+h3 {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-snug);
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+p {
+  margin: 0 0 var(--space-2);
+}
+
+a {
+  color: var(--color-text);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--color-accent);
+}
+
+/* Foco visível em tudo que recebe foco pelo teclado */
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+/* Grid de layout: 4 colunas no celular, 12 no desktop (valores nos tokens).
+   Os filhos escolhem quantas colunas ocupam com grid-column. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gutter);
+  width: 100%;
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
 }

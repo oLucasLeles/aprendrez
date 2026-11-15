@@ -21,7 +21,7 @@
       "A fonte é carregada de arquivos do próprio projeto (sem depender de servidor externo) e a licença está registrada no PROGRESSO.md",
       "O contraste entre o texto principal e a superfície, e entre o texto e o botão de destaque, é de pelo menos 4,5:1 (WCAG AA), conferido por um teste de unidade que calcula o contraste a partir dos tokens"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F03",
