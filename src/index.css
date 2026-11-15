@@ -1,0 +1,12 @@
+/* Estilos globais mínimos. Os tokens de design (cores, tipografia,
+   espaçamentos) entram na funcionalidade F02, em src/styles/tokens.css. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+}

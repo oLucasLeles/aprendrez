@@ -1,0 +1,493 @@
+[
+  {
+    "id": "F01",
+    "categoria": "Fundação",
+    "titulo": "Estrutura base do projeto",
+    "descricao": "Projeto React + TypeScript + Vite com testes de unidade (Vitest) e de ponta a ponta (Playwright, desktop 1440 px e celular 375 px) funcionando, e o comando npm run verificar.",
+    "passos": [
+      "npm run verificar termina sem erros",
+      "Existe pelo menos um teste de unidade e um teste e2e passando"
+    ],
+    "passes": true
+  },
+  {
+    "id": "F02",
+    "categoria": "Fundação",
+    "titulo": "Tokens de design",
+    "descricao": "Arquivo único src/styles/tokens.css com as variáveis de cor (60% superfícies em branco e cinzas claros; 30% neutro primário escuro e neutro secundário claro; 10% destaque vermelho), as cores das casas do tabuleiro, a tipografia (sans-serif grotesca, como Inter, com licença aberta e servida pelo próprio app), a escala tipográfica, os espaçamentos em múltiplos de 8 px e o grid (12 colunas no desktop, 4 no celular). Os estilos globais usam esses tokens.",
+    "passos": [
+      "src/styles/tokens.css existe e define cores, tipografia, espaçamentos e grid como variáveis CSS",
+      "Um teste de unidade varre src/ e falha se encontrar cores escritas direto (hex, rgb, hsl) fora de tokens.css",
+      "A fonte é carregada de arquivos do próprio projeto (sem depender de servidor externo) e a licença está registrada no PROGRESSO.md",
+      "O contraste entre o texto principal e a superfície, e entre o texto e o botão de destaque, é de pelo menos 4,5:1 (WCAG AA), conferido por um teste de unidade que calcula o contraste a partir dos tokens"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F03",
+    "categoria": "Fundação",
+    "titulo": "Rotas e páginas vazias",
+    "descricao": "Navegação entre as telas: Início (/), Lição (/abertura/:id) e Página não encontrada (qualquer outra rota). Inclui o vercel.json com o redirecionamento de todas as rotas para o index.html, necessário para um app de página única na Vercel.",
+    "passos": [
+      "Um teste e2e visita /, /abertura/italiana e /rota-que-nao-existe e confere que cada uma mostra a tela certa",
+      "vercel.json existe e redireciona as rotas para index.html",
+      "Recarregar a página em /abertura/italiana (no npm run preview) continua mostrando a lição"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F04",
+    "categoria": "Conteúdo",
+    "titulo": "Leitura da base de aberturas do Lichess",
+    "descricao": "Módulo (usado nos testes, em Node) que lê os arquivos TSV de data/lichess-openings/ e permite buscar entradas pelo nome exato e verificar se uma sequência de lances começa com a linha de uma entrada.",
+    "passos": [
+      "Teste de unidade: a busca por 'Italian Game: Giuoco Piano' retorna a linha 1. e4 e5 2. Nf3 Nc6 3. Bc4 Bc5",
+      "Teste de unidade: a sequência e4 e5 Nf3 Nc6 Bc4 Bc5 c3 é reconhecida como começando com essa entrada, e e4 e5 Nf3 Nc6 Bb5 não é"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F05",
+    "categoria": "Conteúdo",
+    "titulo": "Modelo de dados da árvore de abertura",
+    "descricao": "Tipos TypeScript para uma abertura (id, nome em português, nome exato na base Lichess, cor, nível, tipo 'linha fixa' ou 'sistema', primeiro lance assumido do adversário quando for de pretas, ideia, ideias-chave e árvore de lances) e para os nós da árvore (lance em SAN, de quem é o lance, explicação, dica, erros comuns com a explicação de cada um, nome da variação quando for um galho do adversário, filhos). Inclui funções para percorrer a árvore: linha principal, lista de variações e caminho até um nó.",
+    "passos": [
+      "Os tipos existem em src/chess/ e são usados por um exemplo de teste",
+      "Testes de unidade cobrem as funções de linha principal, de variações e de caminho com uma árvore de exemplo"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F06",
+    "categoria": "Conteúdo",
+    "titulo": "Validador automático do conteúdo",
+    "descricao": "Teste de unidade obrigatório que roda sobre TODAS as aberturas em src/content/openings/ e confere: todo lance é legal na sua posição (chess.js); toda linha (da raiz até cada folha) começa com a sequência de lances de uma entrada da base Lichess com o nome declarado; todo lance da pessoa tem explicação e dica não vazias; só aberturas do tipo 'sistema' têm lances da pessoa com mais de um filho; todo galho do adversário que não é a linha principal tem nome de variação; a linha principal tem pelo menos 6 lances de cada lado; existem de 1 a 2 variações.",
+    "passos": [
+      "O teste roda dentro de npm run test",
+      "Existe um conjunto de exemplos inválidos (só nos testes) e o validador recusa cada um deles com uma mensagem clara: lance ilegal, linha que não bate com a base, dica vazia, alternativa em linha fixa"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F07",
+    "categoria": "Conteúdo",
+    "titulo": "Notação em português",
+    "descricao": "Função que converte um lance em SAN (inglês) para a notação em português: R (rei), D (dama), T (torre), B (bispo), C (cavalo), e que formata uma sequência de lances como lista numerada (1. e4 e5 2. Cf3 Cc6).",
+    "passos": [
+      "Testes de unidade cobrem: Nf3 → Cf3, Qxd5 → Dxd5, Kxe2 → Rxe2, Rae1 → Tae1, O-O e O-O-O sem mudança, xeque (+), mate (#) e promoção (e8=Q → e8=D)",
+      "Teste de unidade da lista numerada, começando de um lance das brancas e de um lance das pretas"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F08",
+    "categoria": "Conteúdo",
+    "titulo": "Conteúdo: Italiana (Giuoco Piano)",
+    "descricao": "Arquivo de conteúdo da Italiana (brancas, nível 1, linha fixa), conforme a seção 8 da SPEC: ideia, 2 ou 3 ideias-chave, linha principal com explicação e dica em cada lance da pessoa, 1 ou 2 variações comuns das pretas e erros comuns em pelo menos 3 lances.",
+    "passos": [
+      "O validador de conteúdo (F06) passa para esta abertura",
+      "Os textos estão em português, no tom da SPEC (encorajador, sem jargão não explicado)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F09",
+    "categoria": "Conteúdo",
+    "titulo": "Gerador do docs/ABERTURAS.md",
+    "descricao": "Script (npm run docs:aberturas) que gera docs/ABERTURAS.md a partir dos arquivos de conteúdo: para cada abertura, cor, nível, tipo, ideia, linha principal e variações em notação portuguesa e, nos sistemas, as alternativas aceitas com a justificativa. É o documento de revisão humana do conteúdo.",
+    "passos": [
+      "O script gera o arquivo com a Italiana",
+      "Um teste de unidade falha se docs/ABERTURAS.md estiver desatualizado em relação ao conteúdo"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F10",
+    "categoria": "Tabuleiro",
+    "titulo": "Componente de tabuleiro",
+    "descricao": "Componente que mostra uma posição (FEN) com a orientação escolhida (brancas ou pretas embaixo), usando as cores do tabuleiro definidas nos tokens e destacando o último lance. Usa uma biblioteca de tabuleiro com licença permissiva; as imagens das peças precisam ter licença que permita uso público (se exigir atribuição, registre para F42).",
+    "passos": [
+      "Teste e2e numa página de teste ou na lição: o tabuleiro aparece com as peças na posição inicial",
+      "Com orientação 'pretas', as peças pretas aparecem embaixo",
+      "Licença da biblioteca e das peças registrada no PROGRESSO.md"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F11",
+    "categoria": "Tabuleiro",
+    "titulo": "Lances por clique",
+    "descricao": "Seção 7.1 da SPEC: clicar numa peça própria, na sua vez, seleciona a peça e marca as casas de destino legais; clicar numa casa marcada faz o lance; clicar em outro lugar ou na mesma peça desfaz a seleção; peças do adversário e fora da vez não são selecionáveis; pelo clique só é possível fazer lances legais.",
+    "passos": [
+      "Teste e2e: clicar no peão de e2 marca e3 e e4; clicar em e4 faz o lance",
+      "Teste e2e: clicar numa peça preta na vez das brancas não seleciona nada",
+      "Teste e2e: clicar numa casa não marcada não faz lance e desfaz a seleção"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F12",
+    "categoria": "Tabuleiro",
+    "titulo": "Lances por arrastar",
+    "descricao": "Seção 7.2 da SPEC: arrastar marca as casas legais; soltar numa casa legal faz o lance; soltar numa casa ilegal ou fora do tabuleiro devolve a peça à origem, sem mensagem e sem contar como nada.",
+    "passes": false,
+    "passos": [
+      "Teste e2e: arrastar o peão de e2 para e4 faz o lance",
+      "Teste e2e: arrastar o peão de e2 para e5 devolve o peão a e2, sem mensagem e sem mudar a vez"
+    ]
+  },
+  {
+    "id": "F13",
+    "categoria": "Tabuleiro",
+    "titulo": "Guia de lance",
+    "descricao": "O tabuleiro consegue destacar, na cor de destaque (vermelho), a peça que deve se mover e uma seta até a casa de destino. É usado na prática com guia e no botão 'Ver lance'.",
+    "passos": [
+      "Teste e2e: com um guia de e2 para e4, a casa e2 tem o destaque e existe uma seta de e2 para e4",
+      "A cor do guia vem do token de destaque"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F14",
+    "categoria": "Tabuleiro",
+    "titulo": "Tabuleiro pelo teclado",
+    "descricao": "Dá para jogar só com o teclado: Tab leva o foco até o tabuleiro, as setas movem o foco entre as casas, Enter ou Espaço seleciona a peça e depois a casa de destino, e Esc desfaz a seleção. O foco é visível e cada casa tem um nome acessível (por exemplo, 'e2, peão branco').",
+    "passos": [
+      "Teste e2e: fazer 1. e4 usando só o teclado",
+      "Teste e2e: a casa com foco tem um indicador visível (contorno)"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F15",
+    "categoria": "Motor da lição",
+    "titulo": "Motor da lição (lógica pura)",
+    "descricao": "Lógica sem interface que conduz uma linha da árvore: sabe de quem é a vez, qual lance (ou quais, nos sistemas) é esperado, avalia o lance da pessoa (correto ou fora do roteiro, com a explicação de erro comum se existir ou a mensagem genérica com a dica), aplica a resposta do adversário, desfaz o lance fora do roteiro ('Voltar'), entrega o guia do lance atual ('Ver lance') e informa quando a linha terminou.",
+    "passos": [
+      "Testes de unidade: percorrer a linha principal da Italiana inteira só com lances corretos",
+      "Testes de unidade: um lance fora do roteiro fica aplicado, gera a mensagem com a dica, e 'Voltar' restaura a posição anterior",
+      "Testes de unidade: um erro comum cadastrado gera a explicação específica dele",
+      "Testes de unidade: num sistema, uma alternativa cadastrada é aceita e segue pelo seu galho"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F16",
+    "categoria": "Motor da lição",
+    "titulo": "Escolha de galhos do adversário",
+    "descricao": "O motor permite dois modos: seguir um caminho específico (linha principal ou uma variação) e o modo Desafio, em que o adversário escolhe ao acaso entre os galhos existentes. A fonte de acaso pode ser injetada, para os testes serem previsíveis.",
+    "passos": [
+      "Testes de unidade: no modo caminho, o adversário segue exatamente a variação escolhida",
+      "Testes de unidade: no modo Desafio, com acaso controlado, cada galho pode ser escolhido e a linha sempre chega a uma folha"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F17",
+    "categoria": "Lição",
+    "titulo": "Layout da tela de lição",
+    "descricao": "Seção 10.2 da SPEC: no desktop, o tabuleiro à esquerda como protagonista e o painel à direita (indicador de etapas, texto da etapa, lista de lances, ações); em telas estreitas, o tabuleiro em cima e o painel embaixo. Link para voltar à trilha. Segue o grid e os tokens (design suíço: alinhamento à esquerda, hierarquia pela tipografia, sem ornamentos).",
+    "passos": [
+      "Teste e2e em 1440 px e em 375 px: o tabuleiro e o painel aparecem e não há rolagem horizontal",
+      "Em 1440 px o painel fica à direita do tabuleiro; em 375 px fica abaixo",
+      "Capturas de tela nos dois tamanhos foram vistas e fazem sentido"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F18",
+    "categoria": "Lição",
+    "titulo": "Etapa Conhecer",
+    "descricao": "Primeira etapa da lição: nome, cor, nível, a ideia em até 3 frases, 2 ou 3 ideias-chave e o tabuleiro estático na posição característica (o fim da linha principal, se não houver outra definida). Botão 'Continuar'.",
+    "passos": [
+      "Teste e2e: em /abertura/italiana aparecem o nome, a ideia e as ideias-chave",
+      "O tabuleiro não aceita lances nesta etapa"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F19",
+    "categoria": "Lição",
+    "titulo": "Etapa Assistir",
+    "descricao": "A linha principal é mostrada lance a lance. 'Próximo' e 'Anterior' avançam e voltam; cada lance mostra a narração com o porquê; a lista de lances em notação portuguesa acompanha e destaca o lance atual.",
+    "passos": [
+      "Teste e2e: avançar três lances mostra a narração do terceiro e a lista '1. e4 e5 2. Cf3'",
+      "Teste e2e: 'Anterior' volta a posição e a narração"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F20",
+    "categoria": "Lição",
+    "titulo": "Etapa Praticar com guia",
+    "descricao": "A pessoa joga a linha principal com o guia (F13) mostrando a peça e o destino. Depois de um lance correto aparece a confirmação com a explicação, e o adversário responde automaticamente depois de cerca de 400 ms. A lista de lances é atualizada.",
+    "passes": false,
+    "passos": [
+      "Teste e2e: jogar a linha principal da Italiana inteira seguindo o guia, por clique",
+      "Teste e2e: o lance do adversário aparece sozinho depois de cada lance correto"
+    ]
+  },
+  {
+    "id": "F21",
+    "categoria": "Lição",
+    "titulo": "Etapa Praticar sozinho",
+    "descricao": "A mesma linha sem guia. Lance fora do roteiro (seção 7.3 da SPEC): o lance fica no tabuleiro, aparece uma mensagem com um ícone discreto de erro (sem usar vermelho) e a dica, ou a explicação do erro comum; o botão principal vira 'Voltar' (na cor de destaque) e desfaz o lance. O botão 'Ver lance' mostra o guia só do lance atual, sem penalidade.",
+    "passos": [
+      "Teste e2e: jogar um lance legal fora do roteiro mostra a mensagem com a dica e o botão 'Voltar'",
+      "Teste e2e: 'Voltar' desfaz o lance e permite jogar o correto",
+      "Teste e2e: 'Ver lance' mostra o guia do lance atual",
+      "Teste e2e: a mensagem tem ícone e texto, e o botão principal usa a cor de destaque"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F22",
+    "categoria": "Lição",
+    "titulo": "Etapa Variações",
+    "descricao": "Para cada variação: um texto mostra o momento em que o adversário desvia ('E se as pretas jogarem…?'), a pessoa assiste à continuação e depois pratica com guia e sozinha, reaproveitando as etapas anteriores.",
+    "passos": [
+      "Teste e2e: completar a primeira variação da Italiana (assistir, praticar com guia, praticar sozinho)",
+      "O indicador de etapas mostra em qual variação a pessoa está"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F23",
+    "categoria": "Lição",
+    "titulo": "Etapa Desafio",
+    "descricao": "Partida do começo até o fim da linha, sem guia, com o adversário escolhendo ao acaso entre os galhos ensinados (F16). Valem as regras de lance fora do roteiro e o 'Ver lance'. Concluir o Desafio leva à tela de conclusão.",
+    "passos": [
+      "Teste e2e (com o acaso controlado por um parâmetro de teste): completar o Desafio da Italiana leva à tela de conclusão"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F24",
+    "categoria": "Lição",
+    "titulo": "Navegação entre etapas",
+    "descricao": "O indicador de etapas (Conhecer · Assistir · Praticar com guia · Praticar sozinho · Variações · Desafio) mostra a etapa atual e as concluídas, e é clicável para voltar a etapas já vistas. A ação 'Reiniciar a linha' recomeça a etapa atual.",
+    "passos": [
+      "Teste e2e: depois de chegar a 'Praticar com guia', clicar em 'Assistir' volta para aquela etapa",
+      "Teste e2e: etapas ainda não alcançadas não são clicáveis",
+      "Teste e2e: 'Reiniciar a linha' volta a posição para o início da etapa"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F25",
+    "categoria": "Lição",
+    "titulo": "Aberturas de pretas",
+    "descricao": "Nas aberturas de pretas, o tabuleiro fica invertido (pretas embaixo) em todas as etapas e o app joga automaticamente o primeiro lance das brancas definido no conteúdo.",
+    "passos": [
+      "Depende do conteúdo da Escandinava (F26)",
+      "Teste e2e: em /abertura/escandinava as pretas aparecem embaixo e o lance 1. e4 já aparece jogado na prática com guia"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F26",
+    "categoria": "Conteúdo",
+    "titulo": "Conteúdo: Defesa Escandinava",
+    "descricao": "Arquivo de conteúdo da Escandinava (pretas, nível 1, linha fixa, contra 1.e4), seguindo o mesmo padrão da Italiana. docs/ABERTURAS.md regenerado.",
+    "passos": [
+      "O validador de conteúdo (F06) passa para esta abertura",
+      "docs/ABERTURAS.md está atualizado"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F27",
+    "categoria": "Lição",
+    "titulo": "Tela de conclusão",
+    "descricao": "Seção 10.3 da SPEC: posição final da linha principal, a ideia em uma frase e a linha principal em notação; botões 'Próxima abertura' (a próxima da trilha) e 'Voltar à trilha'.",
+    "passos": [
+      "Teste e2e: ao concluir a Italiana, a tela mostra a linha principal e o botão 'Próxima abertura' leva à próxima abertura da trilha"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F28",
+    "categoria": "Progresso",
+    "titulo": "Progresso no navegador",
+    "descricao": "Seção 11 da SPEC: salvar no localStorage as etapas concluídas de cada abertura e as aberturas concluídas; ao reabrir uma abertura em andamento, a lição continua na primeira etapa não concluída; se o armazenamento falhar ou estiver vazio, o app funciona como numa primeira visita.",
+    "passos": [
+      "Testes de unidade: salvar, ler e lidar com armazenamento indisponível (que lança erro)",
+      "Teste e2e: concluir 'Conhecer' e 'Assistir', recarregar a página e a lição continua em 'Praticar com guia'"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F29",
+    "categoria": "Trilha",
+    "titulo": "Tela inicial com a trilha",
+    "descricao": "Seção 10.1 da SPEC: o nome Aprendrez e a frase da proposta; as aberturas agrupadas pelos 3 níveis; cada cartão com nome, cor (ícone e texto), mini-tabuleiro na posição característica, a ideia em uma frase e o status (não iniciada, em andamento, concluída); indicador geral de progresso. Aberturas ainda sem conteúdo não aparecem.",
+    "passos": [
+      "Teste e2e: a tela inicial mostra os cartões das aberturas que têm conteúdo, nos níveis certos",
+      "Teste e2e: o status de um cartão muda para 'em andamento' depois de começar a lição",
+      "Capturas de tela em 1440 px e 375 px foram vistas e seguem o design suíço da SPEC"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F30",
+    "categoria": "Trilha",
+    "titulo": "Filtro por cor",
+    "descricao": "Filtro 'Todas · Brancas · Pretas' na tela inicial, acessível (grupo de botões ou abas com estado selecionado anunciado).",
+    "passos": [
+      "Teste e2e: o filtro 'Pretas' mostra só aberturas de pretas, e 'Todas' volta a mostrar todas"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F31",
+    "categoria": "Trilha",
+    "titulo": "Continuar de onde parei",
+    "descricao": "Botão principal da tela inicial: 'Começar' na primeira visita (leva à primeira abertura da trilha) e 'Continuar de onde parei' depois (leva à próxima abertura não concluída, na ordem da trilha, e à etapa certa).",
+    "passos": [
+      "Teste e2e: numa primeira visita o botão diz 'Começar' e leva à Italiana",
+      "Teste e2e: com a Italiana concluída, o botão leva à próxima abertura da trilha"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F32",
+    "categoria": "Trilha",
+    "titulo": "Reiniciar progresso",
+    "descricao": "Opção 'Reiniciar progresso' na tela inicial, com uma confirmação acessível antes de apagar.",
+    "passos": [
+      "Teste e2e: cancelar a confirmação mantém o progresso; confirmar apaga tudo e os cartões voltam a 'não iniciada'"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F33",
+    "categoria": "Fundação",
+    "titulo": "Página não encontrada",
+    "descricao": "Seção 10.4 da SPEC: mensagem simples e um link para o início, no mesmo visual do resto do app.",
+    "passos": [
+      "Teste e2e: /rota-que-nao-existe mostra a mensagem e o link leva à tela inicial"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F34",
+    "categoria": "Conteúdo",
+    "titulo": "Conteúdo: Sistema Londres",
+    "descricao": "Arquivo de conteúdo do Sistema Londres (brancas, nível 1, SISTEMA). É a abertura que testa as alternativas de ordem: inclua pelo menos uma alternativa aceita, como mais um galho, com a justificativa. docs/ABERTURAS.md regenerado.",
+    "passos": [
+      "O validador de conteúdo (F06) passa para esta abertura",
+      "Existe pelo menos uma alternativa de ordem com justificativa, e um teste e2e confirma que ela é aceita na prática sozinho"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F35",
+    "categoria": "Conteúdo",
+    "titulo": "Conteúdo: Espanhola (Ruy Lopez)",
+    "descricao": "Arquivo de conteúdo da Espanhola (brancas, nível 2, linha fixa). docs/ABERTURAS.md regenerado.",
+    "passos": [
+      "O validador de conteúdo (F06) passa para esta abertura",
+      "docs/ABERTURAS.md está atualizado"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F36",
+    "categoria": "Conteúdo",
+    "titulo": "Conteúdo: Defesa Caro-Kann",
+    "descricao": "Arquivo de conteúdo da Caro-Kann (pretas, nível 2, linha fixa, contra 1.e4). docs/ABERTURAS.md regenerado.",
+    "passos": [
+      "O validador de conteúdo (F06) passa para esta abertura",
+      "docs/ABERTURAS.md está atualizado"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F37",
+    "categoria": "Conteúdo",
+    "titulo": "Conteúdo: Gambito da Dama Recusado",
+    "descricao": "Arquivo de conteúdo do Gambito da Dama Recusado (pretas, nível 2, linha fixa, contra 1.d4). docs/ABERTURAS.md regenerado.",
+    "passos": [
+      "O validador de conteúdo (F06) passa para esta abertura",
+      "docs/ABERTURAS.md está atualizado"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F38",
+    "categoria": "Conteúdo",
+    "titulo": "Conteúdo: Gambito da Dama",
+    "descricao": "Arquivo de conteúdo do Gambito da Dama (brancas, nível 3, linha fixa). docs/ABERTURAS.md regenerado.",
+    "passos": [
+      "O validador de conteúdo (F06) passa para esta abertura",
+      "docs/ABERTURAS.md está atualizado"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F39",
+    "categoria": "Conteúdo",
+    "titulo": "Conteúdo: Defesa Siciliana (linha aberta)",
+    "descricao": "Arquivo de conteúdo da Siciliana, linha aberta (pretas, nível 3, linha fixa, contra 1.e4). docs/ABERTURAS.md regenerado.",
+    "passos": [
+      "O validador de conteúdo (F06) passa para esta abertura",
+      "docs/ABERTURAS.md está atualizado",
+      "Teste e2e: a tela inicial mostra as 8 aberturas, 4 de brancas e 4 de pretas, nos níveis da SPEC"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F40",
+    "categoria": "Qualidade",
+    "titulo": "Acessibilidade automática",
+    "descricao": "Testes e2e com axe-core (pacote @axe-core/playwright) na tela inicial, na lição (em cada etapa) e na conclusão, sem violações de gravidade 'serious' ou 'critical'.",
+    "passos": [
+      "Os testes de acessibilidade rodam dentro de npm run e2e e passam nos dois tamanhos de tela"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F41",
+    "categoria": "Qualidade",
+    "titulo": "Movimento reduzido",
+    "descricao": "Todas as animações duram até 200 ms e são desligadas quando a pessoa prefere movimento reduzido (prefers-reduced-motion). O atraso da resposta do adversário continua existindo, sem animação.",
+    "passos": [
+      "Teste e2e com reducedMotion: 'reduce': o tabuleiro não anima os lances"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F42",
+    "categoria": "Qualidade",
+    "titulo": "Créditos e licenças",
+    "descricao": "Rodapé discreto com os créditos exigidos pelas licenças (peças, fonte, base de aberturas do Lichess) e um arquivo CREDITOS.md com a lista completa de dependências de interface e as suas licenças.",
+    "passos": [
+      "Teste e2e: o rodapé aparece na tela inicial com os créditos",
+      "CREDITOS.md lista cada pacote de dependencies do package.json com a sua licença"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F43",
+    "categoria": "Qualidade",
+    "titulo": "Capturas de tela para revisão",
+    "descricao": "Script (npm run capturas) que usa o Playwright para salvar em docs/capturas/ uma imagem de cada tela e de cada etapa da lição, em 1440 px e 375 px. É o material que o dono do projeto usa para revisar o visual.",
+    "passos": [
+      "O script gera as imagens sem erros",
+      "As imagens foram vistas, e qualquer problema visual encontrado foi corrigido ou registrado no PROGRESSO.md"
+    ],
+    "passes": false
+  },
+  {
+    "id": "F44",
+    "categoria": "Qualidade",
+    "titulo": "Revisão final da definição de pronto",
+    "descricao": "Conferir cada item da seção 14 da SPEC (Definição de pronto): as 8 aberturas completáveis do começo ao fim, todos os testes passando, progresso sobrevivendo ao recarregamento, funcionamento em 1440 px e 375 px sem rolagem horizontal, e npm run build gerando a pasta dist pronta para publicação.",
+    "passos": [
+      "Teste e2e que conclui o Desafio de cada uma das 8 aberturas (com o acaso controlado)",
+      "npm run build gera dist/ sem avisos de erro",
+      "Uma entrada final no PROGRESSO.md resume o estado do MVP e o que precisa de revisão humana"
+    ],
+    "passes": false
+  }
+]

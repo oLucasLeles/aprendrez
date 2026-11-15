@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(git push:*)",
+      "PowerShell(git push:*)",
+      "Bash(npm publish:*)",
+      "PowerShell(npm publish:*)",
+      "Bash(vercel:*)",
+      "PowerShell(vercel:*)"
+    ]
+  }
+}
