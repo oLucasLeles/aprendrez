@@ -13,14 +13,22 @@ import {
 } from '../chess/lessonEngine'
 import { formatMoveList, toPortugueseSan } from '../chess/notation'
 import { COLOR_NAMES, getCharacteristicFen, LEVEL_NAMES } from '../chess/openingPosition'
-import { getMainLine, getMainLineMoves } from '../chess/openingTree'
+import { getMainLine, getMainLineMoves, getVariations, type OpeningNode } from '../chess/openingTree'
 import type { ClickMove } from '../chess/squareClick'
+import {
+  getDeviationStep,
+  getVariationQuestion,
+  nextVariationPosition,
+  VARIATION_PHASE_LABELS,
+  type VariationPosition,
+} from '../chess/variationStage'
 import { clampStep, getWatchView } from '../chess/watchLine'
 import NotFoundScreen from './NotFoundScreen'
 
-// As etapas da lição, na ordem da SPEC (seção 6). Por enquanto só Conhecer,
-// Assistir e as duas práticas têm conteúdo; as outras entram nas próximas funcionalidades.
+// As etapas da lição, na ordem da SPEC (seção 6). Por enquanto só Conhecer, Assistir,
+// as duas práticas e as Variações têm conteúdo; o Desafio entra na próxima funcionalidade.
 const STAGES = ['Conhecer', 'Assistir', 'Praticar com guia', 'Praticar sozinho', 'Variações', 'Desafio']
+const VARIATIONS_STAGE = 4
 
 // Atraso da resposta do adversário (SPEC 7.5): dá tempo de perceber o que aconteceu.
 const OPPONENT_DELAY_MS = 400
@@ -43,9 +51,14 @@ function LessonScreen() {
   // "Ver lance" (etapa sem guia): a posição (FEN) em que a pessoa pediu para ver o guia.
   // Quando a posição muda, o guia some sozinho, sem precisar limpar nada.
   const [peekFen, setPeekFen] = useState<string | null>(null)
+  // A linha que o adversário segue na prática: a principal ou a de uma variação.
+  const [practiceLine, setPracticeLine] = useState<OpeningNode[]>([])
+  // Etapa Variações: qual variação e em qual passo dela (assistir, com guia, sozinho).
+  const [variationPos, setVariationPos] = useState<VariationPosition>({ index: 0, phase: 'watch' })
 
-  const guidedStage = stageIndex === 2
-  const soloStage = stageIndex === 3
+  const inVariations = stageIndex === VARIATIONS_STAGE
+  const guidedStage = stageIndex === 2 || (inVariations && variationPos.phase === 'guided')
+  const soloStage = stageIndex === 3 || (inVariations && variationPos.phase === 'solo')
   const practicing = (guidedStage || soloStage) && practice !== null
   const practiceStatus = practice ? getStatus(practice) : null
 
@@ -54,17 +67,22 @@ function LessonScreen() {
   useEffect(() => {
     if (!practicing || !practice || practiceStatus !== 'opponent-turn') return
     const timer = setTimeout(() => {
-      setPractice(playOpponentTurn(practice, { kind: 'path', line: getMainLine(practice.opening) }))
+      setPractice(playOpponentTurn(practice, { kind: 'path', line: practiceLine }))
     }, OPPONENT_DELAY_MS)
     return () => clearTimeout(timer)
-  }, [practicing, practice, practiceStatus])
+  }, [practicing, practice, practiceStatus, practiceLine])
 
   if (!opening) return <NotFoundScreen />
 
   const mainLine = getMainLineMoves(opening)
   const line = getMainLine(opening)
-  const watching = stageIndex === 1
-  const watchView = getWatchView(line, watchStep, opening.color)
+  const variations = getVariations(opening)
+  const variation = inVariations ? (variations[variationPos.index] ?? null) : null
+  const watching = stageIndex === 1 || (inVariations && variationPos.phase === 'watch')
+  // Na etapa Variações, assiste-se à linha da variação; nas outras, à linha principal.
+  const watchLine = variation ? variation.line : line
+  const watchView = getWatchView(watchLine, watchStep, opening.color)
+  const atDeviation = variation !== null && watchStep === getDeviationStep(variation)
 
   // Etapa 1 · Conhecer (SPEC 6): tabuleiro estático na posição característica.
   // Etapa 2 · Assistir: a posição depois dos lances mostrados até agora.
@@ -77,13 +95,41 @@ function LessonScreen() {
   const guide = showGuide ? getGuide(practice) : null
   const offScript = practicing ? practice.offScript : null
 
+  // Começa uma prática do zero, com o adversário seguindo a linha dada.
+  function startPractice(lineToFollow: OpeningNode[]) {
+    setPractice(createLesson(opening!))
+    setPracticeLine(lineToFollow)
+    setCorrectText(null)
+    setPeekFen(null)
+  }
+
+  // Mostra um passo da etapa Variações. O "Assistir" começa logo antes do desvio.
+  function enterVariationPosition(position: VariationPosition) {
+    const target = variations[position.index]
+    setVariationPos(position)
+    if (position.phase === 'watch') setWatchStep(getDeviationStep(target))
+    else startPractice(target.line)
+  }
+
   function goToNextStage() {
+    // Dentro das Variações, "Continuar" anda pelos passos de cada variação.
+    if (inVariations) {
+      const next = nextVariationPosition(variationPos, variations.length)
+      if (next) enterVariationPosition(next)
+      else setStageIndex(stageIndex + 1)
+      return
+    }
+
     const next = stageIndex + 1
-    // Ao entrar numa etapa de prática, a linha começa do zero.
-    if (next === 2 || next === 3) {
-      setPractice(createLesson(opening!))
-      setCorrectText(null)
-      setPeekFen(null)
+    // Ao entrar numa etapa de prática, a linha principal começa do zero.
+    if (next === 2 || next === 3) startPractice(line)
+    if (next === VARIATIONS_STAGE) {
+      // Conteúdo sem variações (o validador não deixa, mas não travamos): pula a etapa.
+      if (variations.length === 0) {
+        setStageIndex(next + 1)
+        return
+      }
+      enterVariationPosition({ index: 0, phase: 'watch' })
     }
     setStageIndex(next)
   }
@@ -129,6 +175,8 @@ function LessonScreen() {
             {STAGES.map((stage, index) => (
               <li key={stage} aria-current={index === stageIndex ? 'step' : undefined}>
                 {stage}
+                {/* Dentro das Variações, o indicador diz em qual delas a pessoa está. */}
+                {index === stageIndex && inVariations && ` (${variationPos.index + 1} de ${variations.length})`}
               </li>
             ))}
           </ol>
@@ -167,17 +215,38 @@ function LessonScreen() {
 
         {watching && (
           <div className="lesson-text" aria-live="polite">
-            <h2>Assistir</h2>
+            <h2>{variation ? 'Variações' : 'Assistir'}</h2>
+            {variation && (
+              <>
+                <p className="lesson-hint" data-testid="variacao-atual">
+                  Variação {variationPos.index + 1} de {variations.length}: {variation.name} · Assistir
+                </p>
+                <p className="lesson-question">{getVariationQuestion(variation, opening.color)}</p>
+              </>
+            )}
             <p className="lesson-hint">
-              Lance {watchStep} de {line.length}
+              Lance {watchStep} de {watchLine.length}
             </p>
-            <p className="lesson-narration">{watchView.narration}</p>
+            <p className="lesson-narration">
+              {atDeviation
+                ? 'Até aqui o jogo é igual ao da linha principal. Aperte "Próximo" para ver a resposta diferente.'
+                : watchView.narration}
+            </p>
           </div>
         )}
 
         {practicing && practice && (
           <div className="lesson-text" aria-live="polite">
-            <h2>{guidedStage ? 'Praticar com guia' : 'Praticar sozinho'}</h2>
+            <h2>{variation ? 'Variações' : guidedStage ? 'Praticar com guia' : 'Praticar sozinho'}</h2>
+            {variation && (
+              <>
+                <p className="lesson-hint" data-testid="variacao-atual">
+                  Variação {variationPos.index + 1} de {variations.length}: {variation.name} ·{' '}
+                  {VARIATION_PHASE_LABELS[variationPos.phase]}
+                </p>
+                <p className="lesson-question">{getVariationQuestion(variation, opening.color)}</p>
+              </>
+            )}
             {practiceStatus === 'user-turn' && guidedStage && (
               <p className="lesson-hint">Sua vez: mova a peça marcada até a casa da seta.</p>
             )}
@@ -217,7 +286,7 @@ function LessonScreen() {
           </div>
         )}
 
-        {stageIndex > 3 && (
+        {stageIndex > VARIATIONS_STAGE && (
           <div className="lesson-text">
             <h2>{STAGES[stageIndex]}</h2>
             <p className="lesson-hint">Esta etapa chega nas próximas funcionalidades.</p>
@@ -259,15 +328,15 @@ function LessonScreen() {
                 type="button"
                 className="button-secondary"
                 disabled={watchStep === 0}
-                onClick={() => setWatchStep(clampStep(watchStep - 1, line))}
+                onClick={() => setWatchStep(clampStep(watchStep - 1, watchLine))}
               >
                 Anterior
               </button>
               <button
                 type="button"
                 className="button-secondary"
-                disabled={watchStep === line.length}
-                onClick={() => setWatchStep(clampStep(watchStep + 1, line))}
+                disabled={watchStep === watchLine.length}
+                onClick={() => setWatchStep(clampStep(watchStep + 1, watchLine))}
               >
                 Próximo
               </button>

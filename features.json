@@ -249,7 +249,7 @@
       "Teste e2e: completar a primeira variação da Italiana (assistir, praticar com guia, praticar sozinho)",
       "O indicador de etapas mostra em qual variação a pessoa está"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F23",

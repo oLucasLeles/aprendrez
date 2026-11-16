@@ -232,6 +232,12 @@ textarea {
   font-size: var(--font-size-md);
 }
 
+/* Etapa "Variações" (F22): a pergunta "E se as pretas jogarem…?" que abre cada variação. */
+.lesson-question {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
 /* Botão secundário: contorno neutro, sem preenchimento (o vermelho é só da ação principal). */
 .button-secondary {
   padding: var(--space-1) var(--space-3);

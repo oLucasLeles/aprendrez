@@ -583,3 +583,35 @@ caso extra de erro comum (`a4`). Capturas olhadas: `docs/capturas/f21-*.png` (fo
 - Subi o servidor de desenvolvimento para as capturas e o encerrei no fim do turno.
 **Próximo turno:** F22 · Etapa Variações. Vai precisar de `getVariations` (F05) e do modo `path` com `variação.line` (F16) para o
 adversário seguir o desvio; a prática com guia e sozinho já aceita `guidedStage`/`soloStage`, mas hoje começa sempre da linha principal.
+
+## Turno 2026-11-16 00:20 · [F22] Etapa Variações
+**Status:** concluída
+**O que fiz:** O "Continuar" da etapa Praticar sozinho agora leva à etapa **Variações**. Para cada variação da abertura
+a pessoa passa por três passos: **Assistir** (começa logo antes do desvio, com a pergunta "E se as pretas jogarem 5... a6?"
+e a continuação lance a lance), **Praticar com guia** e **Praticar sozinho**. As práticas reaproveitam o código das etapas
+anteriores; a diferença é que o adversário segue a linha da variação (modo `path` com `variação.line`, da F16) em vez da linha
+principal. Ao terminar a última variação, o "Continuar" leva ao Desafio. O indicador de etapas mostra "Variações (1 de 2)" e o
+painel diz o nome da variação e o passo ("Variação 1 de 2: Pretas jogam a6 antes do roque · Praticar com guia"). A ordem dos
+passos e os textos ficaram em `src/chess/variationStage.ts` (com testes de unidade); a ligação com a tela, em `LessonScreen.tsx`.
+Teste novo em `e2e/licao-variacoes.spec.ts` (desktop e celular) completa a primeira variação nos três passos e confere o
+indicador e a chegada à segunda variação. Capturas olhadas: `docs/capturas/f22-*.png` (1440 px e 375 px).
+**Decisões:**
+- **Ordem das variações:** segui a ordem de `getVariations` (F05), que percorre a árvore em profundidade. Na Italiana isso faz a
+  **primeira** variação ser `5...a6` (mais fundo na linha) e a segunda `4...d6` (desvio mais cedo). Não mudei `getVariations`
+  para não mexer em algo já testado e usado pelo gerador do `docs/ABERTURAS.md`. Se a pessoa dona preferir a ordem "desvio mais
+  cedo primeiro", é um ajuste pequeno (ordenar por `path.length`), mas mudaria também o documento gerado.
+- **A prática da variação recomeça do zero** (posição inicial), e a pessoa joga de novo os lances que antecedem o desvio. Foi o
+  mais simples e funciona com o motor sem mudanças; também serve de revisão da linha principal.
+- No passo Assistir da variação, o texto do momento do desvio diz "Até aqui o jogo é igual ao da linha principal" em vez da
+  narração do lance anterior, para a pergunta ficar em destaque. Depois do "Próximo", a narração do adversário é a frase simples da F19.
+- Se um conteúdo não tiver variações (o validador não deixa), a etapa é pulada em vez de travar.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- O teste e2e leva ~33 s (joga a linha principal duas vezes, com os atrasos de 400 ms, para chegar à etapa). Quando a F24 permitir
+  clicar nas etapas, dá para encurtar.
+- Uma primeira execução do teste falhou uma vez no desktop, num momento em que o servidor tinha acabado de subir; nas execuções
+  seguintes (e no `npm run verificar`) passou sempre. Fico de olho se voltar a acontecer.
+- Os textos de explicação dos lances do adversário continuam sendo a frase genérica (não há explicação no conteúdo para eles).
+- O servidor de desenvolvimento foi encerrado no fim do turno.
+**Próximo turno:** F23 · Etapa Desafio. Reaproveite `startPractice`, a prática sem guia e `playOpponentTurn` com `{ kind: 'challenge', random }`
+(F16); o acaso precisa poder ser controlado por um parâmetro de teste (por exemplo, na URL, só no servidor de desenvolvimento).
