@@ -190,3 +190,39 @@ textarea {
 .button-primary:hover {
   background: var(--color-accent-hover);
 }
+
+/* Etapa "Conhecer" (F18): ficha da abertura (nome, cor, nível) e ideias-chave. */
+.lesson-facts {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-2);
+}
+
+.lesson-facts dt {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.lesson-facts dd {
+  margin: 0;
+  font-weight: var(--font-weight-medium);
+}
+
+.lesson-text h3 {
+  font-size: var(--font-size-md);
+  margin-bottom: var(--space-1);
+}
+
+.lesson-key-ideas {
+  margin: 0 0 var(--space-2);
+  padding-left: var(--space-3);
+}
+
+.lesson-key-ideas li + li {
+  margin-top: var(--space-1);
+}
+
+.lesson-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}

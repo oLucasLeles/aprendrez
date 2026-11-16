@@ -485,3 +485,28 @@ rolagem horizontal, painel à direita no desktop e abaixo no celular. Capturas o
 **Próximo turno:** F18 · Etapa Conhecer (nome, cor, nível, ideia e ideias-chave da Italiana, tabuleiro estático). Vai precisar
 carregar a abertura pelo `:id` (por exemplo com `import.meta.glob` em `src/content/openings/`) e mostrar "não encontrada" para
 um id que não existe.
+
+## Turno 2026-11-15 23:15 · [F18] Etapa Conhecer
+**Status:** concluída
+**O que fiz:** A tela da Lição agora abre a abertura de verdade pelo endereço (`/abertura/italiana`) e mostra a etapa
+**Conhecer**: nome, cor ("Você joga de"), nível, a ideia, as ideias-chave e a lista de lances da linha principal em notação
+portuguesa. O tabuleiro fica parado na posição do fim da linha principal (com as pretas embaixo nas aberturas de pretas) e
+não aceita lances. Se o `:id` não existe (por exemplo `/abertura/xyz`), aparece a Página não encontrada. Para isso criei um
+catálogo (`src/content/openings/index.ts`, que junta sozinho todos os arquivos da pasta) e `src/chess/openingPosition.ts` (posição
+característica em FEN e os nomes em português de níveis e cores), com testes de unidade. Teste novo em `e2e/licao-conhecer.spec.ts`
+(desktop e celular). Capturas olhadas: `docs/capturas/f18-desktop.png` e `f18-celular.png`.
+**Decisões:**
+- A posição característica é sempre o fim da linha principal; não criei campo novo no conteúdo (a SPEC só pede isso se não houver
+  outra definida, e hoje não há).
+- Mantive o título "Lição" e o texto "Abertura: <nome>" no topo. O texto agora mostra o nome da abertura em vez do id, então
+  atualizei o teste de unidade de `src/App.test.tsx` que esperava o id (o teste e2e de rotas continuou igual e passou). Aproveitei
+  para acrescentar nele um caso de id inexistente e uma limpeza da tela entre testes (`afterEach(cleanup)`).
+- A lista de lances da etapa Conhecer já mostra a linha principal inteira, porque o tabuleiro está no fim dela.
+- O botão "Continuar" continua sem ação: a navegação entre etapas começa na F19 (Assistir).
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- O teste "não aceita lances" confere que não há botões/casas focáveis e que clicar não seleciona nada; o tabuleiro só para olhar
+  não tem casas com nome acessível (só o modo interativo tem), então os testes localizam casas por `data-square`, da biblioteca.
+- O servidor de desenvolvimento pode ter ficado rodando na porta 5173 (usado pelo Playwright).
+**Próximo turno:** F19 · Etapa Assistir. Vai precisar guardar a etapa atual no estado da tela (hoje `stageIndex` é fixo em 0) e
+fazer o "Continuar" da etapa Conhecer levar a ela.

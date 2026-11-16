@@ -203,7 +203,7 @@
       "Teste e2e: em /abertura/italiana aparecem o nome, a ideia e as ideias-chave",
       "O tabuleiro não aceita lances nesta etapa"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F19",
