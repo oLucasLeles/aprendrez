@@ -271,7 +271,7 @@
       "Teste e2e: etapas ainda não alcançadas não são clicáveis",
       "Teste e2e: 'Reiniciar a linha' volta a posição para o início da etapa"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F25",

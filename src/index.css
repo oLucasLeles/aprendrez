@@ -165,6 +165,40 @@ textarea {
   text-underline-offset: 0.3em;
 }
 
+/* Etapa do indicador que pode ser visitada: parece texto, mas é um botão (F24). */
+.lesson-stage-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 0.3em;
+}
+
+.lesson-stage-button:hover:not(:disabled) {
+  color: var(--color-text);
+}
+
+/* Etapa ainda não alcançada: mais apagada e sem cursor de clique. */
+.lesson-stage-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* Texto só para leitores de tela. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .lesson-moves-list {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);

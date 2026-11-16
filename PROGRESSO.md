@@ -642,3 +642,31 @@ teste de unidade em `src/chess/testRandom.test.ts`. Capturas olhadas: `docs/capt
 - O servidor de desenvolvimento foi encerrado pelo próprio Playwright no fim de cada execução.
 **Próximo turno:** F24 · Navegação entre etapas (indicador clicável, etapas concluídas e "Reiniciar a linha"). Hoje o indicador é
 só uma lista; `stageIndex` e o estado de prática ficam em `LessonScreen.tsx`.
+
+## Turno 2026-11-16 01:00 · [F24] Navegação entre etapas
+**Status:** concluída
+**O que fiz:** O indicador de etapas agora é clicável. A etapa atual aparece em negrito e sublinhada; as etapas já
+alcançadas viram botões (com "✓" e o texto escondido "(concluída)" para leitores de tela, quando a pessoa já passou
+por elas); as que ainda não foram alcançadas ficam desabilitadas e apagadas. Clicar numa etapa já alcançada abre essa etapa
+desde o começo. Também criei o botão **"Reiniciar a linha"**, que recomeça a etapa atual: no Assistir volta ao primeiro
+passo (ou ao desvio, nas variações) e nas práticas e no Desafio a partida volta à posição inicial. Ele não aparece na
+etapa Conhecer, que não tem linha para reiniciar. Para isso, juntei a entrada em etapa numa função só (`enterStage`, em
+`LessonScreen.tsx`), usada tanto pelo "Continuar" quanto pelos cliques. Testes novos em `e2e/licao-etapas.spec.ts`
+(desktop e celular), cobrindo os 3 passos da funcionalidade e mais dois casos. Capturas olhadas: `docs/capturas/f24-desktop.png` e `f24-celular.png`.
+**Decisões:**
+- "Etapa alcançada" = a mais avançada em que a pessoa já esteve (`reachedStage`). Ela só cresce; voltar para uma etapa
+  anterior não "desconquista" as seguintes. O progresso salvo no navegador (F28) é outro assunto e ainda não existe.
+- Clicar em **Variações** no indicador começa pela primeira variação, no passo Assistir. Voltar para uma etapa de prática
+  recomeça a linha do zero (como já acontecia ao entrar nelas com "Continuar").
+- Ao entrar no Assistir, o passo volta a 0 (antes não zerava; a F19 deixou essa decisão para esta funcionalidade).
+- Com `?etapa=desafio` (só no desenvolvimento), todas as etapas já contam como alcançadas.
+- O indicador mantém `aria-current="step"` no item da etapa atual, então os testes antigos continuaram valendo sem mudança.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- Logo depois de clicar numa etapa vindo da prática, o tabuleiro leva uns 200 ms animando as peças de volta; uma captura
+  tirada na hora parece "errada", mas é só a animação (confirmei com uma segunda captura, esperando).
+- Os testes antigos de Variações e Desafio ainda jogam tudo do zero. Agora dá para encurtar, mas só voltando a etapas já
+  vistas, não pulando para frente; deixei como está para não mexer em testes que passam.
+- Subi o servidor de desenvolvimento para as capturas e o encerrei no fim do turno.
+**Próximo turno:** F25 · Aberturas de pretas (depende do conteúdo da Escandinava, F26). Como a F25 depende da F26, pode
+valer fazer a F26 primeiro e registrar o motivo.

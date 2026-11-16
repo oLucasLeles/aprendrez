@@ -53,6 +53,9 @@ function LessonScreen() {
   // A etapa atual e, na etapa Assistir, quantos lances da linha já foram mostrados.
   const [stageIndex, setStageIndex] = useState(startAtChallenge ? CHALLENGE_STAGE : 0)
   const [watchStep, setWatchStep] = useState(0)
+  // A etapa mais avançada que a pessoa já alcançou. As etapas até ela podem ser revisitadas
+  // pelo indicador; as que vêm depois ficam desabilitadas.
+  const [reachedStage, setReachedStage] = useState(startAtChallenge ? CHALLENGE_STAGE : 0)
 
   // Etapas de prática (com guia e sozinho): o estado do motor da lição (F15) e a última explicação.
   const [practice, setPractice] = useState<LessonState | null>(() =>
@@ -127,32 +130,40 @@ function LessonScreen() {
     else startPractice(target.line)
   }
 
+  // Entra numa etapa, sempre desde o começo dela. Serve tanto para o "Continuar" quanto
+  // para os cliques no indicador de etapas.
+  function enterStage(target: number) {
+    if (target === 1) setWatchStep(0)
+    // Ao entrar numa etapa de prática, a linha principal começa do zero.
+    if (target === 2 || target === 3 || target === CHALLENGE_STAGE) startPractice(line)
+    if (target === VARIATIONS_STAGE) {
+      if (variations.length === 0) {
+        // Conteúdo sem variações (o validador não deixa, mas não travamos): pula a etapa.
+        startPractice(line)
+        target = CHALLENGE_STAGE
+      } else {
+        enterVariationPosition({ index: 0, phase: 'watch' })
+      }
+    }
+    setStageIndex(target)
+    setReachedStage((reached) => Math.max(reached, target))
+  }
+
   function goToNextStage() {
     // Dentro das Variações, "Continuar" anda pelos passos de cada variação.
     if (inVariations) {
       const next = nextVariationPosition(variationPos, variations.length)
       if (next) enterVariationPosition(next)
-      else {
-        // Última variação concluída: começa o Desafio, do zero.
-        startPractice(line)
-        setStageIndex(CHALLENGE_STAGE)
-      }
+      else enterStage(CHALLENGE_STAGE) // Última variação concluída: começa o Desafio, do zero.
       return
     }
+    enterStage(stageIndex + 1)
+  }
 
-    const next = stageIndex + 1
-    // Ao entrar numa etapa de prática, a linha principal começa do zero.
-    if (next === 2 || next === 3 || next === CHALLENGE_STAGE) startPractice(line)
-    if (next === VARIATIONS_STAGE) {
-      // Conteúdo sem variações (o validador não deixa, mas não travamos): pula a etapa.
-      if (variations.length === 0) {
-        startPractice(line)
-        setStageIndex(CHALLENGE_STAGE)
-        return
-      }
-      enterVariationPosition({ index: 0, phase: 'watch' })
-    }
-    setStageIndex(next)
+  // "Reiniciar a linha": recomeça a etapa atual (na prática, a partida volta ao início).
+  function restartLine() {
+    if (watching) setWatchStep(variation ? getDeviationStep(variation) : 0)
+    else if (practicing) startPractice(challengeStage ? line : practiceLine)
   }
 
   // Concluir o Desafio leva à tela de conclusão (o progresso será salvo na F28).
@@ -198,13 +209,34 @@ function LessonScreen() {
       <section className="lesson-panel" aria-label="Painel da lição">
         <nav aria-label="Etapas da lição">
           <ol className="lesson-stages">
-            {STAGES.map((stage, index) => (
-              <li key={stage} aria-current={index === stageIndex ? 'step' : undefined}>
-                {stage}
-                {/* Dentro das Variações, o indicador diz em qual delas a pessoa está. */}
-                {index === stageIndex && inVariations && ` (${variationPos.index + 1} de ${variations.length})`}
-              </li>
-            ))}
+            {STAGES.map((stage, index) => {
+              const isCurrent = index === stageIndex
+              const isDone = index < reachedStage && !isCurrent
+              return (
+                <li key={stage} aria-current={isCurrent ? 'step' : undefined}>
+                  {isCurrent ? (
+                    <>
+                      {stage}
+                      {/* Dentro das Variações, o indicador diz em qual delas a pessoa está. */}
+                      {inVariations && ` (${variationPos.index + 1} de ${variations.length})`}
+                    </>
+                  ) : (
+                    // Etapas já alcançadas são botões; as que ainda não foram alcançadas ficam desabilitadas.
+                    <button
+                      type="button"
+                      className="lesson-stage-button"
+                      disabled={index > reachedStage}
+                      onClick={() => enterStage(index)}
+                    >
+                      {/* O "✓" marca as etapas concluídas sem depender só de cor. */}
+                      {isDone && <span aria-hidden="true">✓ </span>}
+                      {stage}
+                      {isDone && <span className="visually-hidden"> (concluída)</span>}
+                    </button>
+                  )}
+                </li>
+              )
+            })}
           </ol>
         </nav>
 
@@ -374,6 +406,11 @@ function LessonScreen() {
           {soloStage && practicing && practiceStatus === 'user-turn' && !offScript && (
             <button type="button" className="button-secondary" onClick={() => setPeekFen(practice!.fen)}>
               Ver lance
+            </button>
+          )}
+          {stageIndex !== 0 && (
+            <button type="button" className="button-secondary" onClick={restartLine}>
+              Reiniciar a linha
             </button>
           )}
           {offScript ? (
