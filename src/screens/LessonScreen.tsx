@@ -18,8 +18,8 @@ import type { ClickMove } from '../chess/squareClick'
 import { clampStep, getWatchView } from '../chess/watchLine'
 import NotFoundScreen from './NotFoundScreen'
 
-// As etapas da lição, na ordem da SPEC (seção 6). Por enquanto só Conhecer e
-// Assistir têm conteúdo; as outras entram nas próximas funcionalidades.
+// As etapas da lição, na ordem da SPEC (seção 6). Por enquanto só Conhecer,
+// Assistir e as duas práticas têm conteúdo; as outras entram nas próximas funcionalidades.
 const STAGES = ['Conhecer', 'Assistir', 'Praticar com guia', 'Praticar sozinho', 'Variações', 'Desafio']
 
 // Atraso da resposta do adversário (SPEC 7.5): dá tempo de perceber o que aconteceu.
@@ -37,11 +37,16 @@ function LessonScreen() {
   const [stageIndex, setStageIndex] = useState(0)
   const [watchStep, setWatchStep] = useState(0)
 
-  // Etapa Praticar com guia: o estado do motor da lição (F15) e a última explicação.
+  // Etapas de prática (com guia e sozinho): o estado do motor da lição (F15) e a última explicação.
   const [practice, setPractice] = useState<LessonState | null>(null)
   const [correctText, setCorrectText] = useState<string | null>(null)
+  // "Ver lance" (etapa sem guia): a posição (FEN) em que a pessoa pediu para ver o guia.
+  // Quando a posição muda, o guia some sozinho, sem precisar limpar nada.
+  const [peekFen, setPeekFen] = useState<string | null>(null)
 
-  const practicing = stageIndex === 2 && practice !== null
+  const guidedStage = stageIndex === 2
+  const soloStage = stageIndex === 3
+  const practicing = (guidedStage || soloStage) && practice !== null
   const practiceStatus = practice ? getStatus(practice) : null
 
   // Quando é a vez do adversário, ele responde sozinho depois de ~400 ms.
@@ -67,15 +72,18 @@ function LessonScreen() {
   // Etapa 3 · Praticar com guia: a posição do motor, com o guia no lance esperado.
   const boardFen = practicing ? practice.fen : watching ? watchView.fen : getCharacteristicFen(opening)
   const boardLastMove = practicing ? practice.lastMove : watching ? watchView.lastMove : null
-  const guide = practicing && practiceStatus === 'user-turn' ? getGuide(practice) : null
+  // Com guia: sempre visível. Sozinho: só depois de "Ver lance", e só para o lance atual.
+  const showGuide = practicing && practiceStatus === 'user-turn' && (guidedStage || peekFen === practice.fen)
+  const guide = showGuide ? getGuide(practice) : null
   const offScript = practicing ? practice.offScript : null
 
   function goToNextStage() {
     const next = stageIndex + 1
-    // Ao entrar na prática, a linha começa do zero.
-    if (next === 2) {
+    // Ao entrar numa etapa de prática, a linha começa do zero.
+    if (next === 2 || next === 3) {
       setPractice(createLesson(opening!))
       setCorrectText(null)
+      setPeekFen(null)
     }
     setStageIndex(next)
   }
@@ -169,15 +177,37 @@ function LessonScreen() {
 
         {practicing && practice && (
           <div className="lesson-text" aria-live="polite">
-            <h2>Praticar com guia</h2>
-            {practiceStatus === 'user-turn' && (
+            <h2>{guidedStage ? 'Praticar com guia' : 'Praticar sozinho'}</h2>
+            {practiceStatus === 'user-turn' && guidedStage && (
               <p className="lesson-hint">Sua vez: mova a peça marcada até a casa da seta.</p>
+            )}
+            {practiceStatus === 'user-turn' && soloStage && (
+              <p className="lesson-hint">Sua vez: jogue o próximo lance da abertura. Se precisar, use "Ver lance".</p>
             )}
             {practiceStatus === 'opponent-turn' && <p className="lesson-hint">O adversário está respondendo…</p>}
             {practiceStatus === 'finished' && (
               <p className="lesson-hint">Você chegou ao fim da linha. Clique em Continuar.</p>
             )}
-            {offScript && <p className="lesson-narration">{offScript.message}</p>}
+            {offScript && (
+              <p className="lesson-narration lesson-offscript">
+                {/* Ícone discreto de erro: um círculo com "!", na cor do texto (nunca vermelho). */}
+                <svg
+                  className="lesson-offscript-icon"
+                  data-testid="icone-fora-do-roteiro"
+                  viewBox="0 0 16 16"
+                  width="16"
+                  height="16"
+                  aria-hidden="true"
+                >
+                  <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="M8 4v5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <circle cx="8" cy="11.5" r="0.9" fill="currentColor" />
+                </svg>
+                <span>
+                  <strong>Lance fora do roteiro.</strong> {offScript.message}
+                </span>
+              </p>
+            )}
             {!offScript && correctText !== null && (
               <p className="lesson-narration">
                 <span aria-hidden="true">✓ </span>
@@ -187,7 +217,7 @@ function LessonScreen() {
           </div>
         )}
 
-        {stageIndex > 2 && (
+        {stageIndex > 3 && (
           <div className="lesson-text">
             <h2>{STAGES[stageIndex]}</h2>
             <p className="lesson-hint">Esta etapa chega nas próximas funcionalidades.</p>
@@ -242,6 +272,11 @@ function LessonScreen() {
                 Próximo
               </button>
             </>
+          )}
+          {soloStage && practicing && practiceStatus === 'user-turn' && !offScript && (
+            <button type="button" className="button-secondary" onClick={() => setPeekFen(practice!.fen)}>
+              Ver lance
+            </button>
           )}
           {offScript ? (
             <button type="button" className="button-primary" onClick={handleUndo}>

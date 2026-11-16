@@ -260,3 +260,18 @@ textarea {
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
+
+/* Mensagem de lance fora do roteiro (F21): ícone + texto, na cor do texto (o vermelho é só destaque). */
+.lesson-offscript {
+  display: flex;
+  gap: var(--space-1);
+  align-items: flex-start;
+  padding: var(--space-1) var(--space-2);
+  border-left: 3px solid var(--color-border-strong);
+  background: var(--color-surface-muted);
+}
+
+.lesson-offscript-icon {
+  flex: none;
+  margin-top: 0.2em;
+}

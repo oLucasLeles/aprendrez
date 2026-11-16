@@ -238,7 +238,7 @@
       "Teste e2e: 'Ver lance' mostra o guia do lance atual",
       "Teste e2e: a mensagem tem ícone e texto, e o botão principal usa a cor de destaque"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F22",

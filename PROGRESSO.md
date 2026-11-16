@@ -558,3 +558,28 @@ respondendo sozinho e confere o caminho de lance fora do roteiro + "Voltar". Cap
 desenvolvimento ficou rodando em segundo plano (porta 5173) para as capturas.
 **Próximo turno:** F21 · Etapa Praticar sozinho. Reaproveite o estado `practice` da tela: falta passar `guide={null}`, o botão
 "Ver lance" (use `getGuide`) e o ícone de erro na mensagem fora do roteiro (sem vermelho).
+
+## Turno 2026-11-16 00:00 · [F21] Etapa Praticar sozinho
+**Status:** concluída
+**O que fiz:** O "Continuar" da etapa Praticar com guia agora leva à etapa **Praticar sozinho**: a mesma linha da Italiana, mas sem
+peça marcada nem seta. Reaproveitei o estado da prática da F20 (a tela só passou a atender duas etapas). Um lance legal fora do
+roteiro fica no tabuleiro e mostra uma mensagem com um **ícone discreto de erro** (um círculo com "!", na cor do texto), o texto
+"Lance fora do roteiro." e a dica (ou a explicação do erro comum, quando existe); o botão principal vira "Voltar", em vermelho de
+destaque, e desfaz o lance. Novo botão **"Ver lance"**: mostra peça e seta só para o lance atual; quando a posição muda, o guia
+some sozinho. Teste novo: `e2e/licao-praticar-sozinho.spec.ts` (desktop e celular), cobrindo os 4 passos da funcionalidade, e um
+caso extra de erro comum (`a4`). Capturas olhadas: `docs/capturas/f21-*.png` (fora do roteiro e "Ver lance", 1440 px e 375 px).
+**Decisões:**
+- O "Ver lance" guarda a **posição (FEN)** em que foi pedido (`peekFen`) e só mostra o guia enquanto a posição for essa. Assim não
+  precisa de código para "apagar" o guia depois do lance, do mesmo jeito que a seleção da F11.
+- O botão "Ver lance" só existe na etapa sem guia, e some enquanto há um lance fora do roteiro (aí o botão é o "Voltar").
+- A mensagem fora do roteiro usa fundo cinza claro e uma barra cinza escura na lateral, sem vermelho (SPEC 13, item 1). O ícone é um
+  SVG pequeno desenhado na própria tela, sem biblioteca de ícones. Também passei a mostrar o texto "Lance fora do roteiro." antes da
+  mensagem do motor, para o aviso não depender só do ícone. Isso vale também na etapa com guia, que usa o mesmo código.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- Os testes de prática ficam lentos (~10 s cada), porque cada um joga a linha inteira com guia para chegar à etapa (8 atrasos de 400 ms).
+  Quando a F24 permitir clicar nas etapas, dá para encurtar o caminho.
+- Ainda não existe "Reiniciar a linha" nem indicador clicável (F24). Em Praticar sozinho, o "Continuar" só abre no fim da linha.
+- Subi o servidor de desenvolvimento para as capturas e o encerrei no fim do turno.
+**Próximo turno:** F22 · Etapa Variações. Vai precisar de `getVariations` (F05) e do modo `path` com `variação.line` (F16) para o
+adversário seguir o desvio; a prática com guia e sozinho já aceita `guidedStage`/`soloStage`, mas hoje começa sempre da linha principal.
