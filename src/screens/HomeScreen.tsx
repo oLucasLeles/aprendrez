@@ -4,6 +4,7 @@ import Board from '../components/Board'
 import { COLOR_NAMES, getCharacteristicFen, getIdeaSummary, LEVEL_NAMES } from '../chess/openingPosition'
 import type { Opening, OpeningLevel } from '../chess/openingTree'
 import { trailOpenings } from '../content/trail'
+import { CONTINUE_LABELS, getContinueTarget } from '../progress/continueTarget'
 import { getOpeningStatus, loadProgress, type OpeningStatus } from '../progress/progress'
 
 // Tela de Início (SPEC 10.1): o nome do app, a trilha de aberturas agrupada por nível
@@ -67,6 +68,10 @@ function HomeScreen() {
   const progress = useMemo(() => loadProgress(), [])
   const statuses = new Map(trailOpenings.map((opening) => [opening.id, getOpeningStatus(progress, opening.id)]))
   const completedCount = [...statuses.values()].filter((status) => status === 'completed').length
+  const continueTarget = getContinueTarget(
+    progress,
+    trailOpenings.map((opening) => opening.id),
+  )
 
   return (
     <main className="grid page">
@@ -77,6 +82,12 @@ function HomeScreen() {
         <p className="trail-progress">
           {completedCount} de {trailOpenings.length} {trailOpenings.length === 1 ? 'abertura concluída' : 'aberturas concluídas'}
         </p>
+        {/* Botão principal: é um link (leva a outra tela) com a aparência do botão de destaque */}
+        {continueTarget.openingId && (
+          <Link className="button-primary trail-continue" to={`/abertura/${continueTarget.openingId}`}>
+            {CONTINUE_LABELS[continueTarget.kind]}
+          </Link>
+        )}
       </header>
 
       {/* Grupo de botões: o botão escolhido é anunciado como "pressionado" (aria-pressed) e também ganha ✓ */}

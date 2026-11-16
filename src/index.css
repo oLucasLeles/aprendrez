@@ -370,6 +370,13 @@ textarea {
   font-weight: var(--font-weight-medium);
 }
 
+/* Botão principal da tela inicial (F31): um link com a aparência de `.button-primary`. */
+.trail-continue {
+  display: inline-block;
+  margin-top: var(--space-3);
+  text-decoration: none;
+}
+
 /* Filtro por cor (F30): botões lado a lado; o escolhido tem fundo escuro e ✓ (não depende só de cor). */
 .trail-filter {
   display: flex;

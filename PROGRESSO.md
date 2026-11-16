@@ -830,3 +830,22 @@ caso extra com teclado (Enter) que confere que o indicador geral continua "0 de 
 de polimento visual. O teste temporário usado para as capturas foi apagado (a F43 fará o script oficial).
 **Próximo turno:** F31 · Continuar de onde parei (botão principal; usa `getNextOpening`/`TRAIL_ORDER` e o progresso salvo, e precisa levar à etapa
 certa: a lição já abre na primeira etapa não concluída, F28).
+
+## Turno 2026-11-16 03:20 · [F31] Continuar de onde parei
+**Status:** concluída
+**O que fiz:** A tela de Início ganhou o botão principal, em vermelho de destaque, logo abaixo do indicador de progresso. Na primeira
+visita ele diz **"Começar"** e leva à primeira abertura da trilha (Italiana). Depois que há progresso, diz **"Continuar de onde parei"** e
+leva à primeira abertura não concluída na ordem da trilha; a lição já abre sozinha na primeira etapa não concluída (F28), então não precisei
+calcular a etapa. A decisão ficou numa função pura, `src/progress/continueTarget.ts` (`getContinueTarget`), com testes de unidade em
+`continueTarget.test.ts`. A interface está em `HomeScreen.tsx`. Testes novos em `e2e/trilha.spec.ts` (desktop e celular): os 2 passos da
+funcionalidade, mais "abertura em andamento volta a ela na etapa certa" e "tudo concluído". Capturas olhadas: `docs/capturas/f31-desktop.png` e `f31-celular.png`.
+**Decisões:**
+- **"Primeira visita" = nenhuma abertura da trilha iniciada nem concluída.** Qualquer progresso troca o texto para "Continuar de onde parei".
+- **Uma abertura em andamento vem antes das seguintes**, e as concluídas são puladas, mesmo no meio da trilha (a primeira não concluída na ordem).
+- **Com todas concluídas** a SPEC não diz nada; escolhi o botão **"Rever desde o início"**, que leva à primeira abertura da trilha. É o mais simples e não deixa a tela sem ação.
+- O botão é um **link** (`<a>`) com a aparência de `.button-primary`, porque leva a outra tela. Nos testes ele é achado por `getByRole('link')`.
+- Classe nova `.trail-continue` em `src/index.css`, só com tokens. Nenhuma dependência nova.
+**Problemas e pendências:** o espaço vertical do cabeçalho ficou um pouco grande (indicador, botão e filtro), assunto de polimento. O servidor
+de desenvolvimento foi iniciado e encerrado pelo próprio Playwright; o teste temporário das capturas foi apagado (a F43 fará o script oficial).
+**Próximo turno:** F32 · Reiniciar progresso (usa `resetProgress` de `src/progress/progress.ts`; precisa de confirmação acessível e de atualizar o
+estado da `HomeScreen`, que hoje lê o progresso uma vez só, com `useMemo`).

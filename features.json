@@ -347,7 +347,7 @@
       "Teste e2e: numa primeira visita o botão diz 'Começar' e leva à Italiana",
       "Teste e2e: com a Italiana concluída, o botão leva à próxima abertura da trilha"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F32",

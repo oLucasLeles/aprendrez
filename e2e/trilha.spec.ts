@@ -97,3 +97,58 @@ test('o filtro não muda o indicador geral de progresso e funciona pelo teclado'
   await expect(page.getByRole('heading', { level: 3 })).toHaveText(['Defesa Escandinava'])
   await expect(page.getByText('0 de 2 aberturas concluídas')).toBeVisible()
 })
+
+// Botão principal "Começar" / "Continuar de onde parei" (F31, SPEC 10.1).
+
+test('na primeira visita o botão diz "Começar" e leva à Italiana', async ({ page }) => {
+  await page.goto('/')
+  const botao = page.getByRole('link', { name: 'Começar' })
+  await expect(botao).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Continuar de onde parei' })).toHaveCount(0)
+
+  await botao.click()
+  await expect(page).toHaveURL('/abertura/italiana')
+  await expect(page.getByText('Abertura: Italiana (Giuoco Piano)')).toBeVisible()
+})
+
+test('com a Italiana concluída, o botão leva à próxima abertura da trilha', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'aprendrez:progresso',
+      JSON.stringify({ version: 1, openings: { italiana: { stages: [0, 1, 2, 3, 4, 5], completed: true } } }),
+    )
+  })
+  await page.goto('/')
+  await expect(page.getByRole('link', { name: 'Começar', exact: true })).toHaveCount(0)
+
+  await page.getByRole('link', { name: 'Continuar de onde parei' }).click()
+  await expect(page).toHaveURL('/abertura/escandinava')
+  await expect(page.getByText('Abertura: Defesa Escandinava')).toBeVisible()
+})
+
+test('com uma abertura em andamento, o botão volta a ela, na etapa certa', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem(
+      'aprendrez:progresso',
+      JSON.stringify({ version: 1, openings: { italiana: { stages: [0, 1], completed: false } } }),
+    )
+  })
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Continuar de onde parei' }).click()
+  await expect(page).toHaveURL('/abertura/italiana')
+  // A lição abre na primeira etapa não concluída: "Praticar com guia".
+  await expect(page.getByRole('navigation', { name: /etapas/i }).locator('[aria-current="step"]')).toContainText('Praticar com guia')
+})
+
+test('com tudo concluído, o botão oferece rever desde o início', async ({ page }) => {
+  await page.addInitScript(() => {
+    const done = { stages: [0, 1, 2, 3, 4, 5], completed: true }
+    window.localStorage.setItem(
+      'aprendrez:progresso',
+      JSON.stringify({ version: 1, openings: { italiana: done, escandinava: done } }),
+    )
+  })
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Rever desde o início' }).click()
+  await expect(page).toHaveURL('/abertura/italiana')
+})
