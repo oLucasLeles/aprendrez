@@ -282,7 +282,7 @@
       "Depende do conteúdo da Escandinava (F26)",
       "Teste e2e: em /abertura/escandinava as pretas aparecem embaixo e o lance 1. e4 já aparece jogado na prática com guia"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F26",

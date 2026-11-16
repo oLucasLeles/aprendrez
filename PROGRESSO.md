@@ -700,3 +700,27 @@ regenerado com a nova abertura.
   arquivos). Isso já estava anotado na F09 e se resolve quando houver um catálogo com a ordem oficial.
 **Próximo turno:** F25 · Aberturas de pretas (agora desbloqueada). Hoje a etapa Praticar do `LessonScreen.tsx` nunca foi exercitada
 com abertura de pretas no navegador: confira que o tabuleiro fica invertido em todas as etapas e que o `1.e4` já aparece jogado.
+
+## Turno 2026-11-16 01:40 · [F25] Aberturas de pretas
+**Status:** concluída
+**O que fiz:** Conferi que as aberturas de pretas funcionam na lição, usando a Defesa Escandinava (F26). O código já estava
+certo: o tabuleiro vem com as pretas embaixo em todas as etapas (o `Board` recebe `opening.color` como orientação) e, na
+prática, como a árvore começa com o `1.e4` das brancas, o motor da lição trata esse lance como "vez do adversário" e o app o
+joga sozinho depois de 400 ms. Por isso **não precisei mudar nenhum código do app**; o trabalho foi escrever o teste que prova
+isso: `e2e/licao-pretas.spec.ts` (desktop e celular). Ele confere pretas embaixo em Conhecer, Assistir, Praticar com guia e
+Praticar sozinho, o `1. e4` já jogado (peão em e4, e2 vazia), o guia no peão de d7 com a seta, e que jogar `1...d5` é aceito e as
+brancas respondem `2. exd5`. Capturas olhadas: `docs/capturas/f25-guia-desktop.png` e `f25-guia-celular.png`.
+**Decisões:**
+- Para saber que as pretas estão embaixo, o teste confere duas coisas: o nome acessível do tabuleiro ("pretas embaixo") e a
+  posição na tela (a casa e8 fica abaixo da e1). Assim o teste não depende só do texto.
+- Para a etapa Praticar sozinho, usei `?etapa=desafio` (só no desenvolvimento, da F23) e cliquei em "Praticar sozinho" no
+  indicador de etapas (F24), em vez de jogar tudo de novo.
+- Não testei Variações nem Desafio com a Escandinava no navegador; usam o mesmo código de prática, já coberto pelos testes da Italiana.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- A lista de lances usa `formatMoveList(..., 'white')`, o que está certo porque a árvore sempre começa no lance das brancas
+  (inclusive o assumido). Se um dia houver conteúdo cuja árvore comece em outro ponto, isso precisa ser revisto.
+- O nome da lição ainda aparece como "Lição / Abertura: Defesa Escandinava"; o texto final de cabeçalho é assunto de polimento.
+- Subi o servidor de desenvolvimento para as capturas e o encerrei no fim do turno.
+**Próximo turno:** F27 · Tela de conclusão (hoje `ConclusionScreen.tsx` é só um esqueleto da F23). Vai precisar da "próxima abertura
+da trilha": hoje só há 2 aberturas (Italiana e Escandinava, ambas nível 1) e a ordem oficial da trilha ainda não existe num catálogo.
