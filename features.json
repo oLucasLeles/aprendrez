@@ -55,7 +55,7 @@
       "Os tipos existem em src/chess/ e são usados por um exemplo de teste",
       "Testes de unidade cobrem as funções de linha principal, de variações e de caminho com uma árvore de exemplo"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F06",

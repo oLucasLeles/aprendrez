@@ -119,3 +119,35 @@ e mais alguns casos de borda (nome inexistente, sequência curta demais, linha q
 então não houve captura de tela.
 **Próximo turno:** F05 · Modelo de dados da árvore de abertura (tipos em `src/chess/`
 e funções para percorrer a árvore).
+
+## Turno 2026-11-15 21:05 · [F05] Modelo de dados da árvore de abertura
+**Status:** concluída
+**O que fiz:** Criei `src/chess/openingTree.ts` com os tipos de uma abertura (`Opening`)
+e de cada lance da árvore (`OpeningNode`: lance em SAN, de quem é, explicação, dica,
+erros comuns, nome da variação e filhos). Também fiz as funções para percorrer a
+árvore: `getMainLine` (linha principal), `getVariations` (lista de variações),
+`getPathToNode` (caminho até um nó) e `findNodePath` (segue uma lista de lances).
+Os testes em `src/chess/openingTree.test.ts` usam uma abertura de exemplo de pretas,
+com duas variações e uma alternativa da pessoa, para mostrar que só galhos do
+adversário contam como variação.
+**Decisões:**
+- **O primeiro filho de cada nó é sempre a linha principal.** Os demais filhos de um
+  lance do adversário são variações. Assim a ordem dos filhos no arquivo de conteúdo
+  já diz qual é a linha principal, sem precisar de um campo extra.
+- **A árvore começa na posição inicial e inclui o lance assumido** (por exemplo, 1.e4
+  nas aberturas de pretas) como primeiro nó, do adversário. O campo `assumedFirstMove`
+  repete esse lance só para a interface saber qual lance o app joga sozinho. Assim
+  toda linha pode ser comparada direto com a base do Lichess no validador (F06).
+- `tree` é uma lista com os primeiros lances possíveis (em vez de um nó raiz vazio),
+  para não precisar inventar um "lance falso" para a posição inicial.
+- A notação em português (Cf3, Bc4…) não fica no conteúdo: os dados guardam SAN
+  (notação inglesa) e a conversão vem na F07.
+- Uma variação dentro de outra variação também aparece em `getVariations`, com o
+  caminho completo até ela. A linha de uma variação = caminho até o desvio + sempre o
+  primeiro filho depois dele.
+- Nenhuma dependência nova.
+**Problemas e pendências:** nenhum. Funcionalidade só de lógica, sem interface, então
+não houve captura de tela. Não existe Python nesta máquina; usei só Node para editar.
+**Próximo turno:** F06 · Validador automático do conteúdo (usa `Opening`/`getMainLine`/
+`getVariations` daqui, `chess.js` e `startsWithNamedOpening` da F04). O validador deve
+tratar `by: 'user'` com mais de um filho como alternativa (só permitida em `kind: 'system'`).
