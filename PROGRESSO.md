@@ -928,7 +928,7 @@ da base com **exatamente** o nome escolhido em `lichessName`.
 **Status:** concluída
 **O que fiz:** Criei `src/content/openings/espanhola.ts`, a quarta abertura (brancas, nível 2, linha fixa). A linha principal é
 `1.e4 e5 2.Cf3 Cc6 3.Bb5 a6 4.Ba4 Cf6 5.O-O Be7 6.Te1 b5 7.Bb3 d6 8.c3 O-O` (8 lances de cada lado). Cada lance das brancas tem explicação e
-dica, e há erros comuns em 6 lances (`Qh5`, `Nxe5`, `Bxc6`, `a3`, `Bxb5` e o `Nxe5` do lance 3). Há 2 variações das pretas: `6...d6` (antes de `b5`) e
+dica, e há erros comuns em 5 lances (`Qh5`, `Nxe5`, `Bxc6`, `a3` e `Bxb5`). Há 2 variações das pretas: `6...d6` (antes de `b5`) e
 `7...O-O` (rocam antes de `d6`, chegando à mesma posição da linha principal). O validador (F06) pegou o arquivo sozinho e passou, e
 `docs/ABERTURAS.md` foi regenerado (agora com 4 aberturas). Teste novo: `e2e/licao-espanhola.spec.ts` (desktop e celular): linha principal
 inteira, lance legal fora do roteiro (`Bc4`) com "Voltar", erro comum `Bxb5` com a explicação específica, as duas variações na etapa Variações e a
