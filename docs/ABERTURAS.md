@@ -402,3 +402,76 @@
   - Dica: Leve o cavalo de f6 para a casa central de d5, de onde ele fica de frente para o cavalo branco.
 - **10... Dxe7**: Você recaptura o bispo com a dama, que fica bem colocada em e7. Daqui você prepara a troca de cavalos e o avanço do peão de e5, que solta o seu jogo.
   - Dica: Recapture o bispo branco que acabou de capturar o seu, usando a dama.
+
+---
+
+## Gambito da Dama
+
+- **Cor:** Brancas
+- **Nível:** 3 · Desafio
+- **Tipo:** Linha fixa
+- **Nome na base do Lichess:** Queen's Gambit
+
+**Ideia:** Você oferece um peão com o lance c4 (isso se chama gambito) para tirar o peão preto do centro. Se as pretas aceitarem, você recupera o peão logo depois; se recusarem, você desenvolve as peças e pressiona o centro.
+
+**Ideias-chave:**
+
+- O peão de c4 não é um sacrifício de verdade: se as pretas o capturarem, o seu bispo o recupera em poucos lances.
+- Os dois cavalos e o bispo da dama saem rápido e miram o centro. O bispo em g5 pressiona o cavalo de f6, que protege o peão de d5.
+- O peão de e3 sustenta o centro e abre o caminho do bispo do rei, que vai para d3 e depois captura em c4.
+
+### Linha principal
+
+`1. d4 d5 2. c4 e6 3. Cc3 Cf6 4. Bg5 Be7 5. e3 O-O 6. Cf3 Cbd7 7. Tc1 c6 8. Bd3 dxc4 9. Bxc4 Cd5`
+
+- **1. d4**: O peão da dama avança duas casas e ocupa o centro (as casas do meio do tabuleiro). É o primeiro passo do gambito e libera o bispo da dama e a dama para entrarem em jogo.
+  - Dica: Ocupe o centro avançando duas casas o peão que fica na frente da dama.
+  - Erro comum, f3: Esse peão não ocupa o centro e ainda enfraquece a diagonal do seu rei. O peão de d4 faz o mesmo trabalho no centro sem criar esse buraco.
+- **2. c4**: Esse é o gambito (a oferta de um peão): o peão de c4 ataca o peão preto de d5 para tentar tirá-lo do centro. Se as pretas o capturarem, você recupera o peão logo depois.
+  - Dica: Ataque o peão de d5 avançando duas casas o peão ao lado do peão da dama.
+  - Erro comum, Bf4: É um lance jogável, mas é outra abertura (o Sistema Londres, que também está no Aprendrez). Ele deixa de lado o peão de c4, que é o que dá nome ao gambito.
+- **3. Cc3**: O cavalo da dama sai para c3 e aumenta a pressão sobre o centro: ele vigia a casa d5 e a casa e4. Cavalos costumam ser desenvolvidos antes dos bispos.
+  - Dica: Desenvolva o cavalo da dama para uma casa que ajude a pressionar o peão preto de d5.
+  - Erro comum, cxd5: Capturar já é jogável (é a chamada Variante da Troca), mas resolve a tensão do centro cedo demais. Aqui o plano é manter a pressão sobre o peão de d5 e desenvolver as peças primeiro.
+- **4. Bg5**: O bispo da dama sai para fora da corrente de peões e pressiona o cavalo de f6, que é quem protege o peão de d5. Quanto mais pressão sobre esse cavalo, mais frágil fica o centro preto.
+  - Dica: Desenvolva o bispo da dama para uma casa que pressione o cavalo preto, antes de trancá-lo com o peão de e3.
+  - Erro comum, a3: Esse peão da borda não desenvolve nenhuma peça e não pressiona o centro. É um lance lento no momento em que você ainda tem peças para tirar de casa.
+- **5. e3**: O peão de e3 apoia o centro e abre a diagonal do bispo do rei, que vai sair para d3. Como o bispo da dama já está fora, ele não corre o risco de ficar trancado atrás dos peões.
+  - Dica: Apoie o centro e abra caminho para o bispo do rei avançando o peão do rei uma casa.
+  - Erro comum, Bxf6: Trocar o bispo pelo cavalo agora é jogável, mas você entrega cedo uma peça que estava pressionando o centro, antes de terminar de desenvolver as outras. Vale mais manter a pressão por enquanto.
+- **6. Cf3**: O cavalo do rei sai e protege o seu peão de d4, além de vigiar o centro. Agora você já tem os dois cavalos e o bispo da dama fora de casa, e falta pouco para rocar.
+  - Dica: Desenvolva o cavalo do rei, de modo que ele vigie o centro e proteja o seu peão de d4.
+- **7. Tc1**: A torre vai para a coluna c, onde fica pronta para agir quando essa coluna se abrir. Se as pretas capturarem em c4, ela passa a olhar direto para o lado delas.
+  - Dica: Leve a torre do canto da dama para a coluna do seu peão de gambito.
+- **8. Bd3**: O bispo do rei sai para d3, uma casa ativa de onde ele aponta para o lado do rei preto. Se as pretas capturarem o peão de c4, é esse bispo que o recupera.
+  - Dica: Desenvolva o bispo do rei para uma casa ativa da diagonal que olha para o lado do rei preto.
+- **9. Bxc4**: Você recupera o peão que ofereceu no começo e o bispo chega a uma casa ativa. O gambito cumpriu o plano: você ficou com bom espaço no centro e as suas peças estão bem colocadas.
+  - Dica: Recupere o peão que você ofereceu no começo, usando o bispo.
+
+### Variações
+
+#### Pretas jogam dxc4 em vez de e6
+
+`1. d4 d5 2. c4 dxc4 3. Cf3 Cf6 4. e3 e6 5. Bxc4 c5 6. O-O a6`
+
+- **3. Cf3**: As pretas aceitaram o peão, mas você não precisa correr para pegá-lo de volta: ele não consegue ficar protegido por muito tempo. Primeiro você desenvolve o cavalo do rei.
+  - Dica: Em vez de recapturar já, desenvolva o cavalo do lado do rei.
+- **4. e3**: O peão de e3 abre a diagonal do bispo do rei, que vai recuperar o peão de c4. Ao mesmo tempo ele sustenta o seu centro.
+  - Dica: Abra o caminho do bispo do rei avançando o peão do rei uma casa.
+- **5. Bxc4**: Agora o bispo recupera o peão do gambito e fica numa casa ativa. Você devolveu o equilíbrio de peões e ficou com mais espaço no centro.
+  - Dica: Recupere o peão do gambito com o bispo do rei.
+- **6. O-O**: Você faz o roque (o rei vai para o canto e a torre vem para perto do centro). O rei fica seguro e as suas peças estão todas em jogo.
+  - Dica: Coloque o rei em segurança com o roque curto.
+
+#### Pretas jogam c6 em vez de e6
+
+`1. d4 d5 2. c4 c6 3. Cf3 Cf6 4. Cc3 dxc4 5. a4 Bf5 6. e3 e6`
+
+- **3. Cf3**: As pretas protegem o peão de d5 com o peão de c6, em vez de usar o peão de e6. Você continua o plano de sempre: desenvolver o cavalo do rei, que vigia o centro.
+  - Dica: Desenvolva o cavalo do lado do rei, numa casa que vigie o centro.
+- **4. Cc3**: O cavalo da dama sai para c3 e aumenta a pressão sobre o peão preto de d5. Agora os seus dois cavalos estão mirando o centro.
+  - Dica: Desenvolva o cavalo da dama para uma casa que pressione o peão preto de d5.
+- **5. a4**: As pretas capturaram o peão. Antes de recuperá-lo, você impede o avanço do peão de b5: se elas conseguissem protegê-lo com ele, seria bem mais difícil pegar o peão de c4 de volta.
+  - Dica: Impeça as pretas de proteger o peão capturado com o peão de b5, usando o peão da torre da dama.
+- **6. e3**: O peão de e3 abre a diagonal do bispo do rei, que vai recuperar o peão de c4 em seguida. Ao mesmo tempo ele sustenta o seu centro.
+  - Dica: Abra o caminho do bispo do rei avançando o peão do rei uma casa.

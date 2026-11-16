@@ -6,7 +6,7 @@ test('mostra os cartões das aberturas que têm conteúdo, nos níveis certos', 
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1, name: 'Aprendrez' })).toBeVisible()
   await expect(page.getByText('Aprenda aberturas de xadrez jogando.')).toBeVisible()
-  await expect(page.getByText('0 de 6 aberturas concluídas')).toBeVisible()
+  await expect(page.getByText('0 de 7 aberturas concluídas')).toBeVisible()
 
   // Nível 1 tem a Italiana, o Sistema Londres e a Escandinava (nesta ordem, a da trilha).
   // Os níveis sem conteúdo nem aparecem.
@@ -16,7 +16,7 @@ test('mostra os cartões das aberturas que têm conteúdo, nos níveis certos', 
     'Sistema Londres',
     'Defesa Escandinava',
   ])
-  // O nível 2 aparece com a Espanhola, a Caro-Kann e o Gambito da Dama Recusado; o nível 3 ainda não tem conteúdo.
+  // O nível 2 tem a Espanhola, a Caro-Kann e o Gambito da Dama Recusado; o nível 3, o Gambito da Dama.
   const nivel2 = page.getByRole('region', { name: /Construindo repertório/ })
   await expect(nivel2.getByRole('heading', { level: 3 })).toHaveText(['Espanhola (Ruy Lopez)', 'Defesa Caro-Kann', 'Gambito da Dama Recusado'])
   await expect(nivel2.getByRole('link', { name: 'Espanhola (Ruy Lopez)' })).toHaveAttribute('href', '/abertura/espanhola')
@@ -31,7 +31,12 @@ test('mostra os cartões das aberturas que têm conteúdo, nos níveis certos', 
   await expect(gambito.getByRole('link', { name: 'Gambito da Dama Recusado' })).toHaveAttribute('href', '/abertura/gambito-da-dama-recusado')
   await expect(gambito.getByText('Pretas')).toBeVisible()
   await expect(gambito.getByText('Não iniciada')).toBeVisible()
-  await expect(page.getByRole('heading', { level: 2, name: /Desafio/ })).toHaveCount(0)
+  const nivel3 = page.getByRole('region', { name: /Desafio/ })
+  await expect(nivel3.getByRole('heading', { level: 3 })).toHaveText(['Gambito da Dama'])
+  const gambitoDaDama = nivel3.getByRole('listitem').filter({ hasText: 'Gambito da Dama' })
+  await expect(gambitoDaDama.getByRole('link', { name: 'Gambito da Dama' })).toHaveAttribute('href', '/abertura/gambito-da-dama')
+  await expect(gambitoDaDama.getByText('Brancas')).toBeVisible()
+  await expect(gambitoDaDama.getByText('Não iniciada')).toBeVisible()
 
   // Cada cartão: cor em texto, status, ideia em uma frase, mini-tabuleiro e link para a lição.
   const italiana = nivel1.getByRole('listitem').filter({ hasText: 'Italiana (Giuoco Piano)' })
@@ -75,7 +80,7 @@ test('uma abertura concluída aparece como concluída e entra na contagem', asyn
     )
   })
   await page.goto('/')
-  await expect(page.getByText('1 de 6 aberturas concluídas')).toBeVisible()
+  await expect(page.getByText('1 de 7 aberturas concluídas')).toBeVisible()
   await expect(page.getByRole('listitem').filter({ hasText: 'Defesa Escandinava' }).getByText('Concluída')).toBeVisible()
 })
 
@@ -96,7 +101,7 @@ test('o filtro "Pretas" mostra só aberturas de pretas, e "Todas" volta a mostra
   // Começa em "Todas", com o estado anunciado.
   await expect(filtro.getByRole('button', { name: 'Todas' })).toHaveAttribute('aria-pressed', 'true')
   await expect(filtro.getByRole('button', { name: 'Pretas' })).toHaveAttribute('aria-pressed', 'false')
-  await expect(titulos).toHaveText(['Italiana (Giuoco Piano)', 'Sistema Londres', 'Defesa Escandinava', 'Espanhola (Ruy Lopez)', 'Defesa Caro-Kann', 'Gambito da Dama Recusado'])
+  await expect(titulos).toHaveText(['Italiana (Giuoco Piano)', 'Sistema Londres', 'Defesa Escandinava', 'Espanhola (Ruy Lopez)', 'Defesa Caro-Kann', 'Gambito da Dama Recusado', 'Gambito da Dama'])
 
   await filtro.getByRole('button', { name: 'Pretas' }).click()
   await expect(filtro.getByRole('button', { name: 'Pretas' })).toHaveAttribute('aria-pressed', 'true')
@@ -104,10 +109,10 @@ test('o filtro "Pretas" mostra só aberturas de pretas, e "Todas" volta a mostra
   await expect(titulos).toHaveText(['Defesa Escandinava', 'Defesa Caro-Kann', 'Gambito da Dama Recusado'])
 
   await filtro.getByRole('button', { name: 'Brancas' }).click()
-  await expect(titulos).toHaveText(['Italiana (Giuoco Piano)', 'Sistema Londres', 'Espanhola (Ruy Lopez)'])
+  await expect(titulos).toHaveText(['Italiana (Giuoco Piano)', 'Sistema Londres', 'Espanhola (Ruy Lopez)', 'Gambito da Dama'])
 
   await filtro.getByRole('button', { name: 'Todas' }).click()
-  await expect(titulos).toHaveText(['Italiana (Giuoco Piano)', 'Sistema Londres', 'Defesa Escandinava', 'Espanhola (Ruy Lopez)', 'Defesa Caro-Kann', 'Gambito da Dama Recusado'])
+  await expect(titulos).toHaveText(['Italiana (Giuoco Piano)', 'Sistema Londres', 'Defesa Escandinava', 'Espanhola (Ruy Lopez)', 'Defesa Caro-Kann', 'Gambito da Dama Recusado', 'Gambito da Dama'])
 })
 
 test('o filtro não muda o indicador geral de progresso e funciona pelo teclado', async ({ page }) => {
@@ -116,7 +121,7 @@ test('o filtro não muda o indicador geral de progresso e funciona pelo teclado'
   await page.keyboard.press('Enter')
   await expect(page.getByRole('button', { name: 'Pretas' })).toHaveAttribute('aria-pressed', 'true')
   await expect(page.getByRole('heading', { level: 3 })).toHaveText(['Defesa Escandinava', 'Defesa Caro-Kann', 'Gambito da Dama Recusado'])
-  await expect(page.getByText('0 de 6 aberturas concluídas')).toBeVisible()
+  await expect(page.getByText('0 de 7 aberturas concluídas')).toBeVisible()
 })
 
 // Botão principal "Começar" / "Continuar de onde parei" (F31, SPEC 10.1).
@@ -166,7 +171,7 @@ test('com tudo concluído, o botão oferece rever desde o início', async ({ pag
     const done = { stages: [0, 1, 2, 3, 4, 5], completed: true }
     window.localStorage.setItem(
       'aprendrez:progresso',
-      JSON.stringify({ version: 1, openings: { italiana: done, londres: done, escandinava: done, espanhola: done, 'caro-kann': done, 'gambito-da-dama-recusado': done } }),
+      JSON.stringify({ version: 1, openings: { italiana: done, londres: done, escandinava: done, espanhola: done, 'caro-kann': done, 'gambito-da-dama-recusado': done, 'gambito-da-dama': done } }),
     )
   })
   await page.goto('/')
@@ -197,7 +202,7 @@ async function comProgressoSalvo(page: import('@playwright/test').Page) {
 test('cancelar a confirmação mantém o progresso', async ({ page }) => {
   await comProgressoSalvo(page)
   await page.goto('/')
-  await expect(page.getByText('1 de 6 aberturas concluídas')).toBeVisible()
+  await expect(page.getByText('1 de 7 aberturas concluídas')).toBeVisible()
 
   await page.getByRole('button', { name: 'Reiniciar progresso' }).click()
   const janela = page.getByRole('dialog', { name: 'Reiniciar progresso?' })
@@ -205,12 +210,12 @@ test('cancelar a confirmação mantém o progresso', async ({ page }) => {
   await janela.getByRole('button', { name: 'Cancelar' }).click()
 
   await expect(janela).toBeHidden()
-  await expect(page.getByText('1 de 6 aberturas concluídas')).toBeVisible()
+  await expect(page.getByText('1 de 7 aberturas concluídas')).toBeVisible()
   await expect(page.getByRole('listitem').filter({ hasText: 'Italiana (Giuoco Piano)' }).getByText('Concluída')).toBeVisible()
   await expect(page.getByRole('listitem').filter({ hasText: 'Defesa Escandinava' }).getByText('Em andamento')).toBeVisible()
   // Também continua salvo no navegador depois de recarregar.
   await page.reload()
-  await expect(page.getByText('1 de 6 aberturas concluídas')).toBeVisible()
+  await expect(page.getByText('1 de 7 aberturas concluídas')).toBeVisible()
 })
 
 test('confirmar apaga tudo e os cartões voltam a "não iniciada"', async ({ page }) => {
@@ -222,8 +227,8 @@ test('confirmar apaga tudo e os cartões voltam a "não iniciada"', async ({ pag
   await page.getByRole('dialog', { name: 'Reiniciar progresso?' }).getByRole('button', { name: 'Apagar progresso' }).click()
 
   await expect(page.getByRole('dialog')).toHaveCount(0)
-  await expect(page.getByText('0 de 6 aberturas concluídas')).toBeVisible()
-  await expect(page.getByText('Não iniciada')).toHaveCount(6)
+  await expect(page.getByText('0 de 7 aberturas concluídas')).toBeVisible()
+  await expect(page.getByText('Não iniciada')).toHaveCount(7)
   await expect(page.getByText('Concluída', { exact: true })).toHaveCount(0)
   await expect(page.getByText('Em andamento', { exact: true })).toHaveCount(0)
   // O botão principal volta a ser o da primeira visita.
@@ -231,7 +236,7 @@ test('confirmar apaga tudo e os cartões voltam a "não iniciada"', async ({ pag
 
   // E o navegador não guarda mais nada: recarregar continua zerado.
   await page.reload()
-  await expect(page.getByText('0 de 6 aberturas concluídas')).toBeVisible()
+  await expect(page.getByText('0 de 7 aberturas concluídas')).toBeVisible()
   const guardado = await page.evaluate(() => window.localStorage.getItem('aprendrez:progresso'))
   expect(guardado).toBeNull()
 })
@@ -249,5 +254,5 @@ test('a confirmação funciona pelo teclado: foco em "Cancelar", Esc cancela e o
   await page.keyboard.press('Escape')
   await expect(janela).toBeHidden()
   await expect(abrir).toBeFocused()
-  await expect(page.getByText('1 de 6 aberturas concluídas')).toBeVisible()
+  await expect(page.getByText('1 de 7 aberturas concluídas')).toBeVisible()
 })

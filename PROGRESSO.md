@@ -1007,3 +1007,34 @@ na trilha (nível 2). Capturas olhadas: `docs/capturas/f37-desktop.png` e `f37-c
 - Um `cd` para `data/lichess-openings` deslocou a pasta de trabalho do shell no meio do turno (acontece em turnos anteriores também); voltei à raiz e nada foi alterado lá.
 **Próximo turno:** F38 · Conteúdo: Gambito da Dama (brancas, nível 3; id `gambito-da-dama`, já em `TRAIL_ORDER`). Lembre de regenerar `docs/ABERTURAS.md` e de atualizar `e2e/trilha.spec.ts`
 (contagem "de 6", lista de cartões e filtro "Brancas"; o nível 3 passa a aparecer na trilha), porque ele escreve o número de aberturas no código.
+
+## Turno 2026-11-16 00:20 · [F38] Conteúdo: Gambito da Dama
+**Status:** concluída
+**O que fiz:** Criei `src/content/openings/gambito-da-dama.ts`, a sétima abertura (brancas, nível 3, linha fixa). A linha principal é
+`1.d4 d5 2.c4 e6 3.Cc3 Cf6 4.Bg5 Be7 5.e3 O-O 6.Cf3 Cbd7 7.Tc1 c6 8.Bd3 dxc4 9.Bxc4 Cd5` (9 lances de cada lado). Cada lance das brancas tem explicação e dica, e há
+erros comuns em 5 lances (`f3`, `Bf4`, `cxd5`, `a3` e `Bxf6`). Há 2 variações das pretas, as outras respostas mais comuns ao 2.c4: `2...dxc4` (aceitam o gambito, e você
+recupera o peão com `Bxc4`) e `2...c6` (Defesa Eslava, onde `a4` impede o `b5`). O validador (F06) pegou o arquivo sozinho e passou, e `docs/ABERTURAS.md` foi regenerado (agora
+com 7 aberturas). Teste novo: `e2e/licao-gambito-da-dama.spec.ts` (desktop e celular): linha principal inteira, lance legal fora do roteiro (`1.e4`) com "Voltar", erro comum
+`Bf4` com a explicação específica, a etapa Variações e a abertura na trilha (nível 3, brancas embaixo). Capturas olhadas: `docs/capturas/f38-*.png` (lição e trilha, 1440 px e 375 px).
+**Decisões:**
+- **Nome na base do Lichess: `Queen's Gambit`** (a entrada `1.d4 d5 2.c4`). É o único nome que as três linhas têm em comum, porque as variações desviam já no segundo lance das pretas.
+  As entradas mais longas (`Queen's Gambit Declined: Modern Variation`, `Queen's Gambit Accepted: …`) têm nomes de outras famílias, e o validador pede um nome só por abertura.
+- **A linha principal é a mesma posição do Gambito da Dama Recusado (F37), vista do lado das brancas.** A SPEC põe as duas na trilha (nível 2 para as pretas, nível 3 para as brancas),
+  e a resposta mais comum ao gambito é recusá-lo com `e6`. Parei em `9...Cd5` (antes de `10.Bxe7 Dxe7 11.O-O`) para a linha ficar com 9 lances de cada lado.
+- **Variações curtas, que terminam num lance do adversário** (`6...a6` e `6...e6`), como nas outras aberturas, para não afirmar teoria que não conferi. Não pedi ao motor de xadrez para
+  conferir se são as melhores jogadas; os lances são os da teoria clássica de cada defesa e o validador garante que são legais.
+- **Atualizei `e2e/trilha.spec.ts`** para acompanhar o conteúdo novo: "de 6" virou "de 7", "Não iniciada" são 7, o filtro "Brancas" passou a incluir o Gambito da Dama, e o nível 3 ("Desafio")
+  agora aparece na trilha (antes o teste conferia que ele não aparecia; troquei por checagens do cartão novo). O teste de "tudo concluído" marca também `gambito-da-dama`. Não removi nem enfraqueci checagem nenhuma.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- **Teste instável (visto uma vez):** na primeira rodada de `npm run verificar` deste turno, `e2e/licao-variacoes.spec.ts` (celular) falhou: depois de "Continuar" para "Praticar sozinho" a lista de lances
+  seguia em "Nenhum lance ainda." (um clique do teste parece ter se perdido). Rodei o teste sozinho 3 vezes e a suíte inteira 2 vezes, e passou sempre; não consegui reproduzir nem guardar o rastro da falha.
+  Suspeita (não confirmada): a máquina estava carregada e o clique caiu antes de o tabuleiro estar pronto. Se voltar a acontecer, olhar o `trace.zip` que o Playwright guarda em `test-results/` e considerar
+  esperar o tabuleiro ficar interativo antes do primeiro clique em `playLine`.
+- **Revisão humana do conteúdo** (SPEC, seção 15): os testes garantem lances legais e a ligação com a base, mas não que as explicações ensinam bem. Vale olhar a explicação do `Tc1` (diz que a torre
+  fica pronta para a coluna c se abrir) e a do `Bd3` (diz que ele recupera o peão se as pretas capturarem).
+- As duas variações têm só um trecho curto depois do desvio; nenhuma delas leva a uma posição da linha principal.
+- Os testes e2e reescrevem `docs/capturas/f27-*.png` a cada execução; restaurei esses dois arquivos para não sujar o commit.
+- O shell herdou um `cd` para `data/` no meio do turno (ocorre em turnos anteriores); voltei à raiz e nada foi alterado lá. Subi o servidor de desenvolvimento para as capturas e parei depois.
+**Próximo turno:** F39, a próxima funcionalidade com `passes: false` (provavelmente o conteúdo da Defesa Siciliana; id `siciliana`, já em `TRAIL_ORDER`). Lembre de regenerar `docs/ABERTURAS.md` e de atualizar `e2e/trilha.spec.ts`
+(contagem "de 7", lista de cartões, filtro "Pretas" e "Não iniciada" = 7), porque ele escreve o número de aberturas no código.
