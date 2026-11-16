@@ -357,7 +357,7 @@
     "passos": [
       "Teste e2e: cancelar a confirmação mantém o progresso; confirmar apaga tudo e os cartões voltam a 'não iniciada'"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F33",

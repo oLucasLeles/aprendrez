@@ -152,3 +152,81 @@ test('com tudo concluído, o botão oferece rever desde o início', async ({ pag
   await page.getByRole('link', { name: 'Rever desde o início' }).click()
   await expect(page).toHaveURL('/abertura/italiana')
 })
+
+// Reiniciar progresso (F32, SPEC 10.1).
+
+const PROGRESSO_SALVO = {
+  version: 1,
+  openings: {
+    italiana: { stages: [0, 1, 2, 3, 4, 5], completed: true },
+    escandinava: { stages: [0, 1], completed: false },
+  },
+}
+
+// Grava o progresso só na primeira carga (senão ele voltaria depois de recarregar a página).
+async function comProgressoSalvo(page: import('@playwright/test').Page) {
+  await page.addInitScript((progresso) => {
+    if (!window.sessionStorage.getItem('semeado')) {
+      window.localStorage.setItem('aprendrez:progresso', JSON.stringify(progresso))
+      window.sessionStorage.setItem('semeado', '1')
+    }
+  }, PROGRESSO_SALVO)
+}
+
+test('cancelar a confirmação mantém o progresso', async ({ page }) => {
+  await comProgressoSalvo(page)
+  await page.goto('/')
+  await expect(page.getByText('1 de 2 aberturas concluídas')).toBeVisible()
+
+  await page.getByRole('button', { name: 'Reiniciar progresso' }).click()
+  const janela = page.getByRole('dialog', { name: 'Reiniciar progresso?' })
+  await expect(janela).toBeVisible()
+  await janela.getByRole('button', { name: 'Cancelar' }).click()
+
+  await expect(janela).toBeHidden()
+  await expect(page.getByText('1 de 2 aberturas concluídas')).toBeVisible()
+  await expect(page.getByRole('listitem').filter({ hasText: 'Italiana (Giuoco Piano)' }).getByText('Concluída')).toBeVisible()
+  await expect(page.getByRole('listitem').filter({ hasText: 'Defesa Escandinava' }).getByText('Em andamento')).toBeVisible()
+  // Também continua salvo no navegador depois de recarregar.
+  await page.reload()
+  await expect(page.getByText('1 de 2 aberturas concluídas')).toBeVisible()
+})
+
+test('confirmar apaga tudo e os cartões voltam a "não iniciada"', async ({ page }) => {
+  await comProgressoSalvo(page)
+  await page.goto('/')
+  await expect(page.getByRole('link', { name: 'Continuar de onde parei' })).toBeVisible()
+
+  await page.getByRole('button', { name: 'Reiniciar progresso' }).click()
+  await page.getByRole('dialog', { name: 'Reiniciar progresso?' }).getByRole('button', { name: 'Apagar progresso' }).click()
+
+  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(page.getByText('0 de 2 aberturas concluídas')).toBeVisible()
+  await expect(page.getByText('Não iniciada')).toHaveCount(2)
+  await expect(page.getByText('Concluída', { exact: true })).toHaveCount(0)
+  await expect(page.getByText('Em andamento', { exact: true })).toHaveCount(0)
+  // O botão principal volta a ser o da primeira visita.
+  await expect(page.getByRole('link', { name: 'Começar', exact: true })).toBeVisible()
+
+  // E o navegador não guarda mais nada: recarregar continua zerado.
+  await page.reload()
+  await expect(page.getByText('0 de 2 aberturas concluídas')).toBeVisible()
+  const guardado = await page.evaluate(() => window.localStorage.getItem('aprendrez:progresso'))
+  expect(guardado).toBeNull()
+})
+
+test('a confirmação funciona pelo teclado: foco em "Cancelar", Esc cancela e o foco volta ao botão', async ({ page }) => {
+  await comProgressoSalvo(page)
+  await page.goto('/')
+
+  const abrir = page.getByRole('button', { name: 'Reiniciar progresso' })
+  await abrir.focus()
+  await page.keyboard.press('Enter')
+  const janela = page.getByRole('dialog', { name: 'Reiniciar progresso?' })
+  await expect(janela.getByRole('button', { name: 'Cancelar' })).toBeFocused()
+
+  await page.keyboard.press('Escape')
+  await expect(janela).toBeHidden()
+  await expect(abrir).toBeFocused()
+  await expect(page.getByText('1 de 2 aberturas concluídas')).toBeVisible()
+})

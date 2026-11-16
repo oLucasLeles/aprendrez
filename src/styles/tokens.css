@@ -47,6 +47,7 @@
   --color-focus: var(--palette-red-600);
 
   /* Tabuleiro: dois neutros com bom contraste entre si */
+  --color-overlay: rgb(26 26 26 / 0.5); /* fundo escurecido atrás de uma janela de confirmação */
   --color-board-light: var(--palette-gray-100);
   --color-board-dark: var(--palette-gray-500);
   --color-board-last-move: var(--palette-gray-900); /* contorno do último lance */

@@ -849,3 +849,22 @@ funcionalidade, mais "abertura em andamento volta a ela na etapa certa" e "tudo 
 de desenvolvimento foi iniciado e encerrado pelo próprio Playwright; o teste temporário das capturas foi apagado (a F43 fará o script oficial).
 **Próximo turno:** F32 · Reiniciar progresso (usa `resetProgress` de `src/progress/progress.ts`; precisa de confirmação acessível e de atualizar o
 estado da `HomeScreen`, que hoje lê o progresso uma vez só, com `useMemo`).
+
+## Turno 2026-11-16 03:40 · [F32] Reiniciar progresso
+**Status:** concluída
+**O que fiz:** A tela de Início ganhou o botão **"Reiniciar progresso"** (secundário, no pé da trilha). Ao clicar, abre uma janela de
+confirmação ("Reiniciar progresso?") com **"Cancelar"** e **"Apagar progresso"**. Cancelar não mexe em nada. Confirmar apaga o progresso do
+navegador (`resetProgress`, da F28) e a tela se atualiza na hora: contador volta a "0 de 2", todos os cartões ficam "Não iniciada" e o botão
+principal volta a ser "Começar". Para a tela reagir, o progresso passou de `useMemo` para `useState` em `HomeScreen.tsx`. Testes novos em
+`e2e/trilha.spec.ts` (desktop e celular): cancelar mantém (inclusive depois de recarregar), confirmar apaga (inclusive o `localStorage`) e o
+uso pelo teclado. Capturas olhadas: `docs/capturas/f32-desktop.png` e `f32-celular.png`.
+**Decisões:**
+- Usei o `<dialog>` nativo do navegador com `showModal()`: ele já prende o foco, fecha com Esc e devolve o foco ao botão que abriu. Não
+  precisei de biblioteca. O foco começa em "Cancelar", o lado seguro, porque apagar não tem volta.
+- Novo token `--color-overlay` (fundo escurecido atrás da janela) em `tokens.css`, para não escrever cor em componente.
+- "Apagar progresso" usa o botão de destaque (vermelho), seguindo a regra de que a ação principal da tela tem sempre essa cor.
+- Não há teste de unidade novo: `resetProgress` já era testado na F28 e o resto é interface.
+- Nenhuma dependência nova.
+**Problemas e pendências:** no teste, `getByText('Concluída')` também casava com "aberturas concluídas" (a busca ignora maiúsculas); usei
+`exact: true`. O teste temporário das capturas foi apagado (a F43 fará o script oficial).
+**Próximo turno:** F33 · Página não encontrada (a próxima com `passes: false`).

@@ -405,6 +405,36 @@ textarea {
   font-weight: var(--font-weight-bold);
 }
 
+/* Reiniciar progresso (F32): botão discreto no pé da trilha e janela de confirmação. */
+.trail-reset {
+  margin-bottom: var(--space-6);
+}
+
+.confirm-dialog {
+  max-width: calc(100vw - 2 * var(--space-2));
+  width: 28rem;
+  padding: var(--space-4);
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.confirm-dialog::backdrop {
+  background: var(--color-overlay);
+}
+
+.confirm-dialog h2 {
+  margin-top: 0;
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
 .trail-level {
   margin-bottom: var(--space-6);
   padding-top: var(--space-2);
