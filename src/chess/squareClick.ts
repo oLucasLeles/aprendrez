@@ -76,3 +76,26 @@ export function handleSquareClick(
   if (isSelectable(chess, square, playerColor)) return { selected: square, move: null }
   return { selected: null, move: null }
 }
+
+/** A peça nessa casa pode ser arrastada? (mesma regra da seleção por clique) */
+export function canMovePiece(fen: string, square: string, playerColor?: PlayerColor): boolean {
+  return isSelectable(new Chess(fen), square, playerColor)
+}
+
+/**
+ * O que acontece quando a pessoa solta uma peça arrastada (SPEC, seção 7.2).
+ * Soltar numa casa legal devolve o lance; soltar numa casa ilegal ou fora do
+ * tabuleiro (`to` = null) devolve null, e a peça volta para a casa de origem.
+ */
+export function handleDrop(
+  fen: string,
+  from: string,
+  to: string | null,
+  playerColor?: PlayerColor,
+): ClickMove | null {
+  if (!to) return null
+  if (!getLegalTargets(fen, from, playerColor).includes(to)) return null
+  const chess = new Chess(fen)
+  const move = chess.moves({ square: from as Square, verbose: true }).find((m) => m.to === to)!
+  return { from, to, ...(move.promotion ? { promotion: 'q' } : {}) }
+}

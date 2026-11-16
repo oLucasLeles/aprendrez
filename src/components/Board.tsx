@@ -1,6 +1,13 @@
 import { useState } from 'react'
 import { Chessboard } from 'react-chessboard'
-import { getTargets, handleSquareClick, type ClickMove, type PlayerColor } from '../chess/squareClick'
+import {
+  canMovePiece,
+  getTargets,
+  handleDrop,
+  handleSquareClick,
+  type ClickMove,
+  type PlayerColor,
+} from '../chess/squareClick'
 import { getSquareStyles, type LastMove } from './boardHighlights'
 
 type BoardProps = {
@@ -16,7 +23,7 @@ type BoardProps = {
    * é só para olhar.
    */
   playerColor?: PlayerColor
-  /** Chamado quando a pessoa faz um lance legal clicando. O pai atualiza o `fen`. */
+  /** Chamado quando a pessoa faz um lance legal, clicando ou arrastando. O pai atualiza o `fen`. */
   onMove?: (move: ClickMove) => void
 }
 
@@ -26,7 +33,7 @@ function prefersReducedMotion() {
 }
 
 // Tabuleiro do Aprendrez. Mostra uma posição (F10) e aceita lances por clique
-// (F11); arrastar e teclado chegam nas próximas funcionalidades. As cores das
+// (F11) e por arrastar (F12); o teclado chega numa próxima funcionalidade. As cores das
 // casas vêm dos tokens (src/styles/tokens.css), nunca escritas aqui.
 function Board({ fen, orientation = 'white', lastMove = null, playerColor, onMove }: BoardProps) {
   const label = `Tabuleiro de xadrez, ${orientation === 'white' ? 'brancas' : 'pretas'} embaixo`
@@ -46,6 +53,21 @@ function Board({ fen, orientation = 'white', lastMove = null, playerColor, onMov
     if (result.move) onMove?.(result.move)
   }
 
+  // Arrastar (SPEC, seção 7.2): ao começar a arrastar, marca os destinos legais;
+  // ao soltar, só um lance legal é feito. Devolver false faz a peça voltar à
+  // casa de origem, sem mensagem e sem contar como nada.
+  function onPieceDrag({ square }: { square: string | null }) {
+    if (square) setSelection({ fen, square })
+  }
+
+  function onPieceDrop({ sourceSquare, targetSquare }: { sourceSquare: string; targetSquare: string | null }) {
+    setSelection(null)
+    const move = handleDrop(fen, sourceSquare, targetSquare, playerColor)
+    if (!move) return false
+    onMove?.(move)
+    return true
+  }
+
   return (
     <div className="board" role="group" aria-label={label}>
       <Chessboard
@@ -53,7 +75,11 @@ function Board({ fen, orientation = 'white', lastMove = null, playerColor, onMov
           id: 'aprendrez-board',
           position: fen,
           boardOrientation: orientation,
-          allowDragging: false,
+          allowDragging: interactive,
+          canDragPiece: ({ square }) => (square ? canMovePiece(fen, square, playerColor) : false),
+          onPieceDrag,
+          onPieceDrop,
+          onPieceDragCancel: () => setSelection(null),
           showAnimations: !prefersReducedMotion(),
           animationDurationInMs: 150,
           onSquareClick,

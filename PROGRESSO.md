@@ -327,3 +327,26 @@ Capturas de tela olhadas: `docs/capturas/f11-selecao-desktop.png` e `f11-selecao
 **Próximo turno:** F12 · Lances por arrastar. Reaproveite `getTargets`/`getLegalTargets` de
 `squareClick.ts` para marcar os destinos durante o arrasto e use `onPieceDrop` do `react-chessboard`
 (devolver `false` faz a peça voltar à origem).
+
+## Turno 2026-11-15 21:50 · [F12] Lances por arrastar
+**Status:** concluída
+**O que fiz:** O tabuleiro agora aceita lances por arrastar (SPEC, seção 7.2). Ao começar a arrastar uma
+peça, as casas de destino legais ficam marcadas (a mesma bolinha/anel e o mesmo contorno do clique).
+Ao soltar numa casa legal, o lance é feito; ao soltar numa casa ilegal ou fora do tabuleiro, a peça
+volta para a casa de origem, sem mensagem e sem mudar a vez. A decisão ficou em duas funções puras
+novas em `src/chess/squareClick.ts` (`handleDrop` e `canMovePiece`), testadas com testes de unidade.
+No `Board`, o arrastar só liga quando existe `playerColor` e só deixa pegar peças da pessoa, na vez dela.
+Testes de ponta a ponta novos em `e2e/arrastar.spec.ts` (desktop e celular): e2→e4 faz o lance, e2→e5
+devolve a peça, soltar fora do tabuleiro, peça do adversário e clique ainda funcionando. Capturas de tela
+olhadas: `docs/capturas/f12-arrastando-desktop.png` e `f12-arrastando-celular.png`.
+**Decisões:**
+- Reaproveitei `getLegalTargets` (da F11) dentro de `handleDrop`, então clicar e arrastar seguem exatamente a
+  mesma regra de lance legal. Promoção por arrastar também vira sempre dama, como no clique.
+- A seleção do arrasto usa o mesmo estado da seleção por clique; ao soltar ou cancelar, ela é limpa.
+- Nenhuma dependência nova (as funções de arrastar já vêm no `react-chessboard`).
+**Problemas e pendências:**
+- Os testes de arrastar usam o mouse do Playwright em passos pequenos; num computador muito lento podem
+  precisar de mais passos. Os seletores das casas marcadas dependem do `style` inline, como na F11.
+- Arrastar com o dedo (toque) no celular não foi testado de verdade, só o mouse na largura de 375 px.
+- Teclado ainda não existe (F14).
+**Próximo turno:** F13, a próxima funcionalidade com `passes: false` em `features.json`.

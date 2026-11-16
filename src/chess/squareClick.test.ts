@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { getLegalTargets, getTargets, handleSquareClick } from './squareClick'
+import { canMovePiece, getLegalTargets, getTargets, handleDrop, handleSquareClick } from './squareClick'
 
 const START = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 // Peão branco em e7 prestes a promover (rei branco em a1, rei preto em h8)
@@ -91,5 +91,27 @@ describe('handleSquareClick', () => {
 
   it('a pessoa de pretas não mexe nas peças brancas, mesmo na vez delas', () => {
     expect(handleSquareClick(START, null, 'e2', 'black')).toEqual({ selected: null, move: null })
+  })
+})
+
+describe('arrastar e soltar (F12)', () => {
+  it('soltar numa casa legal devolve o lance', () => {
+    expect(handleDrop(START, 'e2', 'e4', 'white')).toEqual({ from: 'e2', to: 'e4' })
+  })
+
+  it('soltar numa casa ilegal ou fora do tabuleiro devolve null', () => {
+    expect(handleDrop(START, 'e2', 'e5', 'white')).toBeNull()
+    expect(handleDrop(START, 'e2', null, 'white')).toBeNull()
+  })
+
+  it('não deixa arrastar peça do adversário nem fora da vez', () => {
+    expect(handleDrop(START, 'e7', 'e5', 'white')).toBeNull()
+    expect(canMovePiece(START, 'e7', 'white')).toBe(false)
+    expect(canMovePiece(START, 'e2', 'white')).toBe(true)
+    expect(canMovePiece(START, 'e2', 'black')).toBe(false)
+  })
+
+  it('promoção por arrastar vira dama', () => {
+    expect(handleDrop(PROMOTION, 'e7', 'e8', 'white')).toEqual({ from: 'e7', to: 'e8', promotion: 'q' })
   })
 })

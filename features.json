@@ -130,7 +130,7 @@
     "categoria": "Tabuleiro",
     "titulo": "Lances por arrastar",
     "descricao": "Seção 7.2 da SPEC: arrastar marca as casas legais; soltar numa casa legal faz o lance; soltar numa casa ilegal ou fora do tabuleiro devolve a peça à origem, sem mensagem e sem contar como nada.",
-    "passes": false,
+    "passes": true,
     "passos": [
       "Teste e2e: arrastar o peão de e2 para e4 faz o lance",
       "Teste e2e: arrastar o peão de e2 para e5 devolve o peão a e2, sem mensagem e sem mudar a vez"
