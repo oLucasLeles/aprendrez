@@ -99,7 +99,7 @@
       "O script gera o arquivo com a Italiana",
       "Um teste de unidade falha se docs/ABERTURAS.md estiver desatualizado em relação ao conteúdo"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F10",

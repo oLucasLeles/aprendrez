@@ -233,3 +233,28 @@ valida conteúdo real.
 **Próximo turno:** F09 · Gerador do `docs/ABERTURAS.md` (usa `formatMoveList` da F07 para mostrar a
 linha principal e as variações em português; o arquivo gerado precisa ter um teste que falha se estiver
 desatualizado).
+
+## Turno 2026-11-15 21:15 · [F09] Gerador do docs/ABERTURAS.md
+**Status:** concluída
+**O que fiz:** Criei o comando `npm run docs:aberturas`, que gera `docs/ABERTURAS.md` a partir dos
+arquivos de `src/content/openings/`. Para cada abertura o documento mostra cor, nível, tipo, nome na
+base do Lichess, ideia, ideias-chave, linha principal e variações em notação portuguesa, e, lance a lance,
+a explicação, a dica e os erros comuns dos lances da pessoa (é isso que uma pessoa precisa ler para
+revisar o conteúdo). Nos sistemas ainda entra a seção "Alternativas de ordem aceitas", com a justificativa.
+A parte que monta o texto é uma função pura em `src/chess/openingsDoc.ts`; o script
+`scripts/gerar-aberturas.mjs` só carrega o conteúdo e grava o arquivo. O teste
+`src/chess/openingsDoc.test.ts` falha se o arquivo gravado estiver diferente do que o conteúdo gera
+(confirmei: acrescentei uma linha ao documento e o teste falhou; gerei de novo e passou).
+**Decisões:**
+- Os arquivos de conteúdo são TypeScript, então o script usa o próprio Vite (já instalado) para
+  carregá-los. Assim não precisei instalar nada. Nenhuma dependência nova.
+- A ordem no documento segue a trilha: por nível, e dentro do nível pela ordem dos arquivos (alfabética
+  pelo nome do arquivo). Quando existir um catálogo com a ordem oficial da trilha, vale usá-lo aqui.
+- Nas variações, só aparecem os lances da pessoa **depois do desvio**; antes dele a explicação já está
+  na linha principal.
+- Uma "alternativa aceita" é um lance da pessoa que divide o mesmo ponto com o lance principal; a
+  justificativa é a própria explicação do lance alternativo (a SPEC pede uma frase justificando).
+- O teste compara ignorando diferença de fim de linha (CRLF/LF), por causa do Windows.
+**Problemas e pendências:** nenhum. Sem interface, então sem captura de tela. Sempre que o conteúdo
+mudar, lembre de rodar `npm run docs:aberturas` e commitar o arquivo (o teste avisa se esquecer).
+**Próximo turno:** F10, a próxima funcionalidade com `passes: false` em `features.json`.
