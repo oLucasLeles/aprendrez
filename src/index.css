@@ -99,3 +99,9 @@ textarea {
 .page {
   padding-block: var(--space-4);
 }
+
+/* Tabuleiro: quadrado, ocupa a largura disponível até um máximo */
+.board {
+  width: 100%;
+  max-width: 40rem; /* 640 px */
+}

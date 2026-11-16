@@ -49,6 +49,7 @@
   /* Tabuleiro: dois neutros com bom contraste entre si */
   --color-board-light: var(--palette-gray-100);
   --color-board-dark: var(--palette-gray-500);
+  --color-board-last-move: var(--palette-gray-900); /* contorno do último lance */
 
   /* ---------- Tipografia ---------- */
   /* Inter: grotesca sem serifa, licença SIL Open Font License 1.1.

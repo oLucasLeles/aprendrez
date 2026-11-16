@@ -258,3 +258,39 @@ A parte que monta o texto é uma função pura em `src/chess/openingsDoc.ts`; o 
 **Problemas e pendências:** nenhum. Sem interface, então sem captura de tela. Sempre que o conteúdo
 mudar, lembre de rodar `npm run docs:aberturas` e commitar o arquivo (o teste avisa se esquecer).
 **Próximo turno:** F10, a próxima funcionalidade com `passes: false` em `features.json`.
+
+## Turno 2026-11-15 21:40 · [F10] Componente de tabuleiro
+**Status:** concluída
+**O que fiz:** Criei o componente `src/components/Board.tsx`, que mostra uma posição (texto FEN)
+com as brancas ou as pretas embaixo, usa as cores das casas dos tokens e contorna as duas casas do
+último lance. Por baixo ele usa o `react-chessboard`. A parte que monta os estilos das casas
+destacadas ficou separada em `src/components/boardHighlights.ts`, com testes de unidade. Para
+testar no navegador, criei uma página que **só existe no servidor de desenvolvimento**
+(`/dev/tabuleiro?cor=pretas&de=e2&para=e4&fen=...`); ela não vai para o app publicado. Os testes
+em `e2e/tabuleiro.spec.ts` conferem: 32 peças na posição inicial, orientação das pretas, cores das
+casas vindas dos tokens, destaque do último lance e ausência de rolagem horizontal (1440 e 375 px).
+Tirei capturas de tela e olhei: `docs/capturas/f10-*.png`.
+**Decisões:**
+- O último lance é marcado com um **contorno escuro** dentro da casa (novo token
+  `--color-board-last-move`), e não com cor de fundo, para funcionar nas casas claras e escuras e
+  sem usar o vermelho (que é reservado ao guia e à seleção).
+- O tabuleiro não aceita arrastar ainda (`allowDragging: false`); clique e arrastar são F11 e F12.
+- As animações de movimento são desligadas quando o sistema pede "menos movimento".
+- O tabuleiro fica num `div` com `role="group"` e nome "Tabuleiro de xadrez, brancas/pretas
+  embaixo", o que também permite achá-lo nos testes pelo papel.
+- A página de testes é uma rota condicionada a `import.meta.env.DEV`, para os testes e2e
+  poderem escolher orientação, posição e último lance pelo endereço sem criar telas novas.
+- **Licenças:** `react-chessboard` 5.12.1 é **MIT**. As peças vêm embutidas no pacote como SVG.
+  Pelos desenhos (os traços do SVG são os mesmos do conjunto clássico "Cburnett", de Colin M.L.
+  Burnett, usado na Wikipédia e no Lichess), **não consegui confirmar a licença das peças**
+  neste turno (sem consultar a internet). Pelo que sei, esse conjunto é distribuído sob licenças
+  que costumam exigir **atribuição** ao autor (CC BY-SA 3.0, entre outras). Por prudência,
+  **trate como "exige atribuição"**: o rodapé da F42 deve creditar "Peças: Colin M.L. Burnett"
+  com a licença. Isto precisa ser conferido por uma pessoa antes de publicar.
+**Problemas e pendências:**
+- Licença das peças a confirmar (acima). A letra e o número das bordas do tabuleiro (a–h, 1–8) são
+  pequenos; revisar o contraste/tamanho quando a tela da Lição estiver pronta.
+- Um comando `cd` para dentro de `node_modules` me desviou por um instante durante o turno; nada
+  foi alterado lá.
+**Próximo turno:** F11 · Lances por clique. O `Board` ainda não recebe `onSquareClick`; vai precisar
+de props para seleção, casas de destino (`squareStyles`) e de uma peça de `chess.js` para os lances legais.
