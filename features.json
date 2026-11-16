@@ -66,7 +66,7 @@
       "O teste roda dentro de npm run test",
       "Existe um conjunto de exemplos inválidos (só nos testes) e o validador recusa cada um deles com uma mensagem clara: lance ilegal, linha que não bate com a base, dica vazia, alternativa em linha fixa"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F07",

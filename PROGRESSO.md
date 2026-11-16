@@ -151,3 +151,33 @@ não houve captura de tela. Não existe Python nesta máquina; usei só Node par
 **Próximo turno:** F06 · Validador automático do conteúdo (usa `Opening`/`getMainLine`/
 `getVariations` daqui, `chess.js` e `startsWithNamedOpening` da F04). O validador deve
 tratar `by: 'user'` com mais de um filho como alternativa (só permitida em `kind: 'system'`).
+
+## Turno 2026-11-15 21:10 · [F06] Validador automático do conteúdo
+**Status:** concluída
+**O que fiz:** Criei `src/chess/validateOpening.ts`: uma função que recebe uma abertura e
+devolve a lista de problemas encontrados (lista vazia = tudo certo), cada um com uma
+mensagem em português que diz qual lance e depois de quais lances. Ela confere: lances
+legais (com `chess.js`), linhas que começam com uma entrada da base do Lichess, explicação
+e dica nos lances da pessoa, alternativas da pessoa só em sistemas, nome nas variações,
+mínimo de 6 lances de cada lado na linha principal e de 1 a 2 variações. Os testes em
+`src/chess/validateOpening.test.ts` têm uma abertura de exemplo válida e vários exemplos
+inválidos (só nos testes): lance ilegal, linha que não bate com a base, dica vazia e
+alternativa em linha fixa, entre outros. O mesmo arquivo de teste roda o validador sobre
+todos os arquivos de `src/content/openings/` (a pasta ainda está vazia; a primeira
+abertura chega na F08).
+**Decisões:**
+- **Cada arquivo de conteúdo faz `export default` de uma `Opening`.** O teste descobre os
+  arquivos sozinho (`import.meta.glob`), então abrir uma abertura nova já a coloca no
+  validador, sem lista para manter. `index.ts` e `*.test.ts` da pasta são ignorados.
+- O lance precisa estar escrito na forma exata do `chess.js` (inclusive `+` de xeque e `#`
+  de mate), porque a comparação com a base do Lichess é feita lance a lance.
+- Conferências extras, pequenas e baratas: de quem é cada lance bate com a vez e com a cor
+  da abertura; lances repetidos no mesmo ponto; lance assumido das pretas igual ao primeiro
+  nó; erros comuns precisam ser legais, diferentes dos lances ensinados e ter explicação.
+- Contei "variações" com `getVariations` (da F05), então uma variação dentro de outra também conta no limite de 2.
+- Como a base do Lichess é lida do disco, o validador é só para Node (testes e scripts).
+- Nenhuma dependência nova. Sem interface, então sem captura de tela.
+**Problemas e pendências:** enquanto `src/content/openings/` estiver vazia, o teste "conteúdo
+real" não valida nenhuma abertura de verdade (só passa vazio). Criei um `.gitkeep` para a pasta existir no git.
+**Próximo turno:** F07 · Notação em português (SAN → R, D, T, B, C). As mensagens do validador
+usam SAN (inglês); se quiser, a F09 pode trocar por notação portuguesa nos textos para revisão humana.
