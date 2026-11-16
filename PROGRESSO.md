@@ -375,3 +375,36 @@ Capturas olhadas: `docs/capturas/f13-guia-desktop.png` e `f13-guia-celular.png`.
 - O teste da seta lê o `<path>` do SVG da biblioteca (frágil se ela mudar o desenho das setas).
 **Próximo turno:** F14 · Tabuleiro pelo teclado. O `Board` hoje não tem foco nem nome acessível por casa; a
 biblioteca tem `squareRenderer` e `onSquareClick`, que podem ajudar. Lembre de manter o foco visível (token `--color-focus`).
+
+## Turno 2026-11-15 22:15 · [F14] Tabuleiro pelo teclado
+**Status:** concluída
+**O que fiz:** Dá para jogar só com o teclado. Tab leva o foco ao tabuleiro (na casa e2, ou e7 para as pretas),
+as setas movem o foco entre as casas, Enter ou Espaço seleciona a peça e depois a casa de destino (faz o mesmo que
+um clique) e Esc desfaz a seleção. Cada casa virou um botão com nome acessível, como "e2, peão branco" ou
+"e4, vazia" (e "destino possível" nas casas marcadas). O foco aparece como um anel vermelho dentro da casa, afastado
+do contorno da seleção para não se confundirem. A lógica de "para onde vai o foco" e dos nomes ficou em
+`src/chess/keyboard.ts` (com testes de unidade); a interface está em `Board.tsx`; os testes de navegador em
+`e2e/teclado.spec.ts` (desktop e celular). Capturas olhadas: `docs/capturas/f14-teclado-desktop.png` e `f14-teclado-celular.png`.
+**Decisões:**
+- **Só uma casa fica no caminho do Tab** ("foco móvel"): as outras 63 têm `tabindex=-1` e se alcançam pelas setas.
+  Assim a pessoa não precisa apertar Tab 64 vezes.
+- **As setas seguem o que se vê na tela**: com as pretas embaixo, "para cima" vai em direção às brancas.
+- **A biblioteca (react-chessboard) deixa cada peça como um botão que recebe Tab** e tem um sensor de teclado próprio,
+  que disputaria o Enter/Espaço com as casas. Por isso, a cada renderização o `Board` tira as peças do caminho do Tab
+  (`tabindex=-1`, sem papel de botão). Vale também para o tabuleiro só para olhar (sem `playerColor`), que fica sem
+  nenhuma parada de teclado. Foi a saída mais simples sem trocar de biblioteca.
+- Ao usar `squareRenderer` da biblioteca, o desenho padrão da casa deixa de existir; por isso o `Board` aplica os
+  estilos das casas (último lance, seleção, guia, destinos) no próprio botão da casa. Os testes antigos de clique,
+  arrastar e guia continuaram passando sem mudança.
+- Esc só desfaz a seleção; não tira o foco da casa.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- A limpeza das peças mexe em atributos de elementos criados pela biblioteca; se uma atualização dela mudar o
+  `aria-roledescription="draggable"`, o teste "só uma casa fica no caminho do Tab" avisa.
+- 64 botões num leitor de tela é muita coisa para ouvir; não testei com um leitor de verdade, só os nomes e papéis
+  pelos testes. Uma versão em "grade" (`role="grid"`) pode ser melhor depois, mas não está na SPEC.
+- Enquanto uma peça é arrastada com o mouse, o foco do teclado não muda (é esperado).
+- Arrastar com o dedo (toque) continua sem teste de verdade, como na F12.
+- Um comando `cd` para dentro de `node_modules` desviou a pasta de trabalho do shell no meio do turno; voltei à raiz
+  e confirmei que nada foi alterado lá.
+**Próximo turno:** F15 · Motor da lição (lógica pura). Usa `Opening`/`findNodePath` da F05 e `chess.js`; ainda sem interface.

@@ -105,3 +105,13 @@ textarea {
   width: 100%;
   max-width: 40rem; /* 640 px */
 }
+
+/* Casa do tabuleiro com foco do teclado (F14): o anel fica 5 a 8 px para dentro,
+   com um respiro entre ele e o contorno da seleção/guia (que ocupa os 4 px da borda). */
+.board-square:focus {
+  outline: none;
+}
+.board-square:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: calc(var(--space-1) * -1); /* -8 px: o anel vai de 5 a 8 px da borda */
+}

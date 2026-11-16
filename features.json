@@ -156,7 +156,7 @@
       "Teste e2e: fazer 1. e4 usando só o teclado",
       "Teste e2e: a casa com foco tem um indicador visível (contorno)"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F15",
