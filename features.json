@@ -367,7 +367,7 @@
     "passos": [
       "Teste e2e: /rota-que-nao-existe mostra a mensagem e o link leva à tela inicial"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F34",

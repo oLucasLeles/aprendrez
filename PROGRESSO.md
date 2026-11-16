@@ -868,3 +868,25 @@ uso pelo teclado. Capturas olhadas: `docs/capturas/f32-desktop.png` e `f32-celul
 **Problemas e pendências:** no teste, `getByText('Concluída')` também casava com "aberturas concluídas" (a busca ignora maiúsculas); usei
 `exact: true`. O teste temporário das capturas foi apagado (a F43 fará o script oficial).
 **Próximo turno:** F33 · Página não encontrada (a próxima com `passes: false`).
+
+## Turno 2026-11-16 04:00 · [F33] Página não encontrada
+**Status:** concluída
+**O que fiz:** A Página não encontrada (`src/screens/NotFoundScreen.tsx`) ganhou o visual do resto do app: título grande, texto de apoio em
+cinza e o link "Ir para o início" com a aparência do botão principal (vermelho de destaque). Ela aparece para qualquer endereço desconhecido
+e também para uma abertura que não existe (`/abertura/xyz`) ou a conclusão dela. Teste novo em `e2e/nao-encontrada.spec.ts` (desktop e celular):
+a mensagem aparece e o link leva à tela inicial (passo da funcionalidade), abertura inexistente, uso pelo teclado, sem rolagem horizontal e
+texto do link legível ao passar o mouse. Capturas olhadas: `docs/capturas/f33-desktop.png` e `f33-celular.png`.
+**Decisões:**
+- O link é um `Link` do react-router com a classe `.button-primary` (leva a outra tela, então é link e não botão), como já foi feito na F31.
+- **Conserto de um defeito pequeno de estilo:** a regra global `a:hover` pintava de vermelho o texto de qualquer link com a classe
+  `.button-primary`, ou seja, vermelho sobre fundo vermelho ao passar o mouse. Acrescentei `a.button-primary:hover` em `src/index.css` para o
+  texto continuar claro. Isso também conserta o botão "Começar/Continuar de onde parei" da tela inicial (F31), que tinha o mesmo problema.
+- Classes novas `.not-found`, `.not-found-text` e `.not-found-link`, só com tokens. Nenhuma dependência nova.
+**Problemas e pendências:**
+- Na primeira rodada do `npm run verificar` deste turno, o teste `licao-praticar-sozinho` (celular, "lance legal fora do roteiro") falhou uma vez;
+  rodado sozinho passou (10 de 10) e a segunda rodada completa passou inteira. É a mesma instabilidade dos testes longos anotada nas F22, F27 e F28
+  (jogam a linha toda com atrasos de 400 ms e sofrem com a máquina carregada). Não enfraqueci nenhum teste. Vale um turno de consertos para
+  encurtá-los usando a navegação por etapas (F24).
+- Os testes de rotas antigos (`e2e/rotas.spec.ts`) continuam valendo sem mudança.
+**Próximo turno:** F34 · Conteúdo: Sistema Londres (o primeiro sistema, com alternativa de ordem aceita e justificativa; regenerar `docs/ABERTURAS.md`).
+Lembre que o id da abertura precisa ser `londres`, como está em `TRAIL_ORDER`.

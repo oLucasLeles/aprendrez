@@ -225,6 +225,12 @@ textarea {
   background: var(--color-accent-hover);
 }
 
+/* Quando o botão principal é um link, o `a:hover` global deixaria o texto vermelho
+   sobre fundo vermelho. Aqui o texto continua claro. */
+a.button-primary:hover {
+  color: var(--color-on-accent);
+}
+
 /* Etapa "Conhecer" (F18): ficha da abertura (nome, cor, nível) e ideias-chave. */
 .lesson-facts {
   display: grid;
@@ -353,6 +359,22 @@ textarea {
 .conclusion-next {
   margin-top: var(--space-2);
   color: var(--color-text-secondary);
+}
+
+/* ---------- Página não encontrada (F33) ---------- */
+.not-found {
+  padding-block: var(--space-6);
+}
+
+.not-found-text {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+}
+
+.not-found-link {
+  display: inline-block;
+  margin-top: var(--space-3);
+  text-decoration: none;
 }
 
 /* ---------- Tela de Início: a trilha (F29) ---------- */
