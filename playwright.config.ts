@@ -11,6 +11,12 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:5173',
     trace: 'retain-on-failure',
+    // O navegador dos testes pede "movimento reduzido", então as peças não deslizam.
+    // Motivo: o robô clica muito mais rápido que uma pessoa. Às vezes o clique caía
+    // durante a animação de 150 ms e se perdia, e o teste falhava por acaso (~10%
+    // das vezes). Um teste que quiser ver a animação pode pedir
+    // test.use({ reducedMotion: 'no-preference' }).
+    reducedMotion: 'reduce',
   },
   projects: [
     {

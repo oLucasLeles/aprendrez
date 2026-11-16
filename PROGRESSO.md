@@ -1066,3 +1066,19 @@ Capturas olhadas: `docs/capturas/f39-trilha-*.png` e `f39-licao-*.png` (1440 px 
 - Os testes e2e reescrevem `docs/capturas/f27-*.png` a cada execução; restaurei esses dois arquivos para não sujar o commit.
 - Na primeira rodada do `npm run verificar` o teste do Gambito da Dama falhou por causa da lista do nível 3 (acima); depois do ajuste, a rodada completa passou (246 testes de ponta a ponta).
 **Próximo turno:** F40 · a próxima funcionalidade com `passes: false` (pelas notas anteriores, a verificação de acessibilidade com axe). Com as 8 aberturas prontas, os testes de trilha agora contam "de 8".
+
+## Nota do supervisor · 2026-11-16 · teste instável (a rodada parou)
+**O que aconteceu:** a rodada longa parou depois da F39, porque a verificação independente falhou duas vezes seguidas.
+Nas duas vezes falhou o mesmo teste (`e2e/licao-espanhola.spec.ts`, "só um lance é aceito… Voltar o desfaz"), uma vez no
+celular e outra no desktop. O app estava certo: era um **teste instável**, que às vezes passa e às vezes falha sem mudar nada.
+**Causa:** o robô dos testes clica muito mais rápido que uma pessoa. Quando o clique caía durante a animação de 150 ms das
+peças, ele se perdia. Reproduzi assim: rodando o teste 30 vezes, falhou 3. Com a animação desligada, passou 50 de 50.
+As falhas avulsas nos turnos da F23 (`guia.spec.ts`) e da F33 (`licao-variacoes.spec.ts`) parecem ter a mesma origem.
+**O que mudei:**
+- `playwright.config.ts`: o navegador dos testes agora pede "movimento reduzido" (`reducedMotion: 'reduce'`), então as peças
+  não deslizam durante os testes. Nenhum teste foi apagado nem enfraquecido; só o ambiente mudou.
+- `e2e/conclusao.spec.ts`: a captura da tela de conclusão agora vai para `test-results/`, e não para `docs/capturas/`.
+  Antes, toda execução dos testes alterava `f27-*.png` e deixava alterações sem commit.
+**Para a F41 (movimento reduzido):** como o padrão dos testes agora é "reduzido", o teste da F41 precisa comparar os dois
+casos: `test.use({ reducedMotion: 'no-preference' })` para ver que a animação existe, e `'reduce'` para ver que ela some.
+**Próximo turno:** F40 · Acessibilidade automática.

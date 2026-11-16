@@ -64,5 +64,7 @@ test('a tela de conclusão não tem rolagem horizontal', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Abertura concluída' })).toBeVisible()
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)
   expect(overflow).toBe(false)
-  await page.screenshot({ path: `docs/capturas/f27-${test.info().project.name}.png`, fullPage: true })
+  // A captura vai para a pasta temporária dos testes (test-results), e não para docs/capturas:
+  // senão cada execução dos testes mudaria um arquivo do projeto e deixaria "alterações sem commit".
+  await page.screenshot({ path: test.info().outputPath(`f27-${test.info().project.name}.png`), fullPage: true })
 })
