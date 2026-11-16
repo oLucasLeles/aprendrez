@@ -214,7 +214,7 @@
       "Teste e2e: avançar três lances mostra a narração do terceiro e a lista '1. e4 e5 2. Cf3'",
       "Teste e2e: 'Anterior' volta a posição e a narração"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F20",

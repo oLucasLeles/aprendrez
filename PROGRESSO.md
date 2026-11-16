@@ -510,3 +510,27 @@ característica em FEN e os nomes em português de níveis e cores), com testes 
 - O servidor de desenvolvimento pode ter ficado rodando na porta 5173 (usado pelo Playwright).
 **Próximo turno:** F19 · Etapa Assistir. Vai precisar guardar a etapa atual no estado da tela (hoje `stageIndex` é fixo em 0) e
 fazer o "Continuar" da etapa Conhecer levar a ela.
+
+## Turno 2026-11-15 23:30 · [F19] Etapa Assistir
+**Status:** concluída
+**O que fiz:** O "Continuar" da etapa Conhecer agora leva à etapa **Assistir**. Nela a linha principal da abertura é mostrada lance
+a lance: "Próximo" e "Anterior" avançam e voltam, o tabuleiro acompanha (com o último lance contornado), o texto mostra a narração
+(o porquê do lance) e a lista de lances em notação portuguesa cresce junto, com o lance atual em negrito e sublinhado. A lógica
+(posição, último lance e narração para um dado passo) ficou em `src/chess/watchLine.ts`, com testes de unidade. Teste novo em
+`e2e/licao-assistir.spec.ts` (desktop e celular): avançar três lances mostra a narração do terceiro e `1. e4 e5 2. Cf3`; "Anterior"
+volta posição e narração; o "Próximo" para no último lance. Capturas olhadas: `docs/capturas/f19-desktop.png` e `f19-celular.png`.
+**Decisões:**
+- **Lances do adversário não têm explicação no conteúdo** (só os da pessoa têm). Para esses, a narração é uma frase simples:
+  "As pretas respondem com e5." (ou "As brancas…" nas aberturas de pretas). Não inventei explicações novas, porque isso é conteúdo
+  que precisa de revisão humana.
+- A lista de lances da etapa Assistir mostra **só os lances já vistos** (não a linha inteira), para destacar o atual.
+- Os botões "Anterior" e "Próximo" ficam desabilitados nas pontas. Criei a classe global `.button-secondary` (contorno neutro): o
+  vermelho continua reservado à ação principal ("Continuar").
+- O "Continuar" agora avança qualquer etapa (até a última), mas as etapas depois de Assistir mostram só um aviso de que ainda não
+  existem. Navegar clicando no indicador de etapas e "Reiniciar a linha" ficam para a F24.
+- Ao passar de etapa, o passo do Assistir não é zerado; a F24 decide como reiniciar.
+- Nenhuma dependência nova.
+**Problemas e pendências:** o Assistir ainda não destaca a bifurcação das variações (isso é da etapa Variações, F22). Subi o servidor
+de desenvolvimento em segundo plano para as capturas; pode ter ficado rodando na porta 5173.
+**Próximo turno:** F20 · Etapa Praticar com guia. Use `Board` com `playerColor`, `guide` e `onMove`, e o motor da lição
+(`playUserMove`, `playOpponentTurn`, `getGuide`) de `src/chess/lessonEngine.ts`; o adversário responde após cerca de 400 ms.

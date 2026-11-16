@@ -1,13 +1,15 @@
+import { useState } from 'react'
 import { Link, useParams } from 'react-router'
 import Board from '../components/Board'
 import { getOpening } from '../content/openings'
-import { formatMoveList } from '../chess/notation'
+import { formatMoveList, toPortugueseSan } from '../chess/notation'
 import { COLOR_NAMES, getCharacteristicFen, LEVEL_NAMES } from '../chess/openingPosition'
-import { getMainLineMoves } from '../chess/openingTree'
+import { getMainLine, getMainLineMoves } from '../chess/openingTree'
+import { clampStep, getWatchView } from '../chess/watchLine'
 import NotFoundScreen from './NotFoundScreen'
 
-// As etapas da lição, na ordem da SPEC (seção 6). Por enquanto só a primeira
-// (Conhecer) tem conteúdo; as outras entram nas próximas funcionalidades.
+// As etapas da lição, na ordem da SPEC (seção 6). Por enquanto só Conhecer e
+// Assistir têm conteúdo; as outras entram nas próximas funcionalidades.
 const STAGES = ['Conhecer', 'Assistir', 'Praticar com guia', 'Praticar sozinho', 'Variações', 'Desafio']
 
 // Tela da Lição de uma abertura. O endereço é /abertura/:id, e o ":id"
@@ -18,12 +20,22 @@ function LessonScreen() {
   const { id } = useParams()
   const opening = getOpening(id)
 
+  // A etapa atual e, na etapa Assistir, quantos lances da linha já foram mostrados.
+  const [stageIndex, setStageIndex] = useState(0)
+  const [watchStep, setWatchStep] = useState(0)
+
   if (!opening) return <NotFoundScreen />
 
-  // Etapa 1 · Conhecer (SPEC 6): tabuleiro estático na posição característica
-  // (sem `playerColor`, o tabuleiro é só para olhar e não aceita lances).
-  const stageIndex = 0
   const mainLine = getMainLineMoves(opening)
+  const line = getMainLine(opening)
+  const watching = stageIndex === 1
+  const watchView = getWatchView(line, watchStep, opening.color)
+
+  // Etapa 1 · Conhecer (SPEC 6): tabuleiro estático na posição característica.
+  // Etapa 2 · Assistir: a posição depois dos lances mostrados até agora.
+  // Nas duas, o tabuleiro é só para olhar (sem `playerColor`, não aceita lances).
+  const boardFen = watching ? watchView.fen : getCharacteristicFen(opening)
+  const boardLastMove = watching ? watchView.lastMove : null
 
   return (
     <main className="grid page lesson">
@@ -38,7 +50,7 @@ function LessonScreen() {
       </div>
 
       <div className="lesson-board">
-        <Board fen={getCharacteristicFen(opening)} orientation={opening.color} />
+        <Board fen={boardFen} orientation={opening.color} lastMove={boardLastMove} />
       </div>
 
       <section className="lesson-panel" aria-label="Painel da lição">
@@ -52,6 +64,7 @@ function LessonScreen() {
           </ol>
         </nav>
 
+        {stageIndex === 0 && (
         <div className="lesson-text" aria-live="polite">
           <h2>Conhecer</h2>
           <dl className="lesson-facts">
@@ -80,16 +93,76 @@ function LessonScreen() {
           </ul>
           <p className="lesson-hint">O tabuleiro mostra a posição que você vai alcançar no fim da linha.</p>
         </div>
+        )}
+
+        {watching && (
+          <div className="lesson-text" aria-live="polite">
+            <h2>Assistir</h2>
+            <p className="lesson-hint">
+              Lance {watchStep} de {line.length}
+            </p>
+            <p className="lesson-narration">{watchView.narration}</p>
+          </div>
+        )}
+
+        {stageIndex > 1 && (
+          <div className="lesson-text">
+            <h2>{STAGES[stageIndex]}</h2>
+            <p className="lesson-hint">Esta etapa chega nas próximas funcionalidades.</p>
+          </div>
+        )}
 
         <div className="lesson-moves">
           <h3>Lances</h3>
-          <p className="lesson-moves-list" aria-label="Lista de lances">
-            {formatMoveList(mainLine, 'white')}
-          </p>
+          {watching ? (
+            <p className="lesson-moves-list" aria-label="Lista de lances">
+              {watchView.shownMoves.length === 0 && 'Nenhum lance ainda.'}
+              {watchView.shownMoves.map((san, index) => (
+                <span key={index}>
+                  {index % 2 === 0 && `${index / 2 + 1}. `}
+                  <span
+                    className={index === watchStep - 1 ? 'lesson-move-current' : undefined}
+                    aria-current={index === watchStep - 1 ? 'step' : undefined}
+                  >
+                    {toPortugueseSan(san)}
+                  </span>{' '}
+                </span>
+              ))}
+            </p>
+          ) : (
+            <p className="lesson-moves-list" aria-label="Lista de lances">
+              {formatMoveList(mainLine, 'white')}
+            </p>
+          )}
         </div>
 
         <div className="lesson-actions">
-          <button type="button" className="button-primary">
+          {watching && (
+            <>
+              <button
+                type="button"
+                className="button-secondary"
+                disabled={watchStep === 0}
+                onClick={() => setWatchStep(clampStep(watchStep - 1, line))}
+              >
+                Anterior
+              </button>
+              <button
+                type="button"
+                className="button-secondary"
+                disabled={watchStep === line.length}
+                onClick={() => setWatchStep(clampStep(watchStep + 1, line))}
+              >
+                Próximo
+              </button>
+            </>
+          )}
+          <button
+            type="button"
+            className="button-primary"
+            disabled={stageIndex === STAGES.length - 1}
+            onClick={() => setStageIndex(stageIndex + 1)}
+          >
             Continuar
           </button>
         </div>

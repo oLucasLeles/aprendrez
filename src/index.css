@@ -226,3 +226,37 @@ textarea {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
+
+/* Etapa "Assistir" (F19): narração, botões Anterior/Próximo e lance atual na lista. */
+.lesson-narration {
+  font-size: var(--font-size-md);
+}
+
+/* Botão secundário: contorno neutro, sem preenchimento (o vermelho é só da ação principal). */
+.button-secondary {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.button-secondary:hover:not(:disabled) {
+  background: var(--color-surface-muted);
+}
+
+.button-secondary:disabled,
+.button-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* O lance atual na lista: negrito e sublinhado (não depende só de cor). */
+.lesson-move-current {
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
