@@ -1038,3 +1038,31 @@ com 7 aberturas). Teste novo: `e2e/licao-gambito-da-dama.spec.ts` (desktop e cel
 - O shell herdou um `cd` para `data/` no meio do turno (ocorre em turnos anteriores); voltei à raiz e nada foi alterado lá. Subi o servidor de desenvolvimento para as capturas e parei depois.
 **Próximo turno:** F39, a próxima funcionalidade com `passes: false` (provavelmente o conteúdo da Defesa Siciliana; id `siciliana`, já em `TRAIL_ORDER`). Lembre de regenerar `docs/ABERTURAS.md` e de atualizar `e2e/trilha.spec.ts`
 (contagem "de 7", lista de cartões, filtro "Pretas" e "Não iniciada" = 7), porque ele escreve o número de aberturas no código.
+
+## Turno 2026-11-16 06:00 · [F39] Conteúdo: Defesa Siciliana (linha aberta)
+**Status:** concluída
+**O que fiz:** Criei `src/content/openings/siciliana.ts`, a oitava e última abertura (pretas, nível 3, linha fixa, contra 1.e4). A linha principal é
+`1.e4 c5 2.Cf3 Cc6 3.d4 cxd4 4.Cxd4 Cf6 5.Cc3 d6 6.Be2 e5 7.Cb3 Be7 8.O-O O-O 9.Be3 Be6` (9 lances das pretas). Cada lance das pretas tem explicação e dica, e há
+erros comuns em 7 lances (`f5`, `b5`, `e5`, `Nxe4` em três pontos e `Ng4`). Há 2 variações das brancas: `6.Bg5` em vez de `6.Be2` e `7.Cxc6` em vez de `7.Cb3`. O
+validador (F06) pegou o arquivo sozinho e passou, e `docs/ABERTURAS.md` foi regenerado (agora com as 8 aberturas). Teste novo: `e2e/licao-siciliana.spec.ts` (desktop
+e celular): linha principal inteira, lance legal fora do roteiro (`1...e5`) com "Voltar", erro comum `3...e5` com a explicação específica, a etapa Variações e a abertura
+na trilha (nível 3, pretas embaixo). Em `e2e/trilha.spec.ts` entrou o passo da funcionalidade: a tela inicial mostra as 8 aberturas, 4 de brancas e 4 de pretas, nos 3 níveis.
+Capturas olhadas: `docs/capturas/f39-trilha-*.png` e `f39-licao-*.png` (1440 px e 375 px).
+**Decisões:**
+- **Nome na base do Lichess: `Sicilian Defense: Open`.** As entradas com esse nome vão de `3.d4` até `4...Nf6` (`2...Nc6`), então a linha usa a ordem com `2...Cc6`. Do `5.Cc3`
+  em diante o conteúdo é teoria clássica (a variação Clássica com o plano `...e5`, parecida com a Boleslavsky), que não vem da base nem foi conferida num motor de xadrez.
+- **Escolhi o plano com `...d6` e `...e5`** (em vez de uma linha mais afiada como a Najdorf ou o Dragão) por ser mais fácil de entender e de lembrar para quem está começando.
+  Os textos explicam que a casa d5 fica um pouco fraca depois de `e5`, para ser honesto sobre o custo do plano.
+- **Variações curtas** (terminam logo depois do lance da pessoa), como nas outras aberturas, para não afirmar teoria que não conferi. Na variação 2 o `bxc6` é a única recaptura
+  possível, então o erro comum cadastrado é `Nxe4`, que deixa a dama atacada.
+- **Atualizei testes que escreviam a lista de aberturas no código:** `e2e/trilha.spec.ts` ("de 7" virou "de 8", "Não iniciada" são 8, a Siciliana entrou nas listas e no filtro
+  "Pretas", o nível 3 passou a ter dois cartões, e o teste de "tudo concluído" marca também `siciliana`) e `e2e/licao-gambito-da-dama.spec.ts` (a lista do nível 3 agora tem as duas
+  aberturas). Não removi nem enfraqueci checagem nenhuma.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- **Revisão humana do conteúdo** (SPEC, seção 15): os testes garantem lances legais e a ligação com a base, mas não que as explicações ensinam bem. Vale olhar a explicação do
+  `Be6` (diz que o bispo vigia a casa d5), a do `e6` na variação 1 (contra `Bg5`) e os erros comuns `b5` e `Ng4`, que afirmam que se perde material (conferi à mão, não no motor).
+- O título da Siciliana no cartão quebra em duas linhas ("Defesa Siciliana (linha / aberta)"); é só visual e não atrapalha.
+- Os testes e2e reescrevem `docs/capturas/f27-*.png` a cada execução; restaurei esses dois arquivos para não sujar o commit.
+- Na primeira rodada do `npm run verificar` o teste do Gambito da Dama falhou por causa da lista do nível 3 (acima); depois do ajuste, a rodada completa passou (246 testes de ponta a ponta).
+**Próximo turno:** F40 · a próxima funcionalidade com `passes: false` (pelas notas anteriores, a verificação de acessibilidade com axe). Com as 8 aberturas prontas, os testes de trilha agora contam "de 8".

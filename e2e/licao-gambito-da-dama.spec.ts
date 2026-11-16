@@ -80,7 +80,7 @@ test('a etapa Variações mostra as duas variações, cada uma com o nome do des
 test('a abertura aparece na trilha (nível 3) e a etapa Conhecer mostra o Gambito da Dama com as brancas embaixo', async ({ page }) => {
   await page.goto('/')
   const nivel3 = page.getByRole('region', { name: /Desafio/ })
-  await expect(nivel3.getByRole('heading', { level: 3 })).toHaveText(['Gambito da Dama'])
+  await expect(nivel3.getByRole('heading', { level: 3 })).toHaveText(['Gambito da Dama', 'Defesa Siciliana (linha aberta)'])
   await nivel3.getByRole('link', { name: 'Gambito da Dama' }).click()
   await expect(page).toHaveURL(/\/abertura\/gambito-da-dama$/)
   const panel = page.getByRole('region', { name: 'Painel da lição' })

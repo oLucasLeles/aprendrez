@@ -475,3 +475,67 @@
   - Dica: Impeça as pretas de proteger o peão capturado com o peão de b5, usando o peão da torre da dama.
 - **6. e3**: O peão de e3 abre a diagonal do bispo do rei, que vai recuperar o peão de c4 em seguida. Ao mesmo tempo ele sustenta o seu centro.
   - Dica: Abra o caminho do bispo do rei avançando o peão do rei uma casa.
+
+---
+
+## Defesa Siciliana (linha aberta)
+
+- **Cor:** Pretas
+- **Nível:** 3 · Desafio
+- **Tipo:** Linha fixa
+- **Nome na base do Lichess:** Sicilian Defense: Open
+- **Assume que o adversário começa com:** 1. e4
+
+**Ideia:** Você responde ao peão do rei com o peão do bispo da dama (c5), em vez de copiar o lance das brancas. Depois você troca esse peão lateral por um peão central das brancas, e isso abre uma coluna para as suas torres atacarem. A posição fica desequilibrada, com chances de vitória para os dois lados.
+
+**Ideias-chave:**
+
+- Você troca um peão lateral (o de c) por um peão central das brancas (o de d). Assim você luta pelo centro sem copiar as brancas.
+- Com d6 e e5 você ocupa o centro e expulsa o cavalo branco de d4. A casa d5 fica um pouco fraca, mas o bispo de e6 e o cavalo de f6 ajudam a vigiá-la.
+- A coluna c fica aberta: mais tarde, as suas torres podem usá-la para atacar.
+
+### Linha principal
+
+`1. e4 c5 2. Cf3 Cc6 3. d4 cxd4 4. Cxd4 Cf6 5. Cc3 d6 6. Be2 e5 7. Cb3 Be7 8. O-O O-O 9. Be3 Be6`
+
+- **1... c5**: Em vez de copiar as brancas com e5, você avança o peão do bispo da dama duas casas. Esse peão vigia a casa d4, que é uma casa importante do centro, e deixa o jogo diferente para os dois lados. É o lance que dá nome à Siciliana.
+  - Dica: Dispute o centro pelo lado: avance duas casas o peão da coluna do bispo da dama.
+  - Erro comum, f5: Esse avanço enfraquece a diagonal na frente do seu rei e não ajuda a disputar o centro. Nas primeiras jogadas, vale mais cuidar do centro e do rei.
+- **2... Cc6**: O cavalo da dama sai para o meio do tabuleiro e passa a vigiar as casas d4 e e5, o que reforça o seu plano. Desenvolver (tirar as peças do lugar de partida) cedo é sempre uma boa ideia.
+  - Dica: Desenvolva o cavalo da dama para uma casa que vigie o centro e ajude o peão a controlar d4.
+  - Erro comum, b5: O peão fica sem proteção e o bispo branco o captura na hora. Você perde um peão logo no começo.
+- **3... cxd4**: Você captura o peão central das brancas com o seu peão lateral. É essa troca que "abre" a Siciliana: a coluna c fica livre e as brancas perdem um peão do centro.
+  - Dica: Capture o peão branco que acabou de avançar para o centro, usando o seu peão da coluna do bispo da dama.
+  - Erro comum, e5: O peão avança, mas as brancas capturam o peão de e5 com o peão de d4 e você fica com um peão a menos.
+- **4... Cf6**: O cavalo do rei sai para uma casa central e ataca o peão branco de e4. As brancas precisam proteger o peão, e você ganha tempo para desenvolver as próximas peças.
+  - Dica: Desenvolva o cavalo do rei para uma casa que ataque o peão branco do rei.
+- **5... d6**: O peão de d6 protege a casa e5 e impede o peão branco de avançar com e5 para atacar o seu cavalo. Ele também abre o caminho do bispo da dama.
+  - Dica: Proteja a casa e5 e abra caminho para o bispo da dama com um peão do centro, uma casa para a frente.
+  - Erro comum, Cxe4: O peão de e4 está protegido pelo cavalo de c3. As brancas capturam o seu cavalo e você troca uma peça inteira por um peão.
+- **6... e5**: O peão ataca o cavalo branco de d4 e toma o centro do tabuleiro. A casa d5 fica um pouco fraca, mas os seus bispos e cavalos vão vigiá-la.
+  - Dica: Ataque o cavalo branco que está no centro com um peão da coluna do rei.
+  - Erro comum, Cxe4: O cavalo branco de c3 protege o peão de e4. As brancas capturam o seu cavalo, e você perde uma peça por um peão.
+- **7... Be7**: O bispo do rei sai e libera as casas entre o rei e a torre, o que prepara o roque. Em e7 ele também protege o cavalo de f6.
+  - Dica: Desenvolva o bispo do rei para uma casa perto do rei, que prepare o roque.
+- **8... O-O**: O roque coloca o rei em segurança e traz a torre para perto do centro. É melhor fazê-lo agora, antes que a posição fique mais aberta.
+  - Dica: Coloque o rei em segurança e traga a torre para o jogo com um único lance.
+- **9... Be6**: O último bispo se desenvolve para uma casa central, de onde vigia a casa d5. Agora todas as suas peças pequenas estão no jogo.
+  - Dica: Desenvolva o bispo da dama que ainda está em casa, para uma casa da sexta fileira que vigie d5.
+  - Erro comum, Cg4: O cavalo ataca o bispo, mas o bispo branco de e2 o captura primeiro. Depois da recaptura, a dama branca pega o seu bispo e você perde uma peça.
+
+### Variações
+
+#### Brancas trocam os cavalos (Cxc6)
+
+`1. e4 c5 2. Cf3 Cc6 3. d4 cxd4 4. Cxd4 Cf6 5. Cc3 d6 6. Be2 e5 7. Cxc6 bxc6 8. O-O`
+
+- **7... bxc6**: O cavalo branco capturou o seu cavalo de c6 e agora ameaça a sua dama. Você recaptura com o peão de b7. Os seus peões de c ficam dobrados, mas você ganha o centro forte com c6, d6 e e5.
+  - Dica: Recapture o cavalo branco que está em c6 com o peão que está ao lado do peão de c.
+  - Erro comum, Cxe4: O cavalo branco de c6 está atacando a sua dama. Se você captura o peão de e4 em vez de recapturar, as brancas pegam a sua dama.
+
+#### Brancas jogam Bg5 em vez de Be2
+
+`1. e4 c5 2. Cf3 Cc6 3. d4 cxd4 4. Cxd4 Cf6 5. Cc3 d6 6. Bg5 e6 7. Dd2`
+
+- **6... e6**: O bispo branco aponta para o seu cavalo de f6 e, atrás dele, para a sua dama. Com o peão de e6 você fecha a casa d5 para os cavalos brancos e abre a diagonal do seu bispo do rei. Esse é o plano seguro contra o bispo em g5.
+  - Dica: Prepare o bispo do rei e proteja a casa d5 com o peão central, uma casa para a frente.

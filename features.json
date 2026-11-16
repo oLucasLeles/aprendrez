@@ -434,7 +434,7 @@
       "docs/ABERTURAS.md está atualizado",
       "Teste e2e: a tela inicial mostra as 8 aberturas, 4 de brancas e 4 de pretas, nos níveis da SPEC"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F40",
