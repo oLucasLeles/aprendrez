@@ -1165,3 +1165,26 @@ discretos e que não há rolagem horizontal. Capturas olhadas: `docs/capturas/f4
 - Vi só uma parte das 50 imagens (tela inicial, Conhecer, Assistir, guia, fora do roteiro, desafio, pretas, conclusão); as de Conhecer das outras 7 aberturas foram conferidas só pelo script (sem erros nem rolagem horizontal).
 - As 50 imagens somam 5 MB no repositório; se isso incomodar, dá para tirar a pasta do git e gerar sob demanda.
 **Próximo turno:** F44 · Revisão final da definição de pronto (e2e que conclui o Desafio das 8 aberturas com o acaso controlado, `npm run build` sem avisos e uma entrada final no diário).
+
+## Turno 2026-11-16 11:00 · [F44] Revisão final da definição de pronto
+**Status:** concluída
+**O que fiz:** Conferi cada item da seção 14 da SPEC. Criei `e2e/definicao-de-pronto.spec.ts`, que joga o **Desafio inteiro das 8 aberturas** no navegador, clica em "Concluir" e confere a tela de conclusão. Os lances saem dos próprios arquivos de conteúdo (o teste caminha pela árvore e usa o `chess.js` para achar as casas), então não há lista de lances copiada à mão. Cada abertura roda duas vezes com o acaso fixo: `acaso=0` (adversário na linha principal) e `acaso=0.99` (adversário sempre no último galho, ou seja, na variação). Na primeira, o teste também confere que o progresso sobrevive a um recarregamento ("1 de 8 aberturas concluídas" na trilha). Há ainda um teste que avisa se alguma das 8 aberturas ficar fora da lista. `npm run build` gera `dist/` sem avisos (e o código só de desenvolvimento, como `?acaso=` e `/dev/tabuleiro`, não vai para o build: procurei no arquivo gerado e não achei).
+**Decisões:**
+- O teste importa os 8 arquivos de conteúdo um a um (em vez do `index.ts`), porque o catálogo usa `import.meta.glob`, que só existe dentro do Vite. A lista de 8 é conferida por um teste, então uma abertura nova sem teste não passa despercebida.
+- Nenhum teste existente foi alterado, apagado ou enfraquecido. Nenhuma dependência nova.
+**Estado do MVP (seção 14 da SPEC):**
+- [x] As 8 aberturas existem e cada uma pode ser concluída do começo ao fim, Desafio incluído (este turno).
+- [x] Todos os testes passam, incluindo a validação do conteúdo (`npm run verificar` verde).
+- [x] O progresso sobrevive a um recarregamento (`e2e/progresso.spec.ts` e este turno).
+- [x] Funciona em 1440 px e 375 px sem rolagem horizontal (testes em todas as telas; o `npm run capturas` também avisa).
+- [x] `npm run build` gera a pasta pronta para publicação (`dist/`).
+- [ ] Publicado na Vercel: **fica com uma pessoa**, fora da execução autônoma.
+**Problemas e pendências (precisam de revisão humana):**
+1. **Conteúdo das 8 aberturas** (SPEC 15): os testes garantem lances legais e ligação com a base do Lichess, não que as explicações ensinam bem. Revisar `docs/ABERTURAS.md`. Os diários listam os pontos mais duvidosos de cada abertura, principalmente as afirmações de "perde material" dos erros comuns (conferidas à mão, não num motor) e a teoria depois da base do Lichess (Siciliana a partir de 5.Cc3, por exemplo).
+2. **Licença das peças** (Cburnett, CC BY-SA 3.0 por prudência): conferir a página do conjunto no Wikimedia Commons e ajustar `src/components/Footer.tsx` e `CREDITOS.md` se a atribuição certa for outra.
+3. **Visual** (vindo da F43): letras e números das bordas do tabuleiro minúsculos e encostados nas peças no celular; título da lição é só "Lição" (o nome da abertura poderia ser o título); botões desativados em rosa-claro bem fraco.
+4. **Acessibilidade:** o axe pega só parte dos problemas; falta teste com leitor de tela de verdade (o tabuleiro tem 64 botões) e arrastar com o dedo num aparelho real.
+5. A tela de conclusão abre se alguém digitar o endereço, mesmo sem ter concluído o Desafio.
+6. As 50 imagens de `docs/capturas/revisao/` somam 5 MB no git; dá para tirar a pasta do repositório e gerar sob demanda (`npm run capturas`).
+7. **Publicação:** conectar o repositório ao GitHub e à Vercel (plano Hobby) é com uma pessoa; o `vercel.json` já existe.
+**Próximo turno:** nenhum. Todas as 44 funcionalidades passam. O próximo passo é humano: revisar o conteúdo e as licenças acima e publicar.

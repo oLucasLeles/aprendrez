@@ -488,6 +488,6 @@
       "npm run build gera dist/ sem avisos de erro",
       "Uma entrada final no PROGRESSO.md resume o estado do MVP e o que precisa de revisão humana"
     ],
-    "passes": false
+    "passes": true
   }
 ]
