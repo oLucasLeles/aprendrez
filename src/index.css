@@ -100,6 +100,20 @@ textarea {
   padding-block: var(--space-4);
 }
 
+/* Rodapé de créditos (F42): pequeno e discreto, no fim de todas as telas. */
+.site-footer {
+  padding-block: var(--space-2) var(--space-4);
+}
+
+/* A linha fica no parágrafo (e não no rodapé) para respeitar as margens do grid. */
+.site-footer-text {
+  margin: 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
 /* Tabuleiro: quadrado, ocupa a largura disponível até um máximo */
 .board {
   width: 100%;

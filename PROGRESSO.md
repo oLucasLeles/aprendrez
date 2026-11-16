@@ -1123,3 +1123,27 @@ direto na peça. O atraso de ~400 ms da resposta do adversário não é CSS (é 
 **Problemas e pendências:** nenhum. O token `--duration-fast` (150 ms, vira 0 com movimento reduzido) existe mas nenhum CSS o usa ainda; fica pronto para animações futuras.
 **Próximo turno:** F42 · Créditos e licenças. Pendências já anotadas: confirmar a licença das peças do `react-chessboard` (F10, tratar como "exige atribuição": Colin M.L. Burnett),
 fonte Inter (OFL-1.1), base do Lichess (CC0), e decidir se `CREDITOS.md` lista também as dependências de desenvolvimento (`axe-core` é MPL-2.0, F40; a funcionalidade pede só `dependencies`).
+
+## Turno 2026-11-16 09:00 · [F42] Créditos e licenças
+**Status:** concluída
+**O que fiz:** Criei o rodapé de créditos (`src/components/Footer.tsx`), que aparece no fim de todas as telas (o `App` o coloca depois das rotas). Ele credita as peças
+(Colin M.L. Burnett, CC BY-SA 3.0), a fonte Inter (The Inter Project Authors, SIL OFL 1.1) e a base de aberturas do Lichess (CC0), em texto pequeno e na cor secundária. Criei também
+o `CREDITOS.md`, com uma tabela de cada pacote de `dependencies` e a sua licença, mais os materiais que não são pacotes (peças, fonte, base do Lichess). Dois testes novos:
+`src/credits.test.ts` (unidade) falha se um pacote de `dependencies` não estiver no `CREDITOS.md`, se sobrar um que não existe mais, ou se a licença escrita for diferente da que o
+pacote instalado declara (conferi tirando uma linha: o teste falhou); e `e2e/creditos.spec.ts` (desktop e celular) confere o rodapé na tela inicial e na lição, o tamanho/cor
+discretos e que não há rolagem horizontal. Capturas olhadas: `docs/capturas/f42-inicio-*.png` e `f42-licao-*.png` (1440 px e 375 px).
+**Decisões:**
+- **O rodapé fica em todas as telas, não só na inicial**, porque as peças aparecem na lição e na conclusão, e é onde o crédito é exigido. Está no `App`, fora das telas, então os testes de
+  unidade das rotas não mudaram. O texto não tem links (só nomes e licenças), para não interferir nos testes que procuram links por nome; os detalhes ficam no `CREDITOS.md`.
+- **`CREDITOS.md` lista só `dependencies`** (o que vai para o app publicado), como a funcionalidade pede. As dependências de desenvolvimento ficam numa nota curta, que registra o
+  `axe-core` (MPL-2.0, F40) e explica que não vão para o app publicado.
+- **Licença das peças:** o `react-chessboard` (MIT) não traz aviso sobre as imagens (procurei no pacote). Mantive a decisão da F10: tratar como Cburnett e creditar o autor, citando
+  CC BY-SA 3.0 por prudência. Não consegui confirmar na internet.
+- A linha fina acima do texto do rodapé está no parágrafo, não no `footer`, para respeitar as margens do grid (na primeira captura ela passava das margens).
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- **Uma pessoa precisa conferir a licença e a forma de atribuição das peças Cburnett** (página do conjunto no Wikimedia Commons) antes de publicar; o conjunto é distribuído com mais de uma
+  licença, e talvez a atribuição certa seja outra. Se mudar, ajustar `src/components/Footer.tsx` e `CREDITOS.md` (há um aviso sobre isso lá).
+- Um `cd` para dentro de `node_modules` desviou a pasta de trabalho do shell no meio do turno (como nas F10 e F14); voltei à raiz e nada foi alterado lá.
+- Subi o servidor de desenvolvimento para as capturas e o encerrei no fim do turno.
+**Próximo turno:** F43 · Capturas de tela para revisão (`npm run capturas`, com o Playwright). Já existem várias capturas em `docs/capturas/`, de turnos anteriores.

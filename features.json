@@ -465,7 +465,7 @@
       "Teste e2e: o rodapé aparece na tela inicial com os créditos",
       "CREDITOS.md lista cada pacote de dependencies do package.json com a sua licença"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F43",
