@@ -201,3 +201,35 @@ promoção (`e8=Q` vira `e8=D`), mantendo xeque (+), mate (#) e roque (O-O) como
 **Próximo turno:** F08 · Conteúdo: Italiana (Giuoco Piano). Primeira abertura de verdade em
 `src/content/openings/`, com `export default` de uma `Opening`; o validador (F06) a pega sozinho.
 Lembre: cada linha precisa começar com uma entrada da base do Lichess (`Italian Game: Giuoco Piano`).
+
+## Turno 2026-11-15 21:30 · [F08] Conteúdo: Italiana (Giuoco Piano)
+**Status:** concluída
+**O que fiz:** Criei `src/content/openings/italiana.ts`, a primeira abertura de verdade, com
+`export default` de uma `Opening`. A linha principal é `1.e4 e5 2.Cf3 Cc6 3.Bc4 Bc5 4.c3 Cf6 5.d3 d6
+6.O-O O-O 7.Te1 a6 8.Bb3 Ba7` (8 lances de cada lado). Cada lance das brancas tem explicação e dica.
+Há duas variações das pretas e erros comuns em 4 lances (`a4`, `Qh5`, `Nxe5` e `Bxf7+`). O validador
+(F06) pegou o arquivo sozinho e passou, e o teste "a abertura italiana passa no validador" agora
+valida conteúdo real.
+**Decisões:**
+- Variação 1, "Pretas jogam d6 cedo": `4...d6 5.d4 exd4 6.cxd4 Bb6 7.Nc3 Nf6`. Aqui as brancas
+  podem abrir o centro de uma vez, porque as pretas não deixaram o plano calmo.
+- Variação 2, "Pretas jogam a6 antes do roque": `5...a6 6.O-O d6 7.Re1 O-O`. Termina na mesma
+  posição da linha principal depois de `7...a6`, e o texto do `Re1` diz isso.
+- Escolhi só 2 variações (o máximo que o validador aceita) e ambas bem comuns e simples.
+- Os erros comuns são lances legais que iniciantes costumam jogar (dama cedo demais, capturar um
+  peão protegido, trocar o bispo por um peão). Conferi que cada um é legal e não é um lance ensinado;
+  o validador também confere isso.
+- Nos textos, as casas aparecem em notação de casas (e4, f7), mas as peças são ditas por extenso
+  ("o cavalo", "o bispo"), para não exigir que a pessoa conheça as letras. Termos como "desenvolver",
+  "centro", "roque" e "xeque" são explicados na primeira vez em que aparecem.
+- Nenhuma dependência nova. Sem interface, então sem captura de tela.
+**Problemas e pendências:**
+- Os testes garantem lances legais e a ligação com a base do Lichess, mas **não** garantem que as
+  explicações ensinam bem. Esse conteúdo precisa de revisão humana (SPEC, seção 15), a partir do
+  `docs/ABERTURAS.md` que a F09 vai gerar. Vale olhar principalmente as explicações de `Bb3` e
+  `Re1` (variação 2) e a dica de `c3`, que é a mais vaga.
+- No campo `variationName` usei texto em português, mas os campos `san` dos erros comuns ficam em
+  SAN (inglês), como o resto dos dados.
+**Próximo turno:** F09 · Gerador do `docs/ABERTURAS.md` (usa `formatMoveList` da F07 para mostrar a
+linha principal e as variações em português; o arquivo gerado precisa ter um teste que falha se estiver
+desatualizado).

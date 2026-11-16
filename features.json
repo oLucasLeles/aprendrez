@@ -88,7 +88,7 @@
       "O validador de conteúdo (F06) passa para esta abertura",
       "Os textos estão em português, no tom da SPEC (encorajador, sem jargão não explicado)"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F09",
