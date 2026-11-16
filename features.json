@@ -192,7 +192,7 @@
       "Em 1440 px o painel fica à direita do tabuleiro; em 375 px fica abaixo",
       "Capturas de tela nos dois tamanhos foram vistas e fazem sentido"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F18",

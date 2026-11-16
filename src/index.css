@@ -115,3 +115,78 @@ textarea {
   outline: var(--focus-ring-width) solid var(--color-focus);
   outline-offset: calc(var(--space-1) * -1); /* -8 px: o anel vai de 5 a 8 px da borda */
 }
+
+/* ---------- Tela da Lição (F17) ---------- */
+/* Celular: tudo empilhado, tabuleiro em cima e painel embaixo. */
+.lesson-header {
+  margin-bottom: var(--space-2);
+}
+
+.lesson-board,
+.lesson-panel {
+  grid-column: 1 / -1;
+}
+
+.lesson-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+/* Desktop: tabuleiro à esquerda (7 de 12 colunas) e painel à direita (5 colunas). */
+@media (min-width: 768px) {
+  .lesson-board {
+    grid-column: 1 / span 7;
+  }
+
+  .lesson-panel {
+    grid-column: 8 / -1;
+    margin-top: 0;
+  }
+}
+
+/* Indicador de etapas: lista numerada, a etapa atual em negrito e sublinhada (não só cor). */
+.lesson-stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.lesson-stages [aria-current='step'] {
+  color: var(--color-text);
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+  text-underline-offset: 0.3em;
+}
+
+.lesson-moves-list {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.lesson-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* Botão de ação principal: sempre na cor de destaque (SPEC, seção 9). */
+.button-primary {
+  padding: var(--space-1) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.button-primary:hover {
+  background: var(--color-accent-hover);
+}

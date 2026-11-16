@@ -460,3 +460,28 @@ principal); no Desafio, com acaso controlado, cada galho pode ser escolhido e to
 variação começa; isso é da camada de interface. Um comando de shell com texto longo falhou por aspas no meio do
 turno; nada foi alterado por ele e refiz com as ferramentas de edição.
 **Próximo turno:** a próxima funcionalidade com `passes: false` em `features.json` (F17).
+
+## Turno 2026-11-15 23:00 · [F17] Layout da tela de lição
+**Status:** concluída
+**O que fiz:** A tela da Lição (`src/screens/LessonScreen.tsx`) agora tem o layout da SPEC 10.2. No desktop, o tabuleiro
+fica à esquerda (7 das 12 colunas do grid) e o painel à direita (5 colunas); no celular, o tabuleiro vem em cima e o painel
+embaixo. O painel tem o indicador das 6 etapas (a atual em negrito e sublinhada, para não depender só de cor), o texto da
+etapa, a lista de lances e o botão "Continuar" na cor de destaque. O link "Voltar à trilha" fica no topo. Os estilos estão em
+`src/index.css`, só com tokens. Teste novo: `e2e/licao-layout.spec.ts` (desktop e celular): tabuleiro e painel aparecem, sem
+rolagem horizontal, painel à direita no desktop e abaixo no celular. Capturas olhadas: `docs/capturas/f17-desktop.png` e
+`f17-celular.png`.
+**Decisões:**
+- O conteúdo ainda é de mentira: o tabuleiro mostra a posição inicial (só para olhar), o texto é "O texto de cada etapa
+  aparece aqui" e o botão "Continuar" ainda não faz nada. Cada etapa de verdade vem em F18 em diante. Mantive o título
+  "Lição" e o texto "Abertura: <id>" para os testes das rotas continuarem valendo sem mudança.
+- O indicador de etapas é uma lista numerada dentro de um `nav`, com `aria-current="step"` na etapa atual. Ainda não é clicável
+  (a SPEC pede isso mais adiante, quando houver etapas para voltar).
+- Criei a classe global `.button-primary` (botão de ação principal, sempre vermelho de destaque), que as próximas telas reaproveitam.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- O tabuleiro tem largura máxima de 640 px (classe `.board`); no desktop ele fica um pouco menor que as 7 colunas inteiras.
+  Pode valer revisar quando a lista de lances e o texto de cada etapa estiverem no painel.
+- Subi o servidor de desenvolvimento em segundo plano para tirar as capturas; pode ter ficado rodando na porta 5173.
+**Próximo turno:** F18 · Etapa Conhecer (nome, cor, nível, ideia e ideias-chave da Italiana, tabuleiro estático). Vai precisar
+carregar a abertura pelo `:id` (por exemplo com `import.meta.glob` em `src/content/openings/`) e mostrar "não encontrada" para
+um id que não existe.
