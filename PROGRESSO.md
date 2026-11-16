@@ -435,3 +435,28 @@ com a explicação específica, e um sistema de exemplo com ordem alternativa ac
 O estado não guarda "etapa" da lição (Assistir, Praticar…); isso é da camada de interface.
 **Próximo turno:** F16 · Escolha de galhos do adversário (modos caminho/variação e Desafio com acaso injetável).
 Use `getOpponentOptions` e o parâmetro `chosen` de `playOpponentMove`.
+
+## Turno 2026-11-15 22:45 · [F16] Escolha de galhos do adversário
+**Status:** concluída
+**O que fiz:** Acrescentei ao motor da lição (`src/chess/lessonEngine.ts`) a escolha de qual galho o adversário
+joga. Há dois modos: `path` (segue um caminho já escolhido, que é a linha principal ou uma variação) e `challenge`
+(o modo Desafio, que sorteia entre os galhos existentes). Duas funções novas: `chooseOpponentNode` (só escolhe,
+sem jogar) e `playOpponentTurn` (escolhe e joga). A fonte de acaso (`random`) é passada de fora, então os testes
+controlam o resultado; se não for passada, usa `Math.random`. Os testes novos em `src/chess/lessonEngine.test.ts`
+cobrem os dois passos: no modo caminho o adversário joga exatamente cada variação da Italiana (e não cai na linha
+principal); no Desafio, com acaso controlado, cada galho pode ser escolhido e toda partida chega a uma folha
+(ponta da árvore, sem mais lances).
+**Decisões:**
+- No modo `path`, a linha a seguir é uma lista de nós (`getMainLine(abertura)` ou `variação.line`, da F05). A escolha
+  compara pelo objeto da árvore. Se a linha não combina com a posição (por exemplo, a pessoa usou uma ordem
+  alternativa de um sistema), o adversário joga a linha principal em vez de travar.
+- No Desafio, o número sorteado (0 a menos de 1) é dividido em fatias iguais, uma por galho. Se a fonte devolver
+  exatamente 1, escolhe o último galho, para nunca estourar a lista.
+- Num teste, um sorteio de valor fixo repetia a mesma escolha em todas as bifurcações e nunca combinava "principal
+  numa, variação na outra". Troquei por um gerador simples com semente fixa (60 partidas, sempre o mesmo resultado).
+- `playOpponentMove` (F15) não mudou; a escolha nova só decide qual nó passar a ele.
+- Nenhuma dependência nova. Sem interface, então sem captura de tela.
+**Problemas e pendências:** o motor ainda não guarda a "etapa" da lição (Assistir, Praticar…) nem decide quando uma
+variação começa; isso é da camada de interface. Um comando de shell com texto longo falhou por aspas no meio do
+turno; nada foi alterado por ele e refiz com as ferramentas de edição.
+**Próximo turno:** a próxima funcionalidade com `passes: false` em `features.json` (F17).

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import italiana from '../content/openings/italiana'
 import {
+  chooseOpponentNode,
   createLesson,
   getExpectedMoves,
   getGuide,
@@ -9,11 +10,14 @@ import {
   getTurn,
   isFinished,
   playOpponentMove,
+  playOpponentTurn,
   playUserMove,
   undoOffScriptMove,
   type LessonState,
+  type OpponentMode,
+  type RandomSource,
 } from './lessonEngine'
-import { getMainLine, type Opening, type OpeningNode } from './openingTree'
+import { getMainLine, getVariations, type Opening, type OpeningNode } from './openingTree'
 
 /** Joga um lance da pessoa e exige que esteja correto. */
 function userPlays(state: LessonState, san: string): LessonState {
@@ -336,5 +340,165 @@ describe('motor da lição: sistemas (alternativas aceitas)', () => {
       // A dica mostrada é a do lance principal daquele momento.
       expect(result.message).toContain('Desenvolva o bispo do lado da dama')
     }
+  })
+})
+
+// ---------------------------------------------------------------------------
+// F16 · Escolha de galhos do adversário
+// ---------------------------------------------------------------------------
+
+/** Joga a lição inteira: a pessoa segue o roteiro e o adversário responde pelo `mode`. */
+function playWholeLine(opening: Opening, mode: OpponentMode): LessonState {
+  let state = createLesson(opening)
+  for (let guard = 0; guard < 200 && !isFinished(state); guard++) {
+    if (getStatus(state) === 'user-turn') {
+      const [san] = getExpectedMoves(state)
+      state = userPlays(state, san)
+    } else {
+      state = playOpponentTurn(state, mode)
+    }
+  }
+  return state
+}
+
+/** Anda pela linha principal até a primeira vez em que o adversário tem mais de um galho. */
+function stateAtFirstFork(): LessonState {
+  const variation = getVariations(italiana)[0]
+  let state = createLesson(italiana)
+  while (state.path.length < variation.path.length - 1) {
+    state =
+      getStatus(state) === 'user-turn'
+        ? userPlays(state, getExpectedMoves(state)[0])
+        : playOpponentMove(state)
+  }
+  return state
+}
+
+/** Fonte de acaso previsível: devolve os valores da lista, um por vez (e repete o último). */
+function fakeRandom(values: number[]): RandomSource {
+  let i = 0
+  return () => values[Math.min(i++, values.length - 1)]
+}
+
+const mainLineSans = getMainLine(italiana).map((node) => node.san)
+
+describe('motor da lição: modo caminho (linha principal ou variação)', () => {
+  const variations = getVariations(italiana)
+
+  it('a Italiana tem variações para testar', () => {
+    expect(variations.length).toBeGreaterThanOrEqual(2)
+  })
+
+  it('seguindo a linha principal, o adversário joga sempre o primeiro galho', () => {
+    const final = playWholeLine(italiana, { kind: 'path', line: getMainLine(italiana) })
+    expect(final.moves).toEqual(mainLineSans)
+  })
+
+  it.each(variations.map((variation) => [variation.name, variation] as const))(
+    'seguindo a variação "%s", o adversário joga exatamente os lances dela',
+    (_name, variation) => {
+      const final = playWholeLine(italiana, { kind: 'path', line: variation.line })
+      expect(final.moves).toEqual(variation.line.map((node) => node.san))
+      // Garante que NÃO caiu na linha principal.
+      expect(final.moves).not.toEqual(mainLineSans)
+      expect(isFinished(final)).toBe(true)
+    },
+  )
+
+  it('no ponto de desvio o adversário escolhe o galho da variação, e não o da linha principal', () => {
+    const variation = getVariations(italiana)[0]
+    const mode: OpponentMode = { kind: 'path', line: variation.line }
+    const fork = stateAtFirstFork()
+    expect(getStatus(fork)).toBe('opponent-turn')
+    expect(getOpponentOptions(fork).length).toBeGreaterThan(1)
+    expect(chooseOpponentNode(fork, mode)).toBe(variation.deviation)
+    expect(chooseOpponentNode(fork, mode)).not.toBe(getOpponentOptions(fork)[0])
+  })
+
+  it('fora da vez do adversário, não escolhe nada e não muda o estado', () => {
+    const start = createLesson(italiana) // vez da pessoa
+    const mode: OpponentMode = { kind: 'path', line: getMainLine(italiana) }
+    expect(chooseOpponentNode(start, mode)).toBeNull()
+    expect(playOpponentTurn(start, mode)).toBe(start)
+  })
+
+  it('se a linha pedida não combina com a posição, cai para a linha principal em vez de travar', () => {
+    // Uma linha vazia nunca tem "o nó certo": o adversário joga o primeiro galho.
+    const afterE4 = userPlays(createLesson(italiana), 'e4')
+    const next = playOpponentTurn(afterE4, { kind: 'path', line: [] })
+    expect(next.moves).toEqual(['e4', 'e5'])
+  })
+})
+
+describe('motor da lição: modo Desafio (acaso controlado)', () => {
+  it('cada galho pode ser escolhido, conforme o número sorteado', () => {
+    const fork = stateAtFirstFork()
+    const options = getOpponentOptions(fork)
+    expect(options.length).toBeGreaterThan(1)
+
+    options.forEach((expected, index) => {
+      // O meio da "fatia" de cada galho: (index + 0,5) sobre o total.
+      const random = fakeRandom([(index + 0.5) / options.length])
+      expect(chooseOpponentNode(fork, { kind: 'challenge', random })).toBe(expected)
+    })
+  })
+
+  it('os extremos do sorteio escolhem o primeiro e o último galho; 1 exato não estoura', () => {
+    const fork = stateAtFirstFork()
+    const options = getOpponentOptions(fork)
+    const pick = (value: number) =>
+      chooseOpponentNode(fork, { kind: 'challenge', random: () => value })
+    expect(pick(0)).toBe(options[0])
+    expect(pick(0.999999)).toBe(options[options.length - 1])
+    expect(pick(1)).toBe(options[options.length - 1])
+  })
+
+  it('com acaso sempre 0 o Desafio vira a linha principal; com acaso quase 1, outra linha', () => {
+    const main = playWholeLine(italiana, { kind: 'challenge', random: () => 0 })
+    expect(main.moves).toEqual(mainLineSans)
+
+    const other = playWholeLine(italiana, { kind: 'challenge', random: () => 0.999999 })
+    expect(isFinished(other)).toBe(true)
+    expect(other.moves).not.toEqual(mainLineSans)
+  })
+
+  it('a linha principal e toda variação podem ser sorteadas, e a partida sempre chega a uma folha', () => {
+    const seen = new Set<string>()
+    // Várias partidas, cada uma com um acaso "de mentira" que sempre dá a mesma sequência
+    // (gerador simples com semente fixa). Assim o teste é previsível, mas passa por
+    // combinações diferentes de galhos. Cada partida tem de terminar numa folha.
+    for (let seed = 1; seed <= 60; seed++) {
+      let x = seed
+      const random: RandomSource = () => {
+        x = (x * 1664525 + 1013904223) % 4294967296
+        return x / 4294967296
+      }
+      const final = playWholeLine(italiana, { kind: 'challenge', random })
+      expect(isFinished(final)).toBe(true)
+      expect(final.path[final.path.length - 1].children).toEqual([])
+      seen.add(final.moves.join(' '))
+    }
+    const expected = [getMainLine(italiana), ...getVariations(italiana).map((v) => v.line)].map(
+      (line) => line.map((node) => node.san).join(' '),
+    )
+    for (const line of expected) expect(seen).toContain(line)
+  })
+
+  it('um acaso que alterna valores também sempre termina numa folha', () => {
+    const final = playWholeLine(italiana, {
+      kind: 'challenge',
+      random: fakeRandom([0.9, 0.1, 0.5, 0.99, 0.01]),
+    })
+    expect(isFinished(final)).toBe(true)
+  })
+
+  it('sem fonte de acaso informada, usa Math.random e ainda termina numa folha', () => {
+    const final = playWholeLine(italiana, { kind: 'challenge' })
+    expect(isFinished(final)).toBe(true)
+  })
+
+  it('fora da vez do adversário, o Desafio não escolhe nada', () => {
+    const start = createLesson(italiana)
+    expect(chooseOpponentNode(start, { kind: 'challenge', random: () => 0 })).toBeNull()
   })
 })

@@ -253,3 +253,57 @@ export function getGuide(state: LessonState): MoveGuide | null {
 export function isFinished(state: LessonState): boolean {
   return getStatus(state) === 'finished'
 }
+
+// ---------------------------------------------------------------------------
+// Escolha do galho do adversário (F16)
+//
+// O adversário pode responder de dois jeitos:
+// - `path`: segue um caminho já escolhido (a linha principal ou uma variação);
+// - `challenge`: modo Desafio, escolhe AO ACASO entre os galhos existentes.
+// A fonte de acaso é passada de fora (`random`), para os testes serem previsíveis.
+// ---------------------------------------------------------------------------
+
+/** Uma função que devolve um número de 0 (inclusive) a 1 (exclusive), como `Math.random`. */
+export type RandomSource = () => number
+
+export type OpponentMode =
+  | {
+      kind: 'path'
+      /** A linha a seguir: `getMainLine(abertura)` ou `variação.line` (de `getVariations`). */
+      line: readonly OpeningNode[]
+    }
+  | {
+      kind: 'challenge'
+      /** De onde vem o acaso. Se faltar, usa `Math.random`. */
+      random?: RandomSource
+    }
+
+/**
+ * Escolhe o galho que o adversário vai jogar agora, ou `null` se não for a vez dele.
+ *
+ * - Modo `path`: pega o nó da linha que está na posição atual. Se a pessoa saiu da
+ *   linha (por exemplo, usou uma ordem alternativa de um sistema) e esse nó não é
+ *   mais possível, cai para a linha principal em vez de travar.
+ * - Modo `challenge`: sorteia entre todos os galhos possíveis.
+ */
+export function chooseOpponentNode(state: LessonState, mode: OpponentMode): OpeningNode | null {
+  const options = getOpponentOptions(state)
+  if (options.length === 0) return null
+
+  if (mode.kind === 'path') {
+    const wanted = mode.line[state.path.length]
+    // Compara pela identidade (é o mesmo objeto da árvore), igual ao resto do motor.
+    return options.find((node) => node === wanted) ?? options[0]
+  }
+
+  const random = mode.random ?? Math.random
+  // `min` protege contra uma fonte de acaso que devolva exatamente 1.
+  const index = Math.min(options.length - 1, Math.floor(random() * options.length))
+  return options[index]
+}
+
+/** O adversário responde segundo o modo escolhido. Fora da vez dele, nada muda. */
+export function playOpponentTurn(state: LessonState, mode: OpponentMode): LessonState {
+  const node = chooseOpponentNode(state, mode)
+  return node ? playOpponentMove(state, node) : state
+}

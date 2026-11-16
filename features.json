@@ -180,7 +180,7 @@
       "Testes de unidade: no modo caminho, o adversário segue exatamente a variação escolhida",
       "Testes de unidade: no modo Desafio, com acaso controlado, cada galho pode ser escolhido e a linha sempre chega a uma folha"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F17",
