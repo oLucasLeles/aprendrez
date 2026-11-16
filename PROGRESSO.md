@@ -670,3 +670,33 @@ etapa Conhecer, que não tem linha para reiniciar. Para isso, juntei a entrada e
 - Subi o servidor de desenvolvimento para as capturas e o encerrei no fim do turno.
 **Próximo turno:** F25 · Aberturas de pretas (depende do conteúdo da Escandinava, F26). Como a F25 depende da F26, pode
 valer fazer a F26 primeiro e registrar o motivo.
+
+## Turno 2026-11-16 01:20 · [F26] Conteúdo: Defesa Escandinava
+**Status:** concluída
+**O que fiz:** Criei `src/content/openings/escandinava.ts`, a segunda abertura e a primeira de pretas. A linha principal é
+`1.e4 d5 2.exd5 Dxd5 3.Cc3 Da5 4.d4 Cf6 5.Cf3 Bf5 6.Bc4 e6 7.Bd2 c6 8.De2` (7 lances da pessoa e 8 do adversário, contando o
+`1.e4` assumido, que é o primeiro nó da árvore). Cada lance da pessoa tem explicação e dica, e há erros comuns em 6 deles
+(`f5`, `Cc6`, `Dxg2`, `Dxa2`, `Bxc2`...). O validador (F06) pegou o arquivo sozinho e passou, e o `docs/ABERTURAS.md` foi
+regenerado com a nova abertura.
+**Decisões:**
+- **Pulei a F25 (Aberturas de pretas) e fiz a F26 antes**, porque o primeiro passo da F25 diz "depende do conteúdo da Escandinava (F26)".
+  A F25 fica para o próximo turno.
+- **Nome na base do Lichess: `Scandinavian Defense`** (a entrada `1. e4 d5`), e não uma entrada mais específica como "Main Line".
+  Motivo: as variações desviam das brancas no lance 3 (`3.Cf3`), antes de a entrada "Main Line" terminar (`3...Da5`), e o
+  validador exige que **toda** linha comece com uma entrada da base. Com o nome mais geral, tudo confere e continua sendo uma entrada real.
+- **Variação 1, "Brancas jogam Cf3 em vez de Cc3":** `3.Cf3 Cf6 4.d4 Bg4 5.Be2 e6 6.O-O`. Como a dama não é atacada, a pessoa
+  desenvolve o cavalo e depois o bispo.
+- **Variação 2, "Brancas jogam Bc4 antes do cavalo":** `5.Bc4 Bf5 6.Cf3 e6 7.Bd2`. É a mesma posição da linha principal com a ordem
+  dos lances das brancas trocada; o texto diz isso. Escolhi essa por ser a que tenho mais certeza de que está correta, sem
+  consultar um livro de aberturas.
+- Mantive o mesmo estilo da Italiana: peças ditas por extenso nos textos, termos como "centro", "desenvolver" e "roque" explicados na primeira vez.
+- Nenhuma dependência nova. Sem interface, então sem captura de tela.
+**Problemas e pendências:**
+- Os testes garantem lances legais e a ligação com a base do Lichess, mas **não** garantem que as explicações ensinam bem nem que as
+  continuações depois do trecho da base (do lance 4 em diante) são as mais usadas na teoria. Precisa de revisão humana a partir do
+  `docs/ABERTURAS.md` (SPEC, seção 15). Vale olhar principalmente a variação 1 (`4...Bg4 5.Be2`) e a explicação do `Da5`.
+- A segunda variação é uma troca de ordem (chega na mesma posição); se quiserem uma variação com ideia diferente, é só trocá-la.
+- O arquivo não segue ordem de trilha no `docs/ABERTURAS.md` (a Escandinava aparece antes da Italiana por ordem alfabética dos
+  arquivos). Isso já estava anotado na F09 e se resolve quando houver um catálogo com a ordem oficial.
+**Próximo turno:** F25 · Aberturas de pretas (agora desbloqueada). Hoje a etapa Praticar do `LessonScreen.tsx` nunca foi exercitada
+com abertura de pretas no navegador: confira que o tabuleiro fica invertido em todas as etapas e que o `1.e4` já aparece jogado.

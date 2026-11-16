@@ -293,7 +293,7 @@
       "O validador de conteúdo (F06) passa para esta abertura",
       "docs/ABERTURAS.md está atualizado"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F27",

@@ -6,6 +6,70 @@
 
 ---
 
+## Defesa Escandinava
+
+- **Cor:** Pretas
+- **Nível:** 1 · Primeiros passos
+- **Tipo:** Linha fixa
+- **Nome na base do Lichess:** Scandinavian Defense
+- **Assume que o adversário começa com:** 1. e4
+
+**Ideia:** Você responde ao peão do rei das brancas atacando o centro de imediato, com o peão da dama. Depois da troca de peões, sua dama sai cedo, mas você a leva para um canto seguro e desenvolve as outras peças com calma.
+
+**Ideias-chave:**
+
+- Atacar o centro logo no primeiro lance obriga as brancas a decidir o que fazer com o peão de e4.
+- A dama captura o peão e sai cedo; por isso ela vai para a5, uma casa na lateral onde é difícil as brancas ganharem tempo atacando-a.
+- O bispo da dama sai para f5, fora da cadeia de peões, antes de você fechar a posição com e6.
+
+### Linha principal
+
+`1. e4 d5 2. exd5 Dxd5 3. Cc3 Da5 4. d4 Cf6 5. Cf3 Bf5 6. Bc4 e6 7. Bd2 c6 8. De2`
+
+- **1... d5**: O peão da dama avança duas casas e ataca o peão branco de e4. Em vez de esperar, você disputa o centro (as casas do meio do tabuleiro) já no primeiro lance.
+  - Dica: Responda disputando o centro: ataque o peão branco com o peão que fica na frente da dama.
+  - Erro comum, f5: O peão de f5 fica atacado pelo peão branco de e4, e você perde um peão logo de cara. Além disso, ele deixa o seu rei mais exposto.
+- **2... Dxd5**: Você recupera o peão capturando com a dama. Assim você fica com o centro livre e as peças brancas ainda não têm ataque nenhum.
+  - Dica: Recupere o peão que foi capturado usando a peça mais forte do seu lado.
+  - Erro comum, Cc6: Esse lance desenvolve um cavalo, mas não recupera o peão. As brancas podem proteger o peão de d5 com c4 e ficar com um peão a mais.
+- **3... Da5**: O cavalo branco ataca a sua dama. Ela recua para a5, uma casa segura que também fica de olho no cavalo de c3. Perder tempo com a dama é o preço dessa abertura, e aqui ele é pequeno.
+  - Dica: Tire a dama do ataque levando-a para a lateral do tabuleiro, de onde ela ainda observa o cavalo.
+  - Erro comum, Dxg2: A dama captura um peão, mas ele é protegido pelo bispo de f1. As brancas capturam a sua dama, a peça mais valiosa depois do rei.
+- **4... Cf6**: O cavalo do rei sai para uma casa que controla o centro (as casas d5 e e4) e prepara o seu roque, que é o lance especial que protege o rei.
+  - Dica: Desenvolva o cavalo do lado do rei, numa casa que ajude a controlar o centro.
+  - Erro comum, Dxa2: A dama captura o peão da borda, mas a torre branca de a1 captura a sua dama. Não vale a pena arriscar a dama por um peão.
+- **5... Bf5**: O bispo da dama sai pela diagonal que passa por fora dos seus peões. Você o desenvolve agora porque, depois de e6, ele ficaria preso atrás dos peões.
+  - Dica: Tire o bispo que ficaria trancado atrás dos peões antes de fechar a posição.
+- **6... e6**: Esse peão protege o centro, abre caminho para o bispo do rei e fecha a diagonal do bispo branco de c4, que apontava para a sua posição.
+  - Dica: Com um peão do centro, abra caminho para o bispo do rei e bloqueie a diagonal do bispo branco.
+- **7... c6**: O peão de c6 dá firmeza ao centro e deixa a casa d5 bem protegida. Com a posição sólida, você está pronto para rocar e desenvolver o resto das peças.
+  - Dica: Dê mais firmeza ao seu centro com um peão ao lado do rei, mas na coluna do bispo da dama.
+  - Erro comum, Bxc2: O bispo captura um peão, mas a dama branca captura o bispo de volta. Você trocaria uma peça por um peão.
+
+### Variações
+
+#### Brancas jogam Bc4 antes do cavalo
+
+`1. e4 d5 2. exd5 Dxd5 3. Cc3 Da5 4. d4 Cf6 5. Bc4 Bf5 6. Cf3 e6 7. Bd2`
+
+- **5... Bf5**: Seu plano não muda: o bispo da dama sai para fora da cadeia de peões antes de você jogar e6. A ordem dos lances das brancas mudou, mas a ideia é a mesma.
+  - Dica: Mesmo com o bispo branco já em c4, tire o seu bispo da dama para fora dos peões.
+- **6... e6**: Agora a posição é a mesma da linha principal: o peão protege o centro, abre caminho para o bispo do rei e bloqueia a diagonal do bispo de c4.
+  - Dica: Com um peão do centro, abra caminho para o bispo do rei e bloqueie a diagonal do bispo branco.
+
+#### Brancas jogam Cf3 em vez de Cc3
+
+`1. e4 d5 2. exd5 Dxd5 3. Cf3 Cf6 4. d4 Bg4 5. Be2 e6 6. O-O`
+
+- **3... Cf6**: Dessa vez a sua dama não está sendo atacada, então não há pressa em movê-la. Você desenvolve o cavalo do rei, que controla o centro e prepara o roque.
+  - Dica: Sua dama está em paz: use o tempo para desenvolver o cavalo do lado do rei.
+- **4... Bg4**: O bispo da dama sai pela diagonal de fora e pressiona o cavalo de f3, que protege o peão branco do centro. Assim você desenvolve uma peça e incomoda as brancas ao mesmo tempo.
+  - Dica: Desenvolva o bispo da dama para uma casa de onde ele pressione o cavalo que protege o centro branco.
+- **5... e6**: O peão protege o centro e abre caminho para o bispo do rei, que vai ajudar a proteger o rei depois do roque.
+  - Dica: Abra caminho para o bispo do rei com um peão do centro.
+
+---
+
 ## Italiana (Giuoco Piano)
 
 - **Cor:** Brancas
