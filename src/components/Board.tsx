@@ -38,6 +38,14 @@ type BoardProps = {
 // Duração da animação das peças. A SPEC (seção 9) manda animações de até 200 ms.
 const PIECE_ANIMATION_MS = 150
 
+// Estilo comum das letras (a–h) e números (1–8) nas bordas do tabuleiro.
+const notationStyle = {
+  color: 'var(--color-text)',
+  fontSize: 'var(--font-size-board-notation)',
+  fontWeight: 'var(--font-weight-medium)',
+  lineHeight: 1,
+}
+
 // Quem pediu "menos movimento" no sistema não vê as peças deslizando (SPEC, seção 9).
 // Lemos a preferência de forma "viva": se a pessoa mudar a configuração com o app
 // aberto, o tabuleiro acompanha sem precisar recarregar.
@@ -210,8 +218,10 @@ function Board({ fen, orientation = 'white', lastMove = null, guide = null, play
           // As letras e números das bordas usam o texto padrão em todas as casas
           lightSquareNotationStyle: { color: 'var(--color-text)' },
           darkSquareNotationStyle: { color: 'var(--color-text)' },
-          alphaNotationStyle: { color: 'var(--color-text)', fontSize: 'var(--font-size-sm)' },
-          numericNotationStyle: { color: 'var(--color-text)', fontSize: 'var(--font-size-sm)' },
+          // Tamanho que acompanha as casas, peso médio para ler bem mesmo pequeno,
+          // e encostadas no canto (2 px), para invadir o mínimo possível o desenho da peça.
+          alphaNotationStyle: { ...notationStyle, bottom: 1, right: 2 },
+          numericNotationStyle: { ...notationStyle, top: 1, left: 2 },
         }}
       />
     </div>

@@ -6,8 +6,8 @@ test('cada endereço mostra a tela certa', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: 'Aprendrez' })).toBeVisible()
 
   await page.goto('/abertura/italiana')
-  await expect(page.getByRole('heading', { level: 1, name: 'Lição' })).toBeVisible()
-  await expect(page.getByText('Abertura: italiana')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Italiana (Giuoco Piano)' })).toBeVisible()
+  await expect(page.getByText('Lição de abertura')).toBeVisible()
 
   await page.goto('/rota-que-nao-existe')
   await expect(page.getByRole('heading', { level: 1, name: 'Página não encontrada' })).toBeVisible()
@@ -27,7 +27,7 @@ test('os links levam de volta ao início', async ({ page }) => {
 test('recarregar a lição continua mostrando a lição', async ({ page }) => {
   await page.goto('/abertura/italiana')
   await page.reload()
-  await expect(page.getByRole('heading', { level: 1, name: 'Lição' })).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Italiana (Giuoco Piano)' })).toBeVisible()
 })
 
 test('as páginas não têm rolagem horizontal', async ({ page }) => {

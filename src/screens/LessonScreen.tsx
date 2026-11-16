@@ -238,8 +238,9 @@ function LessonScreen() {
         <p>
           <Link to="/">Voltar à trilha</Link>
         </p>
-        <h1>Lição</h1>
-        <p>Abertura: {opening.name}</p>
+        {/* O nome da abertura é o título da tela; "Lição" vira uma etiqueta pequena acima dele. */}
+        <p className="lesson-eyebrow">Lição de abertura</p>
+        <h1 className="lesson-title">{opening.name}</h1>
       </div>
 
       <div className="lesson-board">

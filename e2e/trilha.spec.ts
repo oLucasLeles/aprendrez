@@ -154,7 +154,7 @@ test('na primeira visita o botão diz "Começar" e leva à Italiana', async ({ p
 
   await botao.click()
   await expect(page).toHaveURL('/abertura/italiana')
-  await expect(page.getByText('Abertura: Italiana (Giuoco Piano)')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Italiana (Giuoco Piano)' })).toBeVisible()
 })
 
 test('com a Italiana concluída, o botão leva à próxima abertura da trilha', async ({ page }) => {
@@ -169,7 +169,7 @@ test('com a Italiana concluída, o botão leva à próxima abertura da trilha', 
 
   await page.getByRole('link', { name: 'Continuar de onde parei' }).click()
   await expect(page).toHaveURL('/abertura/londres')
-  await expect(page.getByText('Abertura: Sistema Londres')).toBeVisible()
+  await expect(page.getByRole('heading', { level: 1, name: 'Sistema Londres' })).toBeVisible()
 })
 
 test('com uma abertura em andamento, o botão volta a ela, na etapa certa', async ({ page }) => {

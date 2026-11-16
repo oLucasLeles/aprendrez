@@ -1204,3 +1204,18 @@ de lances não mudaram, só textos. As afirmações de xadrez duvidosas foram co
 7. **Caro-Kann, 3...dxe4:** a vantagem real é o bispo sair para f5 atacando o cavalo e ganhando tempo.
 `docs/ABERTURAS.md` foi gerado de novo e `npm run verificar` passou (217 testes de unidade, 310 de ponta a ponta).
 **Pendências de revisão humana que continuam:** licença das peças (Cburnett) e os ajustes visuais listados na entrada da F44.
+
+## Nota do supervisor · 2026-11-16 · ajustes visuais
+**O que mudou** (pedido do dono do projeto, a partir das pendências da F44):
+1. **Título da lição:** o nome da abertura virou o título (h1) da tela. "Lição de abertura" ficou como uma etiqueta
+   pequena acima dele, e a linha "Abertura: …" saiu. O título usa um tamanho menor que o da tela inicial, porque alguns
+   nomes são longos (ex.: "Defesa Siciliana (linha aberta)").
+2. **Letras e números das bordas do tabuleiro:** novo token `--font-size-board-notation`, que vai de 11 px (celular) a
+   14 px (desktop), com peso médio e encostado no canto da casa, para cobrir menos as peças.
+3. **Botões desativados:** cinza neutro (fundo `--color-surface-muted`, texto `--color-text-secondary`) em vez do
+   vermelho apagado. O vermelho fica só para o que a pessoa pode fazer agora.
+4. **Indicador de etapas:** virou uma grade (3 colunas no desktop, 2 no celular), em vez de uma linha que quebrava
+   deixando "Desafio" sozinho embaixo.
+**Testes:** os que procuravam o título "Lição" e o texto "Abertura: …" agora procuram o nome da abertura como título,
+uma checagem mais específica que a anterior. `npm run verificar` passou (217 de unidade, 310 de ponta a ponta).
+As capturas de `docs/capturas/revisao/` foram geradas de novo com `npm run capturas`.
