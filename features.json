@@ -303,7 +303,7 @@
     "passos": [
       "Teste e2e: ao concluir a Italiana, a tela mostra a linha principal e o botão 'Próxima abertura' leva à próxima abertura da trilha"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F28",

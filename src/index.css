@@ -315,3 +315,42 @@ textarea {
   flex: none;
   margin-top: 0.2em;
 }
+
+/* ---------- Tela de conclusão (F27) ---------- */
+.conclusion-board {
+  grid-column: 1 / -1;
+  margin-bottom: var(--space-3);
+}
+
+.conclusion-text {
+  grid-column: 1 / -1;
+}
+
+.conclusion-moves {
+  color: var(--color-text-secondary);
+}
+
+.conclusion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+/* Desktop: tabuleiro à esquerda (7 colunas) e texto à direita (5), como na lição */
+@media (min-width: 768px) {
+  .conclusion-board {
+    grid-column: 1 / span 7;
+    margin-bottom: 0;
+  }
+
+  .conclusion-text {
+    grid-column: 8 / span 5;
+  }
+}
+
+.conclusion-next {
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+}

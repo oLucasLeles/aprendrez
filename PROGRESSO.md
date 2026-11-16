@@ -724,3 +724,27 @@ brancas respondem `2. exd5`. Capturas olhadas: `docs/capturas/f25-guia-desktop.p
 - Subi o servidor de desenvolvimento para as capturas e o encerrei no fim do turno.
 **Próximo turno:** F27 · Tela de conclusão (hoje `ConclusionScreen.tsx` é só um esqueleto da F23). Vai precisar da "próxima abertura
 da trilha": hoje só há 2 aberturas (Italiana e Escandinava, ambas nível 1) e a ordem oficial da trilha ainda não existe num catálogo.
+
+## Turno 2026-11-16 02:00 · [F27] Tela de conclusão
+**Status:** concluída
+**O que fiz:** Completei a tela de conclusão (`src/screens/ConclusionScreen.tsx`): tabuleiro só para olhar na posição final da linha
+principal (com o lado da pessoa embaixo), a ideia da abertura, a linha principal em notação portuguesa e os botões **"Próxima
+abertura"** (vermelho, leva à próxima da trilha) e **"Voltar à trilha"**. Para saber qual é a "próxima da trilha", criei
+`src/content/trail.ts` com a ordem oficial da SPEC (seção 5) e a função `getNextOpening`. Testes novos: `src/content/trail.test.ts`
+(unidade) e `e2e/conclusao.spec.ts` (desktop e celular), que joga o Desafio da Italiana inteiro, confere a linha principal, a posição
+final e clica em "Próxima abertura". Capturas olhadas: `docs/capturas/f27-desktop.png` e `f27-celular.png`.
+**Decisões:**
+- **A ordem da trilha fica em `TRAIL_ORDER`** (ids das 8 aberturas, na ordem da tabela da SPEC). Os ids das aberturas que ainda não existem
+  (`londres`, `espanhola`, `caro-kann`, `gambito-da-dama-recusado`, `gambito-da-dama`, `siciliana`) são um palpite: quem criar o
+  conteúdo precisa usar o mesmo id ou ajustar a lista. Um teste de unidade falha se uma abertura do catálogo não estiver na lista.
+  Aberturas sem conteúdo são puladas. Hoje a próxima depois da Italiana é a Escandinava.
+- Na última abertura da trilha com conteúdo, o botão "Próxima abertura" não aparece (só "Voltar à trilha").
+- Mostrei a **ideia completa** (até 3 frases, como está no conteúdo) e não uma frase só, para não inventar um resumo novo.
+- A "próxima" é sempre a seguinte na ordem da trilha, não a próxima ainda não concluída; o progresso (F28) ainda não existe.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- O teste `licao-variacoes` no celular falhou uma vez na primeira rodada do `npm run verificar` (e passou sozinho e na rodada seguinte).
+  É o mesmo teste que a F22 já tinha anotado como instável: ele é longo (~33 s) e fica sensível quando a máquina está carregada.
+  Vale encurtá-lo (voltando a etapas já vistas, agora que a F24 existe) num turno de consertos.
+- A tela de conclusão pode ser aberta digitando o endereço, sem ter concluído o Desafio; só o progresso salvo (F28) permitirá controlar isso, se quiserem.
+**Próximo turno:** F28 · Progresso no navegador. Pasta `src/progress/` ainda não existe; a lição guarda `reachedStage` em `LessonScreen.tsx`.
