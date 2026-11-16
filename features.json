@@ -221,7 +221,7 @@
     "categoria": "Lição",
     "titulo": "Etapa Praticar com guia",
     "descricao": "A pessoa joga a linha principal com o guia (F13) mostrando a peça e o destino. Depois de um lance correto aparece a confirmação com a explicação, e o adversário responde automaticamente depois de cerca de 400 ms. A lista de lances é atualizada.",
-    "passes": false,
+    "passes": true,
     "passos": [
       "Teste e2e: jogar a linha principal da Italiana inteira seguindo o guia, por clique",
       "Teste e2e: o lance do adversário aparece sozinho depois de cada lance correto"

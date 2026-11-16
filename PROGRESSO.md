@@ -534,3 +534,27 @@ volta posição e narração; o "Próximo" para no último lance. Capturas olhad
 de desenvolvimento em segundo plano para as capturas; pode ter ficado rodando na porta 5173.
 **Próximo turno:** F20 · Etapa Praticar com guia. Use `Board` com `playerColor`, `guide` e `onMove`, e o motor da lição
 (`playUserMove`, `playOpponentTurn`, `getGuide`) de `src/chess/lessonEngine.ts`; o adversário responde após cerca de 400 ms.
+
+## Turno 2026-11-15 23:45 · [F20] Etapa Praticar com guia
+**Status:** concluída
+**O que fiz:** O "Continuar" da etapa Assistir agora leva à etapa **Praticar com guia**. A pessoa joga a linha principal pelo
+tabuleiro (clique, arrastar ou teclado), com o guia da F13 mostrando a peça (destaque) e o destino (seta). Depois de um lance
+correto aparece "✓ Lance correto." com a explicação, e o adversário responde sozinho depois de 400 ms. A lista de lances cresce
+junto. No fim da linha a seta some e o "Continuar" é liberado. Toda a lógica vem do motor da lição (F15/F16: `createLesson`,
+`playUserMove`, `playOpponentTurn`, `getGuide`); o que fiz foi ligá-lo à tela em `src/screens/LessonScreen.tsx`. Teste novo:
+`e2e/licao-praticar-guia.spec.ts` (desktop e celular), que joga a Italiana inteira por clique seguindo o guia, confere o adversário
+respondendo sozinho e confere o caminho de lance fora do roteiro + "Voltar". Capturas olhadas: `docs/capturas/f20-desktop.png` e `f20-celular.png`.
+**Decisões:**
+- Durante a prática, "Continuar" fica desabilitado até a linha acabar (o indicador de etapas ainda não é clicável, então não dá para pular).
+- Mesmo com guia, a pessoa pode fazer um lance legal fora da linha. Para não travar, já tratei: o lance fica no tabuleiro, aparece
+  a mensagem do motor (dica ou erro comum) e o botão principal vira "Voltar", que desfaz. O ícone de erro, o "Ver lance" e os testes
+  desse fluxo são da F21; aqui só o mínimo para não travar (um teste cobre).
+- O adversário responde sempre pela linha principal (modo `path`). Variações e acaso entram nas etapas Variações e Desafio.
+- Ao entrar na etapa, a linha recomeça do zero. O temporizador de 400 ms é cancelado se a pessoa sair da etapa.
+- Não criei teste e2e para abertura de pretas (só há a Italiana, de brancas). A abertura automática do adversário já nasce
+  do mesmo código (`playOpponentTurn` quando é a vez dele), mas não foi exercitada no navegador.
+- Nenhuma dependência nova.
+**Problemas e pendências:** o teste da linha inteira leva ~10 s por causa dos 8 atrasos de 400 ms (é o esperado). O servidor de
+desenvolvimento ficou rodando em segundo plano (porta 5173) para as capturas.
+**Próximo turno:** F21 · Etapa Praticar sozinho. Reaproveite o estado `practice` da tela: falta passar `guide={null}`, o botão
+"Ver lance" (use `getGuide`) e o ícone de erro na mensagem fora do roteiro (sem vermelho).
