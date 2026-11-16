@@ -378,7 +378,7 @@
       "O validador de conteúdo (F06) passa para esta abertura",
       "Existe pelo menos uma alternativa de ordem com justificativa, e um teste e2e confirma que ela é aceita na prática sozinho"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F35",

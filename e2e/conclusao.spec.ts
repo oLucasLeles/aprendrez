@@ -43,8 +43,9 @@ test('ao concluir a Italiana, a tela mostra a linha principal e "Próxima abertu
   await expect(square(page, 'a7').locator('svg')).toHaveCount(1)
 
   await page.getByRole('button', { name: 'Próxima abertura' }).click()
-  await expect(page).toHaveURL(/\/abertura\/escandinava$/)
-  await expect(page.getByText('Abertura: Defesa Escandinava')).toBeVisible()
+  // Na trilha da SPEC, depois da Italiana vem o Sistema Londres.
+  await expect(page).toHaveURL(/\/abertura\/londres$/)
+  await expect(page.getByText('Abertura: Sistema Londres')).toBeVisible()
 })
 
 test('"Voltar à trilha" leva ao início', async ({ page }) => {

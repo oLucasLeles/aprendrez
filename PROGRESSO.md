@@ -890,3 +890,36 @@ texto do link legível ao passar o mouse. Capturas olhadas: `docs/capturas/f33-d
 - Os testes de rotas antigos (`e2e/rotas.spec.ts`) continuam valendo sem mudança.
 **Próximo turno:** F34 · Conteúdo: Sistema Londres (o primeiro sistema, com alternativa de ordem aceita e justificativa; regenerar `docs/ABERTURAS.md`).
 Lembre que o id da abertura precisa ser `londres`, como está em `TRAIL_ORDER`.
+
+## Turno 2026-11-16 04:20 · [F34] Conteúdo: Sistema Londres
+**Status:** concluída
+**O que fiz:** Criei `src/content/openings/londres.ts`, a primeira abertura do tipo **sistema** (brancas, nível 1). A linha principal é
+`1.d4 d5 2.Cf3 Cf6 3.Bf4 c5 4.e3 Cc6 5.Cbd2 e6 6.c3 Bd6 7.Bg3 O-O 8.Bd3 b6` (8 lances de cada lado). Cada lance das brancas tem explicação e dica,
+e há erros comuns em 4 lances (`h3`, `Qd3`, `e3` antes do bispo e `g4`). Há **uma alternativa de ordem aceita**, escrita como mais um galho:
+depois de `4...Cc6`, a pessoa pode jogar `5.c3` antes de `5.Cbd2`, porque as duas ordens chegam à mesma posição; a justificativa está na explicação
+do lance e aparece em "Alternativas de ordem aceitas" no `docs/ABERTURAS.md` (regenerado). Também há 2 variações do adversário: `3...e6` em vez de
+`3...c5` e `4...e6` antes de `4...Cc6` (esta chega à mesma posição da linha principal). O validador (F06) pegou o arquivo sozinho e passou. Teste novo:
+`e2e/licao-londres.spec.ts` (desktop e celular), que joga a alternativa `5.c3` na etapa Praticar sozinho até o fim da linha, confere a ordem principal,
+que um lance legal fora do conteúdo (`a3`) continua "fora do roteiro", o erro comum de `e3`, e a abertura aparecendo na trilha. Capturas olhadas:
+`docs/capturas/f34-*.png` (1440 px e 375 px).
+**Decisões:**
+- **Nome na base do Lichess: `Queen's Pawn Game: London System`** (a entrada `1.d4 d5 2.Nf3 Nf6 3.Bf4`, que a base tem em várias versões mais longas). Troquei a
+  ordem de lances do conteúdo para `1.d4 d5 2.Cf3 Cf6 3.Bf4` por causa disso. Uma primeira ideia de variação (`2...e6`) e a ordem acelerada (`2.Bf4`) são entradas
+  da base com **outro nome** ("…with e6", "Accelerated London System"), e o validador exige que toda linha comece com uma entrada do nome escolhido; por isso
+  as duas ficaram de fora e usei variações que ficam dentro da entrada escolhida.
+- **A alternativa de ordem fica depois da entrada do Lichess** (`5.c3` em vez de `5.Cbd2`), por esse mesmo motivo. Ela continua até o fim da linha (os dois galhos
+  usam a mesma continuação `6...Bd6 7.Bg3 O-O 8.Bd3 b6`, montada por uma função em `londres.ts` para cada galho ter seus próprios nós).
+- **Atualizei testes que tinham "2 aberturas" e "a próxima depois da Italiana é a Escandinava" escritos no código**, porque o catálogo passou a ter 3 aberturas e a
+  trilha da SPEC põe o Londres em segundo (`e2e/trilha.spec.ts` e `e2e/conclusao.spec.ts`: "de 2" virou "de 3", a lista de cartões ganhou o Londres, "Não iniciada"
+  são 3, a próxima passou a ser `/abertura/londres`, e o teste de "tudo concluído" marca também o Londres). Não removi nem enfraqueci nenhuma checagem; só acompanhei o
+  conteúdo novo e acrescentei checagens do cartão do Londres.
+- Sem dependências novas. A explicação dos lances do adversário continua a frase genérica da F19 (o conteúdo não tem explicação para eles).
+**Problemas e pendências:**
+- **Revisão humana do conteúdo** (SPEC, seção 15): os testes garantem lances legais e a ligação com a base, mas não que as explicações ensinam bem. Vale olhar a
+  explicação do `Bg3` (diz que, se as pretas trocarem, as brancas recapturam com o peão `h` e ganham uma coluna para a torre) e a das duas variações, que são
+  mais curtas.
+- O resumo de uma frase do cartão do Londres na trilha é mais longo que o dos outros (a primeira frase da ideia é comprida); vale encurtar a ideia num turno de polimento.
+- Os testes de e2e reescrevem `docs/capturas/f27-*.png` a cada execução (os bytes mudam um pouco). Restaurei esses dois arquivos para não sujar o commit.
+- A alternativa só vale depois de `4...Cc6`; não há alternativa de ordem nas outras casas. A SPEC pede "pelo menos uma".
+**Próximo turno:** F35 · Conteúdo: Espanhola (Ruy Lopez). Use o id `espanhola`, que já está em `TRAIL_ORDER`, e lembre que a linha precisa começar com uma entrada
+da base com **exatamente** o nome escolhido em `lichessName`.

@@ -131,3 +131,75 @@
   - Dica: Recupere o peão com o peão que preparou o avanço.
 - **7. Cc3**: Desenvolve o cavalo da dama, que protege o peão de e4 e aumenta a sua pressão sobre o centro.
   - Dica: Traga o cavalo que ainda está em casa para ajudar o centro.
+
+---
+
+## Sistema Londres
+
+- **Cor:** Brancas
+- **Nível:** 1 · Primeiros passos
+- **Tipo:** Sistema
+- **Nome na base do Lichess:** Queen's Pawn Game: London System
+
+**Ideia:** Você monta quase sempre o mesmo esquema de peças, sem precisar decorar muita teoria: peões em d4, e3 e c3, o bispo da dama fora da corrente de peões e os cavalos em f3 e d2. Como o esquema serve contra várias respostas, é uma boa abertura para quem está começando.
+
+**Ideias-chave:**
+
+- O bispo da dama sai para f4 antes de você jogar e3. Se o peão vier primeiro, o bispo fica preso atrás dele.
+- Os peões de d4, e3 e c3 formam uma estrutura firme que protege o centro e quase nunca precisa mudar.
+- Em um sistema, a ordem de alguns lances é flexível: o importante é chegar à mesma posição.
+
+### Linha principal
+
+`1. d4 d5 2. Cf3 Cf6 3. Bf4 c5 4. e3 Cc6 5. Cbd2 e6 6. c3 Bd6 7. Bg3 O-O 8. Bd3 b6`
+
+- **1. d4**: O peão da dama avança duas casas e ocupa o centro (as casas do meio do tabuleiro). Ele libera o bispo da dama e a dama para entrarem em jogo.
+  - Dica: Ocupe o centro avançando o peão que fica na frente da dama.
+  - Erro comum, h3: Esse peão da borda não ocupa o centro nem libera nenhuma peça. É um lance lento no momento em que as pretas estão tomando espaço.
+- **2. Cf3**: O cavalo do rei sai para uma casa que protege o peão de d4 e prepara o roque. Cavalos costumam ser desenvolvidos antes dos bispos.
+  - Dica: Desenvolva o cavalo do lado do rei, numa casa que ajude a proteger o seu peão do centro.
+  - Erro comum, Dd3: A dama sai cedo demais e ainda tampa a casa do bispo do rei. Peças menores podem atacá-la e você perde tempo tendo que movê-la de novo.
+- **3. Bf4**: Este é o lance que dá nome ao sistema. O bispo da dama sai para f4, fora da corrente de peões, e fica de olho na diagonal que vai até o lado da dama preta. Ele precisa sair agora, antes do peão de e3.
+  - Dica: Tire o bispo da dama para fora da corrente de peões, antes de fechar a diagonal dele.
+  - Erro comum, e3: O peão de e3 fecha a diagonal do bispo da dama, que fica preso atrás dele. No sistema Londres o bispo precisa sair primeiro e o peão vem depois.
+- **4. e3**: Agora o peão de e3 pode vir, porque o bispo já está fora. Ele protege o bispo de f4 e abre a diagonal do bispo do rei.
+  - Dica: Agora que o bispo da dama está fora, use um peão central para protegê-lo e abrir caminho para o bispo do rei.
+  - Erro comum, g4: O peão avança, mas fica sem proteção e pode ser capturado pelo cavalo ou pelo bispo preto. Além disso, ele enfraquece as casas em volta do seu rei.
+- **5. Cbd2**: O cavalo da dama sai para d2. Ele ajuda a controlar o centro (a casa e4) e deixa o peão de c livre para avançar até c3.
+  - Dica: Desenvolva o cavalo da dama para uma casa que não atrapalhe os peões nem o bispo.
+- **6. c3**: O peão de c3 protege o peão de d4 e completa a estrutura do sistema. Com ele, o centro das brancas fica firme contra os ataques das pretas.
+  - Dica: Complete a estrutura de peões protegendo o peão de d4 com o peão da coluna do bispo da dama.
+- **7. Bg3**: O bispo preto ataca o seu bispo de f4. Você o recua para g3, onde ele continua na mesma diagonal e fica protegido pelo peão de h2. Assim você não perde o bispo e, se as pretas o trocarem, você recaptura com o peão e ganha uma coluna aberta para a torre.
+  - Dica: Seu bispo da dama está sendo atacado: recue-o um passo, mantendo-o na mesma diagonal e protegido pelos peões.
+- **8. Bd3**: O bispo do rei sai para d3 e aponta para o lado do rei preto. Com os dois bispos, o cavalo e os peões bem colocados, a sua estrutura está completa. Agora falta só rocar (o lance especial que protege o rei) e escolher um plano.
+  - Dica: Desenvolva o bispo do rei para uma casa da diagonal que aponta para o lado do rei adversário.
+
+### Variações
+
+#### Pretas jogam e6 antes de Cc6
+
+`1. d4 d5 2. Cf3 Cf6 3. Bf4 c5 4. e3 e6 5. Cbd2 Cc6 6. c3 Bd6 7. Bg3 O-O 8. Bd3 b6`
+
+- **5. Cbd2**: Você continua o mesmo plano: o cavalo da dama sai para d2. A ordem dos lances das pretas mudou (e6 antes de Cc6), mas o seu esquema não muda.
+  - Dica: Desenvolva o cavalo da dama para uma casa que não atrapalhe os peões nem o bispo.
+- **6. c3**: Agora a posição é a mesma da linha principal: o peão de c3 protege o peão de d4 e completa a estrutura do sistema.
+  - Dica: Complete a estrutura de peões protegendo o peão de d4 com o peão da coluna do bispo da dama.
+- **7. Bg3**: O bispo preto ataca o seu bispo de f4. Você o recua para g3, onde ele continua na mesma diagonal e fica protegido pelo peão de h2. Assim você não perde o bispo e, se as pretas o trocarem, você recaptura com o peão e ganha uma coluna aberta para a torre.
+  - Dica: Seu bispo da dama está sendo atacado: recue-o um passo, mantendo-o na mesma diagonal e protegido pelos peões.
+- **8. Bd3**: O bispo do rei sai para d3 e aponta para o lado do rei preto. Com os dois bispos, o cavalo e os peões bem colocados, a sua estrutura está completa. Agora falta só rocar (o lance especial que protege o rei) e escolher um plano.
+  - Dica: Desenvolva o bispo do rei para uma casa da diagonal que aponta para o lado do rei adversário.
+
+#### Pretas jogam e6 em vez de c5
+
+`1. d4 d5 2. Cf3 Cf6 3. Bf4 e6 4. e3 Bd6 5. Bg3 O-O 6. Bd3 c5`
+
+- **4. e3**: A estrutura é a mesma: o peão de e3 protege o bispo e abre a diagonal do bispo do rei. Não importa se as pretas jogaram c5 ou e6, você monta o mesmo esquema.
+  - Dica: Monte a mesma estrutura de sempre, com o peão que protege o bispo da dama e abre caminho para o bispo do rei.
+- **5. Bg3**: O bispo preto ataca o seu bispo de f4. Você o recua para g3, onde ele fica protegido e continua na mesma diagonal, em vez de aceitar uma troca que não precisa.
+  - Dica: Seu bispo da dama está sendo atacado: recue-o um passo, mantendo-o na mesma diagonal.
+- **6. Bd3**: O bispo do rei sai para d3, apontando para o lado do rei preto. Os seus dois bispos agora trabalham juntos na mesma direção.
+  - Dica: Desenvolva o bispo do rei para a diagonal que aponta para o lado do rei adversário.
+
+### Alternativas de ordem aceitas
+
+- depois de 1. d4 d5 2. Cf3 Cf6 3. Bf4 c5 4. e3 Cc6, em vez de **5. Cbd2** também vale **5. c3**. Justificativa: Esta ordem também vale: você joga o peão de c3 agora e o cavalo de d2 no lance seguinte. Os dois lances são necessários nos dois jeitos, e depois de 5...e6 6.Cbd2 você chega exatamente à mesma posição da linha principal.
