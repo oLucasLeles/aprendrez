@@ -169,7 +169,7 @@
       "Testes de unidade: um erro comum cadastrado gera a explicação específica dele",
       "Testes de unidade: num sistema, uma alternativa cadastrada é aceita e segue pelo seu galho"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F16",

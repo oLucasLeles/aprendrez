@@ -408,3 +408,30 @@ do contorno da seleção para não se confundirem. A lógica de "para onde vai o
 - Um comando `cd` para dentro de `node_modules` desviou a pasta de trabalho do shell no meio do turno; voltei à raiz
   e confirmei que nada foi alterado lá.
 **Próximo turno:** F15 · Motor da lição (lógica pura). Usa `Opening`/`findNodePath` da F05 e `chess.js`; ainda sem interface.
+
+## Turno 2026-11-15 22:30 · [F15] Motor da lição (lógica pura)
+**Status:** concluída
+**O que fiz:** Criei `src/chess/lessonEngine.ts`, a lógica (sem interface) que conduz uma linha da árvore.
+Ela guarda um "estado da lição" e tem funções que devolvem um estado novo, sem mexer no antigo: de quem é a
+vez (`getStatus`, `getTurn`), quais lances são aceitos (`getExpectedMoves`), `playUserMove` (avalia o lance da
+pessoa: **correto**, com a explicação; **fora do roteiro**, que fica no tabuleiro; ou **rejeitado**, se for
+ilegal ou fora da vez), `playOpponentMove` (a resposta do adversário), `undoOffScriptMove` ("Voltar") e `getGuide`
+("Ver lance": peça e casa de destino). Os testes em `src/chess/lessonEngine.test.ts` cobrem os 4 passos da
+funcionalidade: linha principal da Italiana inteira, lance fora do roteiro com dica e "Voltar", erros comuns
+com a explicação específica, e um sistema de exemplo com ordem alternativa aceita.
+**Decisões:**
+- O lance da pessoa pode vir em SAN (`"Nf3"`) ou por casas (`{ from, to }`, como o tabuleiro entrega).
+  Quem confere a legalidade é o `chess.js`; promoção vira sempre dama, como no clique e no arrastar.
+- Enquanto há um lance fora do roteiro no tabuleiro, o estado é `off-script` e novos lances da pessoa são
+  rejeitados até o "Voltar" (SPEC 7.3: o botão principal vira "Voltar").
+- A mensagem genérica é "Esse lance é possível, mas não é o da abertura. Dica: …" com a dica do lance
+  esperado (o primeiro, se houver alternativas). Se o lance for um erro comum cadastrado, entra a explicação dele.
+- O ícone de erro (SPEC 13) é assunto da interface; o motor só diz se foi erro comum (`isCommonMistake`).
+- `playOpponentMove(state, escolhido?)` joga a linha principal por padrão e já aceita um galho escolhido,
+  para a F16 só acrescentar a escolha (caminho específico e Desafio com acaso).
+- A abertura de sistema dos testes é um exemplo só dos testes (não há sistema no conteúdo ainda).
+- Nenhuma dependência nova. Sem interface, então sem captura de tela.
+**Problemas e pendências:** o motor ainda não sabe começar numa variação nem escolher galhos ao acaso (F16).
+O estado não guarda "etapa" da lição (Assistir, Praticar…); isso é da camada de interface.
+**Próximo turno:** F16 · Escolha de galhos do adversário (modos caminho/variação e Desafio com acaso injetável).
+Use `getOpponentOptions` e o parâmetro `chosen` de `playOpponentMove`.
