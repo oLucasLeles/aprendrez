@@ -181,3 +181,23 @@ abertura chega na F08).
 real" não valida nenhuma abertura de verdade (só passa vazio). Criei um `.gitkeep` para a pasta existir no git.
 **Próximo turno:** F07 · Notação em português (SAN → R, D, T, B, C). As mensagens do validador
 usam SAN (inglês); se quiser, a F09 pode trocar por notação portuguesa nos textos para revisão humana.
+
+## Turno 2026-11-15 21:20 · [F07] Notação em português
+**Status:** concluída
+**O que fiz:** Criei `src/chess/notation.ts` com duas funções. `toPortugueseSan` converte um
+lance do inglês para o português (N→C, Q→D, K→R, R→T; o bispo continua B), inclusive na
+promoção (`e8=Q` vira `e8=D`), mantendo xeque (+), mate (#) e roque (O-O) como estão.
+`formatMoveList` monta a lista numerada, como `1. e4 e5 2. Cf3 Cc6`. Os testes ficaram em
+`src/chess/notation.test.ts` e cobrem os dois passos de verificação, mais casos de borda.
+**Decisões:**
+- Só a primeira letra do lance (e a peça depois do `=`) é convertida, e só se for maiúscula.
+  Assim as colunas (a–h, minúsculas) nunca são confundidas com peças, como o `b` de `bxc3`.
+- Para uma lista que começa num lance das pretas, o formato é `1... e5 2. Cf3` (padrão do
+  xadrez). `formatMoveList(moves, 'white' | 'black', firstMoveNumber)` também aceita um
+  número inicial, para mostrar um trecho no meio da partida.
+- Nenhuma dependência nova. Sem interface, então sem captura de tela.
+**Problemas e pendências:** nenhum. As mensagens do validador (F06) continuam em SAN
+(inglês); trocar para o português é opcional e pode entrar na F09.
+**Próximo turno:** F08 · Conteúdo: Italiana (Giuoco Piano). Primeira abertura de verdade em
+`src/content/openings/`, com `export default` de uma `Opening`; o validador (F06) a pega sozinho.
+Lembre: cada linha precisa começar com uma entrada da base do Lichess (`Italian Game: Giuoco Piano`).

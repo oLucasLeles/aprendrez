@@ -77,7 +77,7 @@
       "Testes de unidade cobrem: Nf3 → Cf3, Qxd5 → Dxd5, Kxe2 → Rxe2, Rae1 → Tae1, O-O e O-O-O sem mudança, xeque (+), mate (#) e promoção (e8=Q → e8=D)",
       "Teste de unidade da lista numerada, começando de um lance das brancas e de um lance das pretas"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F08",
