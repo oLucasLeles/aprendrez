@@ -11,6 +11,7 @@ const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 // (veja App.tsx): não vai para o app publicado. Os testes e2e usam esta página
 // para ver o tabuleiro em várias situações, escolhidas pelo endereço:
 //   /dev/tabuleiro?cor=pretas&de=e2&para=e4&fen=...
+//   &guia=e2-e4            -> mostra o guia de lance (casa de origem e seta)
 //   &jogar=brancas|pretas  -> liga os cliques para essa cor (a página aplica os
 //                             lances com o chess.js; não há adversário automático)
 function DevBoardScreen() {
@@ -20,6 +21,9 @@ function DevBoardScreen() {
   const playerColor = play === 'brancas' ? 'white' : play === 'pretas' ? 'black' : undefined
   const from = params.get('de')
   const to = params.get('para')
+
+  const [guideFrom, guideTo] = (params.get('guia') ?? '').split('-')
+  const guide = guideFrom && guideTo ? { from: guideFrom, to: guideTo } : null
 
   const [fen, setFen] = useState(params.get('fen') ?? START_FEN)
   const [lastMove, setLastMove] = useState<LastMove | null>(from && to ? { from, to } : null)
@@ -42,6 +46,7 @@ function DevBoardScreen() {
           fen={fen}
           orientation={orientation}
           lastMove={lastMove}
+          guide={guide}
           playerColor={playerColor}
           onMove={handleMove}
         />

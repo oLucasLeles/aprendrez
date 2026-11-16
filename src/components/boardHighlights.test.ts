@@ -37,3 +37,21 @@ describe('getSquareStyles com seleção', () => {
     expect(styles.e2.boxShadow).toContain('var(--color-accent)')
   })
 })
+
+describe('getSquareStyles com guia de lance', () => {
+  it('destaca só a casa da peça que deve se mover, na cor de destaque', () => {
+    const styles = getSquareStyles(null, null, { from: 'e2', to: 'e4' })
+    expect(Object.keys(styles)).toEqual(['e2'])
+    expect(styles.e2.boxShadow).toContain('var(--color-accent)')
+    expect(styles.e2.backgroundColor).toBe('var(--color-accent-soft)')
+  })
+
+  it('sem guia, nada muda', () => {
+    expect(getSquareStyles(null, null, null)).toEqual({})
+  })
+
+  it('o guia convive com o último lance em outras casas', () => {
+    const styles = getSquareStyles({ from: 'g1', to: 'f3' }, null, { from: 'b8', to: 'c6' })
+    expect(Object.keys(styles).sort()).toEqual(['b8', 'f3', 'g1'])
+  })
+})

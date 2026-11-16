@@ -145,7 +145,7 @@
       "Teste e2e: com um guia de e2 para e4, a casa e2 tem o destaque e existe uma seta de e2 para e4",
       "A cor do guia vem do token de destaque"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F14",

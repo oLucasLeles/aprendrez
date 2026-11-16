@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Chessboard } from 'react-chessboard'
+import { Chessboard, defaultArrowOptions } from 'react-chessboard'
 import {
   canMovePiece,
   getTargets,
@@ -8,7 +8,7 @@ import {
   type ClickMove,
   type PlayerColor,
 } from '../chess/squareClick'
-import { getSquareStyles, type LastMove } from './boardHighlights'
+import { getSquareStyles, type Guide, type LastMove } from './boardHighlights'
 
 type BoardProps = {
   /** Posição no formato FEN (texto que descreve onde cada peça está). */
@@ -17,6 +17,11 @@ type BoardProps = {
   orientation?: 'white' | 'black'
   /** Último lance jogado: as duas casas ganham um contorno. */
   lastMove?: LastMove | null
+  /**
+   * Guia de lance: destaca a peça que deve se mover e desenha uma seta até a casa
+   * de destino, na cor de destaque. Serve para "Praticar com guia" e "Ver lance".
+   */
+  guide?: Guide | null
   /**
    * Cor da pessoa que joga. Quando existe, o tabuleiro aceita cliques: só as
    * peças dessa cor, na vez dela, podem ser selecionadas. Sem ela, o tabuleiro
@@ -35,7 +40,7 @@ function prefersReducedMotion() {
 // Tabuleiro do Aprendrez. Mostra uma posição (F10) e aceita lances por clique
 // (F11) e por arrastar (F12); o teclado chega numa próxima funcionalidade. As cores das
 // casas vêm dos tokens (src/styles/tokens.css), nunca escritas aqui.
-function Board({ fen, orientation = 'white', lastMove = null, playerColor, onMove }: BoardProps) {
+function Board({ fen, orientation = 'white', lastMove = null, guide = null, playerColor, onMove }: BoardProps) {
   const label = `Tabuleiro de xadrez, ${orientation === 'white' ? 'brancas' : 'pretas'} embaixo`
   const interactive = playerColor !== undefined
 
@@ -88,7 +93,15 @@ function Board({ fen, orientation = 'white', lastMove = null, playerColor, onMov
           squareStyles: getSquareStyles(
             lastMove,
             selectedSquare ? { square: selectedSquare, targets } : null,
+            guide,
           ),
+          // A seta do guia usa o token de destaque (o SVG aceita var() na cor).
+          // Desligamos o desenho de setas com o botão direito: não faz parte do app.
+          arrows: guide
+            ? [{ startSquare: guide.from, endSquare: guide.to, color: 'var(--color-accent)' }]
+            : [],
+          allowDrawingArrows: false,
+          arrowOptions: { ...defaultArrowOptions, opacity: 0.85 },
           boardStyle: { borderRadius: 'var(--radius-sm)' },
           // As letras e números das bordas usam o texto padrão em todas as casas
           lightSquareNotationStyle: { color: 'var(--color-text)' },

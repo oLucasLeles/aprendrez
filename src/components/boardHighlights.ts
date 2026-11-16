@@ -4,6 +4,9 @@ import type { CSSProperties } from 'react'
 
 export type LastMove = { from: string; to: string }
 
+/** Guia de lance (F13): a peça que deve se mover (`from`) e a casa de destino (`to`). */
+export type Guide = { from: string; to: string }
+
 /** Uma casa de destino legal. `capture` = há uma peça do adversário nela. */
 export type TargetSquare = { square: string; capture: boolean }
 
@@ -23,6 +26,14 @@ const selectedStyle: CSSProperties = {
   boxShadow: 'inset 0 0 0 4px var(--color-accent)',
 }
 
+// Guia de lance: a casa da peça que deve se mover ganha um fundo avermelhado suave
+// e um contorno na cor de destaque. A seta até o destino é desenhada pelo Board.
+// (A seta e o contorno são formas, então o guia não depende só de cor.)
+const guideStyle: CSSProperties = {
+  backgroundColor: 'var(--color-accent-soft)',
+  boxShadow: 'inset 0 0 0 4px var(--color-accent)',
+}
+
 // Casa de destino vazia: uma bolinha no centro. Casa com peça a capturar:
 // um anel em volta da casa. São formas diferentes, então não dependem só de cor.
 const targetStyle: CSSProperties = {
@@ -36,11 +47,15 @@ const captureTargetStyle: CSSProperties = {
 export function getSquareStyles(
   lastMove?: LastMove | null,
   selection?: Selection | null,
+  guide?: Guide | null,
 ): Record<string, CSSProperties> {
   const styles: Record<string, CSSProperties> = {}
   if (lastMove) {
     styles[lastMove.from] = lastMoveStyle
     styles[lastMove.to] = lastMoveStyle
+  }
+  if (guide) {
+    styles[guide.from] = guideStyle
   }
   if (selection) {
     for (const { square, capture } of selection.targets) {

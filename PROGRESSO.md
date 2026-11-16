@@ -350,3 +350,28 @@ olhadas: `docs/capturas/f12-arrastando-desktop.png` e `f12-arrastando-celular.pn
 - Arrastar com o dedo (toque) no celular não foi testado de verdade, só o mouse na largura de 375 px.
 - Teclado ainda não existe (F14).
 **Próximo turno:** F13, a próxima funcionalidade com `passes: false` em `features.json`.
+
+## Turno 2026-11-15 22:00 · [F13] Guia de lance
+**Status:** concluída
+**O que fiz:** O `Board` ganhou a prop `guide` (`{ from, to }`). Quando ela existe, a casa da peça que deve se
+mover ganha um fundo avermelhado suave com contorno na cor de destaque, e uma seta vermelha vai até a casa de
+destino. O destaque da casa fica em `boardHighlights.ts` (função `getSquareStyles`, com testes de unidade); a
+seta usa a que já vem no `react-chessboard`. A página de testes `/dev/tabuleiro` aceita `?guia=e2-e4`. Testes
+novos em `e2e/guia.spec.ts` (desktop e celular): confere o destaque em e2, que a seta começa em e2 e termina perto de
+e4 (lendo as coordenadas do desenho), que a cor vem do token `--color-accent` e que, sem guia, nada aparece.
+Capturas olhadas: `docs/capturas/f13-guia-desktop.png` e `f13-guia-celular.png`.
+**Decisões:**
+- A cor da seta é `var(--color-accent)`, passada direto ao SVG; o teste confirma que o navegador a resolve para o
+  vermelho do token (nenhuma cor escrita no componente).
+- Desliguei `allowDrawingArrows` (desenhar setas com o botão direito do mouse), porque não faz parte do app.
+- A seta ficou um pouco mais opaca (0,85 em vez de 0,65) para aparecer bem sobre as casas cinza.
+- Lance de cavalo: a biblioteca desenha a seta em "L" (como na captura de g1 para f3). Mantive, porque é o desenho
+  usual para cavalos.
+- O destaque do guia só marca a casa de origem; o destino é indicado pela seta (SPEC: "a peça e uma seta").
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- Se a peça do guia estiver selecionada, o contorno do guia e o da seleção ficam iguais (os dois são vermelhos);
+  é o esperado, mas vale rever o visual quando a prática com guia (F20 em diante) estiver na tela.
+- O teste da seta lê o `<path>` do SVG da biblioteca (frágil se ela mudar o desenho das setas).
+**Próximo turno:** F14 · Tabuleiro pelo teclado. O `Board` hoje não tem foco nem nome acessível por casa; a
+biblioteca tem `squareRenderer` e `onSquareClick`, que podem ajudar. Lembre de manter o foco visível (token `--color-focus`).
