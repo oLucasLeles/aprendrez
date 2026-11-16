@@ -1105,3 +1105,21 @@ que corrigi em `src/components/Board.tsx`: as peças da biblioteca eram "botões
 - Violações de gravidade "moderate" ou "minor" não falham o teste; não olhei se existem.
 **Próximo turno:** F41 · Movimento reduzido. Lembre da nota do supervisor: os testes agora rodam com `reducedMotion: 'reduce'` por padrão, então o teste da F41 precisa usar
 `test.use({ reducedMotion: 'no-preference' })` para ver que a animação existe.
+
+## Turno 2026-11-16 08:00 · [F41] Movimento reduzido
+**Status:** concluída
+**O que fiz:** Conferi o que se move no app. Hoje a única animação é a das peças deslizando no tabuleiro (150 ms, dentro do limite de 200 ms); o CSS não tem outras transições. O
+`Board` já desligava a animação quando o sistema pede "menos movimento", mas lia essa preferência só uma vez, a cada desenho da tela. Agora ele acompanha a preferência ao vivo
+(`useSyncExternalStore`, que reage quando a configuração do sistema muda com o app aberto), e a duração virou uma constante com nome (`PIECE_ANIMATION_MS`). Também acrescentei em
+`src/index.css` uma regra de segurança: com "menos movimento" ligado, toda animação e transição de CSS vira praticamente instantânea, inclusive as que a biblioteca do tabuleiro escreve
+direto na peça. O atraso de ~400 ms da resposta do adversário não é CSS (é um temporizador), então continua existindo. Teste novo: `e2e/movimento-reduzido.spec.ts` (desktop e celular).
+**Decisões:**
+- O teste segue a nota do supervisor: o grupo que quer ver a animação usa `test.use({ reducedMotion: 'no-preference' })` e confere que existe transição e que nenhuma passa de 200 ms; o
+  grupo com `'reduce'` confere que nenhuma transição aparece durante um lance, que nenhum elemento da tela inicial tem animação/transição de CSS e que a resposta do adversário ainda leva
+  pelo menos 300 ms (margem para máquinas lentas; a SPEC diz cerca de 400 ms).
+- Conferi que o teste serve: tirei temporariamente a regra de CSS e forcei `showAnimations: true`, e o teste "não anima os lances" falhou. Depois restaurei tudo.
+- A rede de segurança em CSS usa `0.01ms` em vez de `0` (um truque comum), para eventos de fim de animação ainda dispararem.
+- Nenhuma dependência nova. Interface sem mudança visível, então não tirei capturas de tela.
+**Problemas e pendências:** nenhum. O token `--duration-fast` (150 ms, vira 0 com movimento reduzido) existe mas nenhum CSS o usa ainda; fica pronto para animações futuras.
+**Próximo turno:** F42 · Créditos e licenças. Pendências já anotadas: confirmar a licença das peças do `react-chessboard` (F10, tratar como "exige atribuição": Colin M.L. Burnett),
+fonte Inter (OFL-1.1), base do Lichess (CC0), e decidir se `CREDITOS.md` lista também as dependências de desenvolvimento (`axe-core` é MPL-2.0, F40; a funcionalidade pede só `dependencies`).

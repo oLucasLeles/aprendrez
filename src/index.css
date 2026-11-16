@@ -542,3 +542,18 @@ a.button-primary:hover {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+
+/* Movimento reduzido (SPEC, seção 9): quem pede "menos movimento" no sistema não vê
+   nenhuma animação nem transição. É uma rede de segurança para qualquer animação
+   futura, inclusive as que a biblioteca do tabuleiro escreve direto no elemento.
+   Os atrasos (como a resposta do adversário) não são CSS e continuam existindo. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

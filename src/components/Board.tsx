@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ReactNode } from 'react'
 import { Chessboard, defaultArrowOptions } from 'react-chessboard'
 import {
   canMovePiece,
@@ -35,9 +35,26 @@ type BoardProps = {
   showNotation?: boolean
 }
 
+// Duração da animação das peças. A SPEC (seção 9) manda animações de até 200 ms.
+const PIECE_ANIMATION_MS = 150
+
 // Quem pediu "menos movimento" no sistema não vê as peças deslizando (SPEC, seção 9).
-function prefersReducedMotion() {
-  return typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+// Lemos a preferência de forma "viva": se a pessoa mudar a configuração com o app
+// aberto, o tabuleiro acompanha sem precisar recarregar.
+const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)'
+
+function subscribeReducedMotion(onChange: () => void) {
+  const query = window.matchMedia?.(REDUCED_MOTION_QUERY)
+  query?.addEventListener('change', onChange)
+  return () => query?.removeEventListener('change', onChange)
+}
+
+function usePrefersReducedMotion() {
+  return useSyncExternalStore(
+    subscribeReducedMotion,
+    () => window.matchMedia?.(REDUCED_MOTION_QUERY).matches ?? false,
+    () => false,
+  )
 }
 
 // Tabuleiro do Aprendrez. Mostra uma posição (F10) e aceita lances por clique
@@ -46,6 +63,8 @@ function prefersReducedMotion() {
 function Board({ fen, orientation = 'white', lastMove = null, guide = null, playerColor, onMove, showNotation = true }: BoardProps) {
   const label = `Tabuleiro de xadrez, ${orientation === 'white' ? 'brancas' : 'pretas'} embaixo`
   const interactive = playerColor !== undefined
+
+  const reducedMotion = usePrefersReducedMotion()
 
   // Guardamos a posição junto com a seleção: se a posição mudar (lance feito,
   // adversário respondeu, "Voltar"), a seleção antiga deixa de valer sozinha.
@@ -173,8 +192,8 @@ function Board({ fen, orientation = 'white', lastMove = null, guide = null, play
           onPieceDrag,
           onPieceDrop,
           onPieceDragCancel: () => setSelection(null),
-          showAnimations: !prefersReducedMotion(),
-          animationDurationInMs: 150,
+          showAnimations: !reducedMotion,
+          animationDurationInMs: PIECE_ANIMATION_MS,
           onSquareClick,
           lightSquareStyle: { backgroundColor: 'var(--color-board-light)' },
           darkSquareStyle: { backgroundColor: 'var(--color-board-dark)' },

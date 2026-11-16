@@ -454,7 +454,7 @@
     "passos": [
       "Teste e2e com reducedMotion: 'reduce': o tabuleiro não anima os lances"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F42",
