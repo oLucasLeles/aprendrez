@@ -30,6 +30,9 @@ const VAR1_TOKENS = ['e4', 'e5', 'Cf3', 'Cc6', 'Bc4', 'Bc5', 'c3', 'Cf6', 'd3', 
 
 /** Joga os lances da pessoa e espera cada resposta do adversário aparecer na lista. */
 async function playLine(page: Page, moves: Locator, userMoves: string[][], tokens: string[], guided: boolean) {
+  // Espera a partida nova aparecer (lista vazia) antes do primeiro clique. Sem isso, um clique
+  // logo depois do "Continuar" podia cair na tela antiga e se perder, deixando o teste instável.
+  await expect(moves).toHaveText('Nenhum lance ainda.')
   for (const [index, [from, to]] of userMoves.entries()) {
     if (guided) await expect(originHighlight(page, from)).toHaveCount(1)
     await square(page, from).click()

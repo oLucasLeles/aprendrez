@@ -314,7 +314,7 @@
       "Testes de unidade: salvar, ler e lidar com armazenamento indisponível (que lança erro)",
       "Teste e2e: concluir 'Conhecer' e 'Assistir', recarregar a página e a lição continua em 'Praticar com guia'"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F29",

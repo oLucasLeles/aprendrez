@@ -748,3 +748,36 @@ final e clica em "Próxima abertura". Capturas olhadas: `docs/capturas/f27-deskt
   Vale encurtá-lo (voltando a etapas já vistas, agora que a F24 existe) num turno de consertos.
 - A tela de conclusão pode ser aberta digitando o endereço, sem ter concluído o Desafio; só o progresso salvo (F28) permitirá controlar isso, se quiserem.
 **Próximo turno:** F28 · Progresso no navegador. Pasta `src/progress/` ainda não existe; a lição guarda `reachedStage` em `LessonScreen.tsx`.
+
+## Turno 2026-11-16 02:20 · [F28] Progresso no navegador
+**Status:** concluída
+**O que fiz:** Criei `src/progress/progress.ts`, que salva no `localStorage` (a memória do navegador) quais etapas de cada
+abertura foram concluídas e quais aberturas foram concluídas. A lição agora lê esse progresso ao abrir e começa na primeira etapa
+não concluída (por exemplo, depois de Conhecer e Assistir, abre em Praticar com guia, com as etapas anteriores marcadas "✓" e
+clicáveis). Uma etapa é gravada como concluída quando a pessoa clica em "Continuar" nela; concluir o Desafio ("Concluir") marca a
+abertura inteira como concluída. Se o armazenamento der erro, estiver vazio ou tiver dados estragados, o app funciona como numa
+primeira visita (sem mensagens de erro). Testes: `src/progress/progress.test.ts` (unidade, inclui um armazenamento que lança erro)
+e `e2e/progresso.spec.ts` (navegador, desktop e celular, incluindo o caso do passo 2 da funcionalidade). Capturas olhadas:
+`docs/capturas/f28-retomada-desktop.png` e `f28-retomada-celular.png`.
+**Decisões:**
+- Formato salvo (chave `aprendrez:progresso`): `{ version: 1, openings: { <id>: { stages: [0,1,...], completed: false } } }`. Dados
+  de outra versão ou fora desse formato são ignorados (valem como "sem progresso").
+- **Concluir uma etapa = clicar em "Continuar" nela.** Só clicar no indicador de etapas não marca nada. Nas Variações, a etapa só
+  conta como concluída quando a última variação termina e a pessoa segue para o Desafio.
+- Com a abertura concluída, a lição reabre em **Conhecer** (para rever), mas todas as etapas ficam clicáveis e marcadas como concluídas.
+- O parâmetro de desenvolvimento `?etapa=desafio` continua tendo prioridade sobre o progresso salvo.
+- O progresso é relido do navegador a cada gravação (e não guardado na tela), para não sobrescrever o que outra aba tenha salvo.
+- Já deixei prontas, em `progress.ts`, as funções que a tela inicial vai usar: `getOpeningStatus` (não iniciada / em andamento /
+  concluída) e `resetProgress` ("Reiniciar progresso"). Ainda não há interface para elas.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- O teste `licao-variacoes` falhou na primeira rodada do `npm run verificar` (desktop e celular): o clique no primeiro lance da
+  etapa Praticar sozinho se perdia, porque acontecia logo depois do "Continuar", antes da tela nova aparecer. É a mesma instabilidade
+  anotada nas F22 e F27. Não enfraqueci o teste: acrescentei uma espera para a lista de lances mostrar "Nenhum lance ainda." antes
+  do primeiro clique (em `playLine`). Depois disso, `npm run verificar` passou inteiro.
+- Abrir uma lição ainda sem concluir nenhuma etapa não conta como "em andamento" (o status vem das etapas concluídas). O passo 2 da
+  F29 ("em andamento depois de começar a lição") pode pedir que ver "Conhecer" já conte; é uma decisão para aquele turno.
+- A tela de conclusão ainda pode ser aberta digitando o endereço, sem ter concluído o Desafio.
+- Subi o servidor de desenvolvimento para as capturas e o encerrei no fim do turno.
+**Próximo turno:** F29 · Tela inicial com a trilha. Use `TRAIL_ORDER`/`getNextOpening` (`src/content/trail.ts`), o catálogo
+(`src/content/openings/index.ts`), `getCharacteristicFen` (mini-tabuleiro com o `Board`) e `getOpeningStatus` (`src/progress/progress.ts`).
