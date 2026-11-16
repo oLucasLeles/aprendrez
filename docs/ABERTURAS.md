@@ -203,3 +203,62 @@
 ### Alternativas de ordem aceitas
 
 - depois de 1. d4 d5 2. Cf3 Cf6 3. Bf4 c5 4. e3 Cc6, em vez de **5. Cbd2** também vale **5. c3**. Justificativa: Esta ordem também vale: você joga o peão de c3 agora e o cavalo de d2 no lance seguinte. Os dois lances são necessários nos dois jeitos, e depois de 5...e6 6.Cbd2 você chega exatamente à mesma posição da linha principal.
+
+---
+
+## Espanhola (Ruy Lopez)
+
+- **Cor:** Brancas
+- **Nível:** 2 · Construindo repertório
+- **Tipo:** Linha fixa
+- **Nome na base do Lichess:** Ruy Lopez: Closed
+
+**Ideia:** Você aumenta a pressão sobre o cavalo que protege o peão central das pretas e, com calma, monta um centro forte com os peões c3 e d4. É uma abertura de plano longo: nada se resolve de imediato, e quem se prepara melhor ganha espaço e iniciativa.
+
+**Ideias-chave:**
+
+- O bispo em b5 mira o cavalo de c6, que protege o peão de e5: você pressiona o centro das pretas sem capturar nada ainda.
+- Rocar cedo deixa o rei seguro, e a torre em e1 protege o peão de e4 para ele aguentar a pressão.
+- O peão em c3 prepara d4, o avanço que forma um centro grande, e dá ao bispo uma casa segura em c2 ou b3.
+
+### Linha principal
+
+`1. e4 e5 2. Cf3 Cc6 3. Bb5 a6 4. Ba4 Cf6 5. O-O Be7 6. Te1 b5 7. Bb3 d6 8. c3 O-O`
+
+- **1. e4**: O peão avança duas casas e ocupa o centro do tabuleiro (as casas do meio, que dão mais espaço às suas peças). Ele também abre caminho para o bispo e para a dama.
+  - Dica: Comece ocupando o centro com o peão que fica na frente do rei.
+- **2. Cf3**: O cavalo sai para uma casa de onde ataca o peão preto de e5 e ajuda a controlar o centro. Colocar as peças em jogo se chama desenvolver.
+  - Dica: Desenvolva o cavalo do lado do rei: ele deve atacar o peão preto do centro.
+  - Erro comum, Dh5: A dama até ataca o peão de e5, mas sair cedo demais a deixa exposta: as pretas desenvolvem peças atacando a dama e você perde tempo fugindo.
+- **3. Bb5**: O bispo ataca o cavalo de c6, justamente o que protege o peão de e5. Ainda não há ameaça de capturar, mas você passa a pressionar o centro das pretas. É esse lance que dá nome à abertura (Ruy Lopez era um padre espanhol).
+  - Dica: Desenvolva o bispo do lado do rei para uma casa de onde ele pressione o defensor do peão preto do centro.
+  - Erro comum, Cxe5: O cavalo captura um peão, mas o peão de e5 está protegido pelo cavalo preto de c6. Você trocaria seu cavalo por um peão e sairia perdendo.
+- **4. Ba4**: O bispo recua e continua apontando para o cavalo de c6. Se você capturasse agora, desfaria a pressão; recuando, você mantém a tensão e o bispo fica livre para voltar à diagonal importante.
+  - Dica: Fuja do peão que ameaça o bispo, mas mantenha-o na mesma diagonal, ainda mirando o cavalo.
+  - Erro comum, Bxc6: Esse lance é possível e jogadores fortes o usam (chama-se Troca), mas você entrega o bispo e as pretas ficam com os dois bispos. Nesta lição o plano é manter a pressão, então o bispo recua.
+- **5. O-O**: Esse lance especial, o roque, leva o rei para o canto, protegido pelos peões, e ao mesmo tempo traz a torre para perto do centro. Você o faz cedo, antes de a posição esquentar.
+  - Dica: Proteja o rei e ative a torre com um único lance especial.
+- **6. Te1**: A torre vai para a coluna do rei, atrás do peão de e4, para protegê-lo. Assim, se as pretas atacarem esse peão com o cavalo, ele continua seguro e você pode seguir com o seu plano.
+  - Dica: Coloque a torre na coluna do centro, atrás do peão do rei, para protegê-lo.
+  - Erro comum, a3: Esse lance é possível, mas o peão da borda não ajuda o centro nem protege o peão de e4. Falta dar firmeza ao peão do rei antes de pensar nas bordas.
+- **7. Bb3**: O peão de b5 expulsa o bispo de a4. Recuar para b3 mantém o bispo na diagonal importante, ainda mirando f7, e fora de perigo.
+  - Dica: Mantenha o bispo na diagonal importante, mas numa casa onde ele não possa ser expulso.
+  - Erro comum, Bxb5: O bispo captura um peão, mas o peão de a6 recaptura. Você trocaria uma peça valiosa por um peão e sairia perdendo.
+- **8. c3**: Esse peão prepara o avanço do peão da dama até d4, para formar um centro grande, com dois peões lado a lado (e4 e d4). Ele também dá ao bispo uma casa de retirada, em c2.
+  - Dica: Prepare, com um lance de peão, um avanço no centro que ainda não pode ser feito.
+
+### Variações
+
+#### Pretas rocam antes de d6
+
+`1. e4 e5 2. Cf3 Cc6 3. Bb5 a6 4. Ba4 Cf6 5. O-O Be7 6. Te1 b5 7. Bb3 O-O 8. c3 d6`
+
+- **8. c3**: Seu plano não muda: o peão c3 prepara o avanço até d4 e dá ao bispo uma casa de retirada. Se as pretas jogarem d6 agora, a posição fica igual à da linha principal.
+  - Dica: Mesmo com o roque das pretas, prepare o avanço do peão da dama.
+
+#### Pretas jogam d6 cedo
+
+`1. e4 e5 2. Cf3 Cc6 3. Bb5 a6 4. Ba4 Cf6 5. O-O Be7 6. Te1 d6 7. c3 O-O`
+
+- **7. c3**: Sem o lance b5, o seu bispo ainda não precisa recuar. Mesmo assim o plano é o mesmo: o peão c3 prepara o avanço até d4, para formar um centro grande.
+  - Dica: Prepare, com um lance de peão, o avanço no centro que ainda não pode ser feito.

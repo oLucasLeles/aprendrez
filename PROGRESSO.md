@@ -923,3 +923,32 @@ que um lance legal fora do conteúdo (`a3`) continua "fora do roteiro", o erro c
 - A alternativa só vale depois de `4...Cc6`; não há alternativa de ordem nas outras casas. A SPEC pede "pelo menos uma".
 **Próximo turno:** F35 · Conteúdo: Espanhola (Ruy Lopez). Use o id `espanhola`, que já está em `TRAIL_ORDER`, e lembre que a linha precisa começar com uma entrada
 da base com **exatamente** o nome escolhido em `lichessName`.
+
+## Turno 2026-11-16 04:40 · [F35] Conteúdo: Espanhola (Ruy Lopez)
+**Status:** concluída
+**O que fiz:** Criei `src/content/openings/espanhola.ts`, a quarta abertura (brancas, nível 2, linha fixa). A linha principal é
+`1.e4 e5 2.Cf3 Cc6 3.Bb5 a6 4.Ba4 Cf6 5.O-O Be7 6.Te1 b5 7.Bb3 d6 8.c3 O-O` (8 lances de cada lado). Cada lance das brancas tem explicação e
+dica, e há erros comuns em 6 lances (`Qh5`, `Nxe5`, `Bxc6`, `a3`, `Bxb5` e o `Nxe5` do lance 3). Há 2 variações das pretas: `6...d6` (antes de `b5`) e
+`7...O-O` (rocam antes de `d6`, chegando à mesma posição da linha principal). O validador (F06) pegou o arquivo sozinho e passou, e
+`docs/ABERTURAS.md` foi regenerado (agora com 4 aberturas). Teste novo: `e2e/licao-espanhola.spec.ts` (desktop e celular): linha principal
+inteira, lance legal fora do roteiro (`Bc4`) com "Voltar", erro comum `Bxb5` com a explicação específica, as duas variações na etapa Variações e a
+abertura na trilha (nível 2). Capturas olhadas: `docs/capturas/f35-*.png` (1440 px e 375 px).
+**Decisões:**
+- **Nome na base do Lichess: `Ruy Lopez: Closed`** (a entrada `...5.O-O Be7`, e a `C90`, `...7.Bb3 d6 8.c3 O-O`, que é exatamente a linha principal). Escolhi a
+  linha "fechada" porque é a mais clássica e porque fecha em 8 lances de cada lado. As duas variações também começam com entradas dessa família.
+- **Cada variação ficou curta** (termina logo no lance do adversário que desvia), como as da Italiana. Assim não preciso inventar teoria além do que conferi.
+- **Evitei de propósito `7...O-O 8.c3 d5`** (o Gambito Marshall), que é uma ramificação muito comum e complicada para quem está começando. O conteúdo só ensina
+  `8...d6`; se a pessoa jogar contra um adversário real, isso pode aparecer. Fica como assunto de revisão humana.
+- **`Bxc6` na lista de erros comuns é honesto:** o texto diz que é um lance real (a Troca) usado por jogadores fortes, mas que nesta lição o plano é manter a pressão.
+- **Atualizei `e2e/trilha.spec.ts`** para acompanhar o conteúdo novo: "de 3" virou "de 4", a lista de cartões ganhou a Espanhola (filtro Brancas inclui; Pretas não),
+  o teste de "tudo concluído" marca também a `espanhola`, "Não iniciada" são 4, e o nível 2 "Construindo repertório" agora aparece (antes o teste conferia que ele não aparecia).
+  Não removi nem enfraqueci checagem nenhuma.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- **Revisão humana do conteúdo** (SPEC, seção 15): os testes garantem lances legais e a ligação com a base, mas não que as explicações ensinam bem. Vale olhar a explicação
+  do `Re1` (diz que protege `e4` contra o cavalo) e o texto da ideia, que é um pouco abstrato ("plano longo").
+- Meu primeiro teste de "erro comum" jogava a linha, reiniciava e jogava de novo: falhou uma vez numa rodada completa (lento demais). Simplifiquei para jogar a linha só uma vez.
+- Perto do começo do turno um `cd` para `data/lichess-openings` deslocou a pasta de trabalho do shell; voltei à raiz e nada foi alterado lá.
+- Os testes e2e reescrevem `docs/capturas/f27-*.png` a cada execução; restaurei esses dois arquivos para não sujar o commit.
+**Próximo turno:** F36 · a próxima funcionalidade com `passes: false` (provavelmente o conteúdo da Defesa Caro-Kann; id `caro-kann` em `TRAIL_ORDER`). Lembre de regenerar `docs/ABERTURAS.md`
+e de atualizar `e2e/trilha.spec.ts` (contagem "de 4" e lista de cartões), porque ele escreve o número de aberturas no código.
