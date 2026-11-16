@@ -979,3 +979,31 @@ explicação específica, a etapa Variações e a abertura na trilha (nível 2).
 - Um `cd` para `data/lichess-openings` deslocou a pasta de trabalho do shell no meio do turno; voltei à raiz e nada foi alterado lá.
 **Próximo turno:** F37 · a próxima funcionalidade com `passes: false` (provavelmente o conteúdo do Gambito da Dama Recusado; id `gambito-da-dama-recusado`). Lembre de regenerar
 `docs/ABERTURAS.md` e de atualizar `e2e/trilha.spec.ts` (contagem "de 5", lista de cartões e filtros), porque ele escreve o número de aberturas no código.
+
+## Turno 2026-11-16 05:20 · [F37] Conteúdo: Gambito da Dama Recusado
+**Status:** concluída
+**O que fiz:** Criei `src/content/openings/gambito-da-dama-recusado.ts`, a sexta abertura (pretas, nível 2, linha fixa, contra 1.d4). A linha principal é
+`1.d4 d5 2.c4 e6 3.Cc3 Cf6 4.Bg5 Be7 5.e3 O-O 6.Cf3 Cbd7 7.Tc1 c6 8.Bd3 dxc4 9.Bxc4 Cd5 10.Bxe7 Dxe7 11.O-O` (10 lances das pretas). Cada lance das pretas tem explicação e
+dica, e há erros comuns em 3 lances (`e5`, `dxc4` e `Qh4`). Há 2 variações das brancas: `5.Cf3` antes de `5.e3` (chega à mesma posição da linha principal) e `7.Dc2` em vez de `7.Tc1`.
+O validador (F06) pegou o arquivo sozinho e passou, e `docs/ABERTURAS.md` foi regenerado (agora com 6 aberturas). Teste novo: `e2e/licao-gambito-da-dama-recusado.spec.ts`
+(desktop e celular): linha principal inteira, lance legal fora do roteiro (`1...Cf6`) com "Voltar", erro comum `dxc4` com a explicação específica, a etapa Variações e a abertura
+na trilha (nível 2). Capturas olhadas: `docs/capturas/f37-desktop.png` e `f37-celular.png`.
+**Decisões:**
+- **Nome na base do Lichess: `Queen's Gambit Declined: Modern Variation`**, que é a entrada `1.d4 d5 2.c4 e6 3.Nc3 Nf6 4.Bg5`. Todas as linhas começam com ela. Escolhi esse nome porque
+  as entradas da base para o resto da linha (`Orthodox Defense`, `Rubinstein Variation`…) usam outra ordem de lances ou outros nomes, e o validador exige um prefixo exato.
+- **A linha tem 10 lances das pretas** (a SPEC pede "cerca de 6 a 8"). Parei em `11.O-O`, depois da troca de bispos, porque é onde o plano da abertura (trocar peças para ganhar espaço)
+  fica claro. Os lances seguintes (`Cxc3` e o avanço `e5`) aparecem só no texto das ideias-chave, para a linha não ficar ainda mais longa.
+- **A variação 2 é curta** (`7.Dc2 c6 8.Bd3`) e termina logo depois do lance da pessoa, como as das outras aberturas, para não afirmar teoria que não conferi. A variação 1 usa o mesmo trecho
+  final da linha principal, montado pela função `afterKnightD7()` (cada galho tem os seus próprios nós).
+- Os erros comuns são só lances legais com consequência clara: `e5` (custa um peão), `dxc4` (jogável, mas é outra abertura, e o texto diz isso com honestidade) e `Qh4` (dama cedo, as brancas ganham tempo).
+- **Atualizei `e2e/trilha.spec.ts`** para acompanhar o conteúdo novo: "de 5" virou "de 6", o nível 2 agora tem três cartões, o filtro "Pretas" mostra também o Gambito da Dama Recusado, o teste de
+  "tudo concluído" marca o `gambito-da-dama-recusado` e "Não iniciada" são 6. Acrescentei também as checagens do cartão novo. Não removi nem enfraqueci checagem nenhuma.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- **Revisão humana do conteúdo** (SPEC, seção 15): os testes garantem lances legais e a ligação com a base, mas não que as explicações ensinam bem. Vale olhar a explicação do `Nd5` (diz que
+  trocar peças ajuda quem tem menos espaço) e a do `dxc4` (diz que o bispo gasta dois lances para chegar a c4).
+- Eu não conferi no motor de xadrez se `Cd5` e `Dxe7` são os lances mais precisos; são os da teoria clássica da Ortodoxa, mas fica para a revisão humana.
+- Os testes e2e reescrevem `docs/capturas/f27-*.png` a cada execução; restaurei esses dois arquivos para não sujar o commit.
+- Um `cd` para `data/lichess-openings` deslocou a pasta de trabalho do shell no meio do turno (acontece em turnos anteriores também); voltei à raiz e nada foi alterado lá.
+**Próximo turno:** F38 · Conteúdo: Gambito da Dama (brancas, nível 3; id `gambito-da-dama`, já em `TRAIL_ORDER`). Lembre de regenerar `docs/ABERTURAS.md` e de atualizar `e2e/trilha.spec.ts`
+(contagem "de 6", lista de cartões e filtro "Brancas"; o nível 3 passa a aparecer na trilha), porque ele escreve o número de aberturas no código.

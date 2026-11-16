@@ -330,3 +330,75 @@
 
 - **7. c3**: Sem o lance b5, o seu bispo ainda não precisa recuar. Mesmo assim o plano é o mesmo: o peão c3 prepara o avanço até d4, para formar um centro grande.
   - Dica: Prepare, com um lance de peão, o avanço no centro que ainda não pode ser feito.
+
+---
+
+## Gambito da Dama Recusado
+
+- **Cor:** Pretas
+- **Nível:** 2 · Construindo repertório
+- **Tipo:** Linha fixa
+- **Nome na base do Lichess:** Queen's Gambit Declined: Modern Variation
+- **Assume que o adversário começa com:** 1. d4
+
+**Ideia:** As brancas oferecem um peão no centro (isso se chama gambito) para tentar dominar o tabuleiro. Você recusa a oferta: em vez de capturar o peão, sustenta o seu peão central com o peão de e6. Depois desenvolve as peças com calma, faz o roque e usa trocas de peças para soltar o seu jogo.
+
+**Ideias-chave:**
+
+- O peão de e6 protege o peão de d5 e mantém o centro firme. O preço é que o bispo da dama fica preso atrás dos peões, e você vai resolver isso mais tarde.
+- Cavalo em f6, bispo em e7 e roque curto: as peças saem rápido e o rei fica seguro cedo.
+- Quem tem menos espaço deve trocar peças. Capturar em c4 e jogar o cavalo para d5 prepara essas trocas e o avanço e5.
+
+### Linha principal
+
+`1. d4 d5 2. c4 e6 3. Cc3 Cf6 4. Bg5 Be7 5. e3 O-O 6. Cf3 Cbd7 7. Tc1 c6 8. Bd3 dxc4 9. Bxc4 Cd5 10. Bxe7 Dxe7 11. O-O`
+
+- **1... d5**: Você ocupa o centro com o peão da dama, de frente para o peão branco. Assim as brancas não ficam sozinhas com o centro.
+  - Dica: Responda ao peão branco avançando o seu peão da dama duas casas.
+  - Erro comum, e5: As brancas capturam em e5 e ficam com um peão a mais. Recuperar esse peão exige um jogo muito preciso, então é um risco grande no primeiro lance.
+- **2... e6**: O peão de c4 é a oferta de gambito. Você recusa: o peão de e6 protege o peão de d5 e mantém o centro firme, sem capturar nada.
+  - Dica: Proteja o peão do centro com o peão do rei, avançando-o uma casa.
+  - Erro comum, dxc4: Capturar o peão é um lance jogável, mas é outra abertura (o Gambito da Dama Aceito). Aqui o plano é recusar o gambito e manter o centro.
+- **3... Cf6**: O cavalo do rei sai para uma casa que reforça o peão de d5 e vigia a casa e4. Desenvolver uma peça é sempre bom nos primeiros lances.
+  - Dica: Desenvolva o cavalo do rei para uma casa que ajude a proteger o peão de d5.
+  - Erro comum, Dh4: Sair cedo com a dama faz as brancas ganharem tempo: elas desenvolvem uma peça atacando a dama, e você precisa gastar lances para tirá-la de lá.
+- **4... Be7**: O bispo branco está pressionando o seu cavalo. Com o bispo em e7, o cavalo deixa de estar "cravado" (preso porque, se sair, a dama fica atacada). Esse lance também prepara o roque.
+  - Dica: Solte o cavalo da pressão do bispo branco com o bispo do rei, que ao mesmo tempo prepara o roque.
+- **5... O-O**: O roque (o rei vai para o canto e a torre vem para perto do centro) deixa o rei seguro e liga as suas peças. A posição está fechada, então é um bom momento.
+  - Dica: Coloque o rei em segurança com o roque curto.
+- **6... Cbd7**: O cavalo da dama sai para d7: ele protege o cavalo de f6 contra o bispo de g5 e abre caminho para o seu plano com c6 e dxc4.
+  - Dica: Desenvolva o cavalo da dama para uma casa em que ele proteja o cavalo de f6.
+- **7... c6**: Esse peão reforça o peão de d5 mais uma vez. Com o centro bem protegido, você pode capturar o peão de c4 quando as brancas gastarem um lance com o bispo.
+  - Dica: Reforce o peão de d5 com o peão de uma coluna ao lado, avançando-o uma casa.
+- **8... dxc4**: Agora o bispo branco já está em d3. Ao capturar o peão de c4, você obriga o bispo a ir até lá para recapturar: ele gasta dois lances para chegar a c4, e você ganha tempo para desenvolver as suas peças.
+  - Dica: Agora que o bispo branco saiu de casa, capture o peão de c4 com o peão da dama.
+- **9... Cd5**: O cavalo vai para o centro e oferece uma troca de peças. Trocar peças ajuda quem tem menos espaço, como é o seu caso, porque as peças que sobram têm mais lugar para se mexer.
+  - Dica: Leve o cavalo de f6 para a casa central de d5, de onde ele fica de frente para o cavalo branco.
+- **10... Dxe7**: Você recaptura o bispo com a dama, que fica bem colocada em e7. Daqui você prepara a troca de cavalos e o avanço do peão de e5, que solta o seu jogo.
+  - Dica: Recapture o bispo branco que acabou de capturar o seu, usando a dama.
+
+### Variações
+
+#### Brancas jogam Dc2 em vez de Tc1
+
+`1. d4 d5 2. c4 e6 3. Cc3 Cf6 4. Bg5 Be7 5. e3 O-O 6. Cf3 Cbd7 7. Dc2 c6 8. Bd3`
+
+- **7... c6**: O plano é o mesmo: o peão de c6 reforça o peão de d5 e deixa você pronto para capturar em c4 quando o bispo branco sair.
+  - Dica: Reforce o peão de d5 com o peão de uma coluna ao lado, avançando-o uma casa.
+
+#### Brancas jogam Cf3 antes de e3
+
+`1. d4 d5 2. c4 e6 3. Cc3 Cf6 4. Bg5 Be7 5. Cf3 O-O 6. e3 Cbd7 7. Tc1 c6 8. Bd3 dxc4 9. Bxc4 Cd5 10. Bxe7 Dxe7 11. O-O`
+
+- **5... O-O**: O roque continua sendo o lance certo. A ordem dos lances das brancas mudou, mas o plano é o mesmo: rei seguro e peças desenvolvidas.
+  - Dica: Coloque o rei em segurança com o roque curto.
+- **6... Cbd7**: Agora você chega à mesma posição da linha principal: o cavalo da dama sai para d7 e protege o cavalo de f6.
+  - Dica: Desenvolva o cavalo da dama para uma casa em que ele proteja o cavalo de f6.
+- **7... c6**: Esse peão reforça o peão de d5 mais uma vez. Com o centro bem protegido, você pode capturar o peão de c4 quando as brancas gastarem um lance com o bispo.
+  - Dica: Reforce o peão de d5 com o peão de uma coluna ao lado, avançando-o uma casa.
+- **8... dxc4**: Agora o bispo branco já está em d3. Ao capturar o peão de c4, você obriga o bispo a ir até lá para recapturar: ele gasta dois lances para chegar a c4, e você ganha tempo para desenvolver as suas peças.
+  - Dica: Agora que o bispo branco saiu de casa, capture o peão de c4 com o peão da dama.
+- **9... Cd5**: O cavalo vai para o centro e oferece uma troca de peças. Trocar peças ajuda quem tem menos espaço, como é o seu caso, porque as peças que sobram têm mais lugar para se mexer.
+  - Dica: Leve o cavalo de f6 para a casa central de d5, de onde ele fica de frente para o cavalo branco.
+- **10... Dxe7**: Você recaptura o bispo com a dama, que fica bem colocada em e7. Daqui você prepara a troca de cavalos e o avanço do peão de e5, que solta o seu jogo.
+  - Dica: Recapture o bispo branco que acabou de capturar o seu, usando a dama.
