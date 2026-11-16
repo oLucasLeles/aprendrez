@@ -101,7 +101,7 @@ const espanhola: Opening = {
                                               san: 'Re1',
                                               by: 'user',
                                               explanation:
-                                                'A torre vai para a coluna do rei, atrás do peão de e4, para protegê-lo. Assim, se as pretas atacarem esse peão com o cavalo, ele continua seguro e você pode seguir com o seu plano.',
+                                                'O cavalo preto de f6 já ataca o peão de e4, e nenhuma peça sua o protege. A torre vai para a coluna do rei, atrás do peão, e resolve isso: agora ele está protegido e você pode seguir com o seu plano.',
                                               hint: 'Coloque a torre na coluna do centro, atrás do peão do rei, para protegê-lo.',
                                               commonMistakes: [
                                                 {

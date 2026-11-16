@@ -15,7 +15,7 @@ const italiana: Opening = {
   assumedFirstMove: null,
   idea: 'Você ocupa o centro do tabuleiro, põe o bispo numa diagonal que mira o ponto mais fraco das pretas e protege o rei com o roque. É um começo natural e fácil de entender, em que cada peça sai para um lugar claro.',
   keyIdeas: [
-    'Ocupar o centro com peões (e4 e, mais tarde, d4) dá espaço às suas peças.',
+    'Ocupar o centro com o peão de e4 e reforçá-lo com d3 dá espaço às suas peças. O avanço d4 fica para mais tarde.',
     'O bispo em c4 aponta para f7, a casa mais frágil das pretas, porque só o rei a protege.',
     'Rocar cedo deixa o rei seguro e leva a torre para perto do centro.',
   ],

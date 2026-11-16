@@ -25,7 +25,7 @@ function bishopTrade(): OpeningNode {
         san: 'Bxd3',
         by: 'user',
         explanation:
-          'Você troca o seu bispo, que já estava bem posicionado, pelo bispo branco. Trocar uma peça que dá trabalho para desenvolver por uma peça das brancas deixa você com mais espaço e sem nenhum bispo ruim.',
+          'Você troca o seu bispo pelo bispo branco. O seu bispo já cumpriu o papel dele (saiu antes de você fechar a posição com e6) e, com a troca, as brancas perdem o bispo que mais mirava o lado do seu rei.',
         hint: 'Troque o seu bispo pelo bispo branco que acabou de aparecer na mesma diagonal.',
         commonMistakes: [
           {
@@ -99,7 +99,7 @@ const caroKann: Opening = {
                           san: 'dxe4',
                           by: 'user',
                           explanation:
-                            'Você captura o peão de e4. Depois que as brancas recapturarem, o peão branco central some e a casa f5 fica livre para o seu bispo, o plano principal da abertura.',
+                            'Você captura o peão de e4. Quando o cavalo branco recapturar em e4, o seu bispo da dama sai para f5 atacando esse cavalo: você desenvolve uma peça e ainda obriga as brancas a gastar um lance.',
                           hint: 'Capture o peão branco do rei com o seu peão do centro.',
                           children: [
                             {

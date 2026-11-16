@@ -25,7 +25,7 @@ const bishopG5Branch: OpeningNode = {
       san: 'e6',
       by: 'user',
       explanation:
-        'O bispo branco aponta para o seu cavalo de f6 e, atrás dele, para a sua dama. Com o peão de e6 você fecha a casa d5 para os cavalos brancos e abre a diagonal do seu bispo do rei. Esse é o plano seguro contra o bispo em g5.',
+        'O bispo branco ameaça capturar o seu cavalo de f6 e estragar os seus peões do lado do rei. Com o peão de e6 você vigia a casa d5 e abre a diagonal do seu bispo do rei, que vai para e7 e protege o cavalo. Atenção: depois de e6, a sua dama fica na mesma diagonal do bispo branco, atrás do cavalo, então não tire o cavalo de f6 sem pensar.',
       hint: 'Prepare o bispo do rei e proteja a casa d5 com o peão central, uma casa para a frente.',
       children: [{ san: 'Qd2', by: 'opponent', children: [] }],
     },

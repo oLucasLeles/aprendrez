@@ -56,7 +56,7 @@ const escandinava: Opening = {
                     {
                       san: 'Nc6',
                       explanation:
-                        'Esse lance desenvolve um cavalo, mas não recupera o peão. As brancas podem proteger o peão de d5 com c4 e ficar com um peão a mais.',
+                        'O peão branco de d5 captura o seu cavalo. Você perde uma peça inteira e ainda não recupera o peão.',
                     },
                   ],
                   children: [
@@ -126,7 +126,7 @@ const escandinava: Opening = {
                                                           san: 'c6',
                                                           by: 'user',
                                                           explanation:
-                                                            'O peão de c6 dá firmeza ao centro e deixa a casa d5 bem protegida. Com a posição sólida, você está pronto para rocar e desenvolver o resto das peças.',
+                                                            'Cuidado com uma armadilha: o bispo branco de d2 está atrás do cavalo de c3, na mesma diagonal da sua dama. Se o cavalo saltar para d5 ou b5, a sua dama fica atacada de repente (isso se chama ataque descoberto). O peão de c6 tira essas duas casas do cavalo e ainda abre a casa c7 para a dama recuar.',
                                                           hint: 'Dê mais firmeza ao seu centro com um peão ao lado do rei, mas na coluna do bispo da dama.',
                                                           commonMistakes: [
                                                             {

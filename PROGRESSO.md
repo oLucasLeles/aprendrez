@@ -1188,3 +1188,19 @@ discretos e que não há rolagem horizontal. Capturas olhadas: `docs/capturas/f4
 6. As 50 imagens de `docs/capturas/revisao/` somam 5 MB no git; dá para tirar a pasta do repositório e gerar sob demanda (`npm run capturas`).
 7. **Publicação:** conectar o repositório ao GitHub e à Vercel (plano Hobby) é com uma pessoa; o `vercel.json` já existe.
 **Próximo turno:** nenhum. Todas as 44 funcionalidades passam. O próximo passo é humano: revisar o conteúdo e as licenças acima e publicar.
+
+## Nota do supervisor · 2026-11-16 · revisão humana do conteúdo (parte 1)
+**O que aconteceu:** revisão das explicações das 8 aberturas (SPEC, seção 15), aprovada pelo dono do projeto. As linhas
+de lances não mudaram, só textos. As afirmações de xadrez duvidosas foram conferidas montando a posição com o `chess.js`.
+**O que mudou:**
+1. **Escandinava, erro comum 2...Cc6 (erro de fato):** o texto dizia que as brancas protegem o peão com c4. Na verdade o
+   peão de d5 captura o cavalo (dxc6) e a pessoa perde uma peça.
+2. **Espanhola, 6.Te1:** o cavalo de f6 já ataca o peão de e4 desde o 4º lance; o texto falava como se fosse uma ameaça futura.
+3. **Siciliana, variação 6.Bg5:** antes de e6, quem está atrás do cavalo de f6 é o peão de e7, não a dama. O texto agora
+   explica a ameaça real (Bxf6 estragando os peões) e o cuidado que vale depois de e6.
+4. **Italiana, ideias-chave:** dizia "e4 e, mais tarde, d4", mas a linha joga d3. Agora fala de e4 reforçado por d3.
+5. **Escandinava, 7...c6:** agora explica a armadilha do ataque descoberto (bispo de d2 atrás do cavalo de c3, mirando a dama).
+6. **Caro-Kann, 9...Bxd3:** o texto se contradizia ("bem posicionado" e "dá trabalho para desenvolver").
+7. **Caro-Kann, 3...dxe4:** a vantagem real é o bispo sair para f5 atacando o cavalo e ganhando tempo.
+`docs/ABERTURAS.md` foi gerado de novo e `npm run verificar` passou (217 testes de unidade, 310 de ponta a ponta).
+**Pendências de revisão humana que continuam:** licença das peças (Cburnett) e os ajustes visuais listados na entrada da F44.
