@@ -370,6 +370,34 @@ textarea {
   font-weight: var(--font-weight-medium);
 }
 
+/* Filtro por cor (F30): botões lado a lado; o escolhido tem fundo escuro e ✓ (não depende só de cor). */
+.trail-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+
+.trail-filter-button {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+}
+
+.trail-filter-button:hover {
+  background: var(--color-surface-muted);
+}
+
+.trail-filter-button[aria-pressed='true'] {
+  background: var(--color-text);
+  color: var(--color-surface);
+  font-weight: var(--font-weight-bold);
+}
+
 .trail-level {
   margin-bottom: var(--space-6);
   padding-top: var(--space-2);

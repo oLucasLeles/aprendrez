@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import Board from '../components/Board'
 import { COLOR_NAMES, getCharacteristicFen, getIdeaSummary, LEVEL_NAMES } from '../chess/openingPosition'
@@ -16,6 +16,15 @@ const STATUS_NAMES: Record<OpeningStatus, string> = {
 }
 
 const LEVELS: OpeningLevel[] = [1, 2, 3]
+
+// Filtro por cor (SPEC 10.1): Todas · Brancas · Pretas.
+type ColorFilter = 'all' | Opening['color']
+
+const FILTERS: { value: ColorFilter; label: string }[] = [
+  { value: 'all', label: 'Todas' },
+  { value: 'white', label: 'Brancas' },
+  { value: 'black', label: 'Pretas' },
+]
 
 // Ícone da cor: círculo vazio para as brancas e cheio para as pretas (sempre junto do texto).
 function ColorIcon({ color }: { color: Opening['color'] }) {
@@ -53,6 +62,7 @@ function OpeningCard({ opening, status }: { opening: Opening; status: OpeningSta
 }
 
 function HomeScreen() {
+  const [filter, setFilter] = useState<ColorFilter>('all')
   // O progresso é lido uma vez ao abrir a tela.
   const progress = useMemo(() => loadProgress(), [])
   const statuses = new Map(trailOpenings.map((opening) => [opening.id, getOpeningStatus(progress, opening.id)]))
@@ -69,8 +79,26 @@ function HomeScreen() {
         </p>
       </header>
 
+      {/* Grupo de botões: o botão escolhido é anunciado como "pressionado" (aria-pressed) e também ganha ✓ */}
+      <div className="grid-full trail-filter" role="group" aria-label="Filtrar por cor">
+        {FILTERS.map(({ value, label }) => (
+          <button
+            key={value}
+            type="button"
+            className="trail-filter-button"
+            aria-pressed={filter === value}
+            onClick={() => setFilter(value)}
+          >
+            {filter === value && <span aria-hidden="true">✓ </span>}
+            {label}
+          </button>
+        ))}
+      </div>
+
       {LEVELS.map((level) => {
-        const levelOpenings = trailOpenings.filter((opening) => opening.level === level)
+        const levelOpenings = trailOpenings.filter(
+          (opening) => opening.level === level && (filter === 'all' || opening.color === filter),
+        )
         if (levelOpenings.length === 0) return null
         return (
           <section key={level} className="grid-full trail-level" aria-labelledby={`nivel-${level}`}>

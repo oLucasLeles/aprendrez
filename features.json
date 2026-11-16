@@ -336,7 +336,7 @@
     "passos": [
       "Teste e2e: o filtro 'Pretas' mostra só aberturas de pretas, e 'Todas' volta a mostrar todas"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F31",

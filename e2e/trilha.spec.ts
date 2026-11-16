@@ -64,3 +64,36 @@ test('a tela inicial não tem rolagem horizontal', async ({ page }) => {
   const rola = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)
   expect(rola).toBe(false)
 })
+
+// Filtro por cor (F30, SPEC 10.1).
+
+test('o filtro "Pretas" mostra só aberturas de pretas, e "Todas" volta a mostrar todas', async ({ page }) => {
+  await page.goto('/')
+  const filtro = page.getByRole('group', { name: 'Filtrar por cor' })
+  const titulos = page.getByRole('heading', { level: 3 })
+
+  // Começa em "Todas", com o estado anunciado.
+  await expect(filtro.getByRole('button', { name: 'Todas' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(filtro.getByRole('button', { name: 'Pretas' })).toHaveAttribute('aria-pressed', 'false')
+  await expect(titulos).toHaveText(['Italiana (Giuoco Piano)', 'Defesa Escandinava'])
+
+  await filtro.getByRole('button', { name: 'Pretas' }).click()
+  await expect(filtro.getByRole('button', { name: 'Pretas' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(filtro.getByRole('button', { name: 'Todas' })).toHaveAttribute('aria-pressed', 'false')
+  await expect(titulos).toHaveText(['Defesa Escandinava'])
+
+  await filtro.getByRole('button', { name: 'Brancas' }).click()
+  await expect(titulos).toHaveText(['Italiana (Giuoco Piano)'])
+
+  await filtro.getByRole('button', { name: 'Todas' }).click()
+  await expect(titulos).toHaveText(['Italiana (Giuoco Piano)', 'Defesa Escandinava'])
+})
+
+test('o filtro não muda o indicador geral de progresso e funciona pelo teclado', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Pretas' }).focus()
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('button', { name: 'Pretas' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('heading', { level: 3 })).toHaveText(['Defesa Escandinava'])
+  await expect(page.getByText('0 de 2 aberturas concluídas')).toBeVisible()
+})

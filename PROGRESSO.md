@@ -810,3 +810,23 @@ e `f29-celular.png`.
 - As capturas foram tiradas com um teste temporário, apagado em seguida (a F43 fará o script oficial de capturas).
 **Próximo turno:** F30 · Filtro por cor (Todas · Brancas · Pretas). Estado do filtro na `HomeScreen`; com o filtro "Pretas" só a Escandinava
 aparece hoje, e níveis sem aberturas visíveis devem sumir (já é assim). Considere o indicador geral: ele deve continuar contando todas.
+
+## Turno 2026-11-16 03:00 · [F30] Filtro por cor
+**Status:** concluída
+**O que fiz:** A tela de Início ganhou o filtro **Todas · Brancas · Pretas** (SPEC 10.1), logo acima dos níveis. É um grupo de
+botões (`role="group"` com o nome "Filtrar por cor"); cada botão anuncia se está escolhido com `aria-pressed`, e o escolhido também
+fica com fundo escuro, negrito e um "✓", para não depender só de cor. O estado do filtro vive na `HomeScreen`. Com "Pretas" só a Defesa
+Escandinava aparece; com "Brancas", só a Italiana; "Todas" mostra tudo. Níveis sem nenhuma abertura visível somem. Testes novos em
+`e2e/trilha.spec.ts` (desktop e celular): o passo da funcionalidade (Pretas, Brancas e volta a Todas, conferindo `aria-pressed`) e um
+caso extra com teclado (Enter) que confere que o indicador geral continua "0 de 2". Capturas olhadas: `docs/capturas/f30-desktop.png` e `f30-celular.png`.
+**Decisões:**
+- **O indicador geral de progresso ignora o filtro** e continua contando todas as aberturas ("0 de 2"), como sugerido na F29.
+- Escolhi **grupo de botões** (e não abas), por ser o mais simples e porque a SPEC aceita os dois.
+- O filtro **não é salvo** (volta para "Todas" ao recarregar): a SPEC só manda salvar etapas e aberturas concluídas.
+- Se o filtro esvaziar a lista (hoje não acontece, porque existe conteúdo das duas cores), a tela mostraria só o filtro; quando as 8 aberturas
+  existirem isso não deve ocorrer.
+- Classes novas em `src/index.css` (`.trail-filter`, `.trail-filter-button`), só com tokens. Nenhuma dependência nova.
+**Problemas e pendências:** o espaço entre o indicador de progresso e o filtro ficou um pouco grande (vem da margem do cabeçalho); é assunto
+de polimento visual. O teste temporário usado para as capturas foi apagado (a F43 fará o script oficial).
+**Próximo turno:** F31 · Continuar de onde parei (botão principal; usa `getNextOpening`/`TRAIL_ORDER` e o progresso salvo, e precisa levar à etapa
+certa: a lição já abre na primeira etapa não concluída, F28).
