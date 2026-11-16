@@ -61,16 +61,33 @@ function Board({ fen, orientation = 'white', lastMove = null, guide = null, play
 
   // A biblioteca deixa cada peça como um botão que recebe Tab. Com 32 peças isso
   // seria 32 paradas no caminho do teclado, e a peça "roubaria" o Enter/Espaço
-  // das casas. Tiramos as peças do caminho do Tab: quem tem foco é sempre a casa (e, no
-  // tabuleiro só para olhar, nada).
+  // das casas. Além disso, um botão dentro de outro botão (a casa) e sem nome é um problema de
+  // acessibilidade que o axe aponta (F40). Por isso tiramos das peças tudo o que as faz parecer
+  // controles: papel, descrição e a parada no Tab. Quem tem foco é sempre a casa (e, no tabuleiro
+  // só para olhar, nada). Arrastar com o mouse continua funcionando, que não depende desses atributos.
+  // Um "observador" refaz a limpeza sempre que a biblioteca cria uma peça nova ou mexe nos atributos
+  // (a biblioteca pode fazer isso depois da nossa renderização).
   useEffect(() => {
-    containerRef.current?.querySelectorAll('[aria-roledescription="draggable"]').forEach((el) => {
-      el.setAttribute('tabindex', '-1')
-      el.removeAttribute('role')
-      el.removeAttribute('aria-roledescription')
-      el.removeAttribute('aria-describedby')
+    const container = containerRef.current
+    if (!container) return
+    const cleanPieces = () => {
+      container.querySelectorAll('[aria-roledescription="draggable"]').forEach((el) => {
+        el.removeAttribute('tabindex')
+        el.removeAttribute('role')
+        el.removeAttribute('aria-roledescription')
+        el.removeAttribute('aria-describedby')
+      })
+    }
+    cleanPieces()
+    const observer = new MutationObserver(cleanPieces)
+    observer.observe(container, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ['aria-roledescription'],
     })
-  })
+    return () => observer.disconnect()
+  }, [])
 
   function focusOn(square: string) {
     setFocusSquare(square)

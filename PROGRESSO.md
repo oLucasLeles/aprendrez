@@ -1082,3 +1082,26 @@ As falhas avulsas nos turnos da F23 (`guia.spec.ts`) e da F33 (`licao-variacoes.
 **Para a F41 (movimento reduzido):** como o padrão dos testes agora é "reduzido", o teste da F41 precisa comparar os dois
 casos: `test.use({ reducedMotion: 'no-preference' })` para ver que a animação existe, e `'reduce'` para ver que ela some.
 **Próximo turno:** F40 · Acessibilidade automática.
+
+## Turno 2026-11-16 07:00 · [F40] Acessibilidade automática
+**Status:** concluída
+**O que fiz:** Instalei o axe-core (um verificador automático de acessibilidade) e criei `e2e/acessibilidade.spec.ts`, que roda o axe na tela inicial
+(inclusive com o filtro "Pretas" e com a confirmação de reiniciar aberta), nas 6 etapas da lição da Italiana, em duas etapas da Siciliana (pretas, tabuleiro
+invertido), nas mensagens de lance correto e de lance fora do roteiro, na conclusão e na página não encontrada. O teste exige zero violações de gravidade
+"serious" ou "critical" nas regras WCAG 2.x A e AA, e roda nos dois tamanhos de tela. Na primeira rodada o axe achou **dois problemas reais no tabuleiro**,
+que corrigi em `src/components/Board.tsx`: as peças da biblioteca eram "botões sem nome" (`aria-command-name`) e ficavam dentro do botão da casa
+(`nested-interactive`, botão dentro de botão).
+**Decisões:**
+- **Nova dependência (só de desenvolvimento, não vai para o app publicado):** `@axe-core/playwright` 4.14.0 e `axe-core` 4.14.0, licença **MPL-2.0**. É uma licença
+  "copyleft fraca": só exige abrir as mudanças feitas nos próprios arquivos do axe, e não afeta o código do Aprendrez. Não é MIT/BSD/Apache, mas a funcionalidade pede
+  este pacote pelo nome e ele só roda nos testes. Fica registrado para a F42 (CREDITOS.md) decidir se lista dependências de desenvolvimento (a SPEC fala só de `dependencies`).
+- A limpeza das peças no `Board` agora usa um **observador** (`MutationObserver`, que avisa quando o navegador muda a página) em vez de rodar a cada renderização, porque a
+  biblioteca recriava os atributos depois da nossa limpeza. Em vez de `tabindex="-1"` as peças ficam **sem** `tabindex` (assim não são "focáveis" dentro do botão da casa).
+  Arrastar com o mouse e o teclado nas casas continuam iguais; os testes de arrastar, clique e teclado passaram sem mudança.
+- Para visitar todas as etapas, o teste grava no navegador um progresso com as etapas 0 a 4 concluídas (assim o indicador deixa clicar em todas). O contraste já tinha sido
+  tratado nos tokens (F02), e o axe confirmou que não há problema de contraste (as regras de cor estão ligadas).
+**Problemas e pendências:**
+- O axe só acha parte dos problemas de acessibilidade (costuma ser cerca de um terço). Teste com leitor de tela de verdade continua pendente (já anotado na F14).
+- Violações de gravidade "moderate" ou "minor" não falham o teste; não olhei se existem.
+**Próximo turno:** F41 · Movimento reduzido. Lembre da nota do supervisor: os testes agora rodam com `reducedMotion: 'reduce'` por padrão, então o teste da F41 precisa usar
+`test.use({ reducedMotion: 'no-preference' })` para ver que a animação existe.

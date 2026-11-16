@@ -444,7 +444,7 @@
     "passos": [
       "Os testes de acessibilidade rodam dentro de npm run e2e e passam nos dois tamanhos de tela"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F41",
