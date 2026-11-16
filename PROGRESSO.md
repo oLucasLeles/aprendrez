@@ -294,3 +294,36 @@ Tirei capturas de tela e olhei: `docs/capturas/f10-*.png`.
   foi alterado lá.
 **Próximo turno:** F11 · Lances por clique. O `Board` ainda não recebe `onSquareClick`; vai precisar
 de props para seleção, casas de destino (`squareStyles`) e de uma peça de `chess.js` para os lances legais.
+
+## Turno 2026-11-15 21:25 · [F11] Lances por clique
+**Status:** concluída
+**O que fiz:** O tabuleiro agora aceita lances por clique (SPEC, seção 7.1). A decisão do que
+acontece em cada clique ficou numa função pura, `src/chess/squareClick.ts` (clicar numa peça
+própria seleciona, clicar numa casa marcada faz o lance, clicar em outro lugar ou na mesma peça
+desfaz). Quem diz quais lances são legais é o `chess.js`. O `Board` ganhou duas props novas:
+`playerColor` (de quem é a pessoa; sem ela o tabuleiro é só para olhar) e `onMove` (avisa o pai
+do lance feito). A peça selecionada ganha um contorno vermelho, as casas de destino vazias ganham
+uma bolinha e as casas com captura ganham um anel. Testes novos: `squareClick.test.ts` e mais
+casos em `boardHighlights.test.ts` (unidade) e `e2e/clique.spec.ts` (navegador, desktop e celular).
+Capturas de tela olhadas: `docs/capturas/f11-selecao-desktop.png` e `f11-selecao-celular.png`.
+**Decisões:**
+- **Promoção por clique vira sempre dama.** A SPEC não pede uma escolha de peça e as aberturas
+  não chegam a promover; é o mais simples. Se um dia precisar, é aqui que se muda.
+- A seleção guarda a posição (FEN) em que foi feita. Se a posição mudar por fora (adversário
+  respondeu, "Voltar"), a seleção antiga some sozinha, sem precisar de código extra nas telas.
+- Destinos e seleção usam o vermelho de destaque (tokens), como a SPEC manda para "seleção".
+  Para não depender só de cor: a seleção é um contorno, os destinos são bolinha/anel (formas).
+- A página de testes `/dev/tabuleiro` (só no servidor de desenvolvimento) ganhou `?jogar=brancas`
+  ou `?jogar=pretas`, que liga os cliques e aplica os lances com o `chess.js`; ela mostra os
+  lances feitos num texto com `data-testid="lances-feitos"` para os testes conferirem.
+- Em passant conta como captura (anel), embora o `chess.js` use uma marca à parte para ele.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- Um comando de shell com vários arquivos de uma vez falhou por erro de sintaxe no começo do turno;
+  nada foi alterado por ele, refiz com as ferramentas de edição.
+- O anel e a bolinha dependem de `style` inline da biblioteca; os testes e2e os localizam por esse
+  `style` (frágil se a biblioteca mudar a forma de aplicar estilos). Se quebrar numa atualização, ajustar os seletores.
+- Arrastar (F12) e teclado (F14) ainda não existem. `allowDragging` continua `false`.
+**Próximo turno:** F12 · Lances por arrastar. Reaproveite `getTargets`/`getLegalTargets` de
+`squareClick.ts` para marcar os destinos durante o arrasto e use `onPieceDrop` do `react-chessboard`
+(devolver `false` faz a peça voltar à origem).

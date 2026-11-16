@@ -13,3 +13,27 @@ describe('getSquareStyles', () => {
     expect(styles.e4.boxShadow).toContain('var(--color-board-last-move)')
   })
 })
+
+describe('getSquareStyles com seleção', () => {
+  const selection = {
+    square: 'e2',
+    targets: [
+      { square: 'e3', capture: false },
+      { square: 'd3', capture: true },
+    ],
+  }
+
+  it('marca a peça selecionada e as casas de destino', () => {
+    const styles = getSquareStyles(null, selection)
+    expect(Object.keys(styles).sort()).toEqual(['d3', 'e2', 'e3'])
+    expect(styles.e2.boxShadow).toContain('var(--color-accent)')
+    expect(styles.e3.backgroundImage).toContain('radial-gradient')
+    expect(styles.d3.boxShadow).toContain('var(--color-accent)')
+  })
+
+  it('a seleção convive com o destaque do último lance', () => {
+    const styles = getSquareStyles({ from: 'g1', to: 'f3' }, selection)
+    expect(styles.g1.boxShadow).toContain('var(--color-board-last-move)')
+    expect(styles.e2.boxShadow).toContain('var(--color-accent)')
+  })
+})
