@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router'
 import DevBoardScreen from './screens/DevBoardScreen'
+import ConclusionScreen from './screens/ConclusionScreen'
 import HomeScreen from './screens/HomeScreen'
 import LessonScreen from './screens/LessonScreen'
 import NotFoundScreen from './screens/NotFoundScreen'
@@ -11,6 +12,7 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<HomeScreen />} />
       <Route path="/abertura/:id" element={<LessonScreen />} />
+      <Route path="/abertura/:id/conclusao" element={<ConclusionScreen />} />
       {/* Página de testes do tabuleiro: só existe no servidor de desenvolvimento */}
       {import.meta.env.DEV && <Route path="/dev/tabuleiro" element={<DevBoardScreen />} />}
       {/* "*" pega qualquer endereço que não bateu com as rotas acima */}

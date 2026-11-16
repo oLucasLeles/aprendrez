@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import Board from '../components/Board'
 import { getOpening } from '../content/openings'
 import {
@@ -22,13 +22,14 @@ import {
   VARIATION_PHASE_LABELS,
   type VariationPosition,
 } from '../chess/variationStage'
+import { parseTestRandom } from '../chess/testRandom'
 import { clampStep, getWatchView } from '../chess/watchLine'
 import NotFoundScreen from './NotFoundScreen'
 
-// As etapas da lição, na ordem da SPEC (seção 6). Por enquanto só Conhecer, Assistir,
-// as duas práticas e as Variações têm conteúdo; o Desafio entra na próxima funcionalidade.
+// As etapas da lição, na ordem da SPEC (seção 6).
 const STAGES = ['Conhecer', 'Assistir', 'Praticar com guia', 'Praticar sozinho', 'Variações', 'Desafio']
 const VARIATIONS_STAGE = 4
+const CHALLENGE_STAGE = 5
 
 // Atraso da resposta do adversário (SPEC 7.5): dá tempo de perceber o que aconteceu.
 const OPPONENT_DELAY_MS = 400
@@ -40,13 +41,23 @@ const OPPONENT_DELAY_MS = 400
 function LessonScreen() {
   const { id } = useParams()
   const opening = getOpening(id)
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  // Só no servidor de desenvolvimento: `?acaso=0.99` fixa o sorteio do Desafio, para os testes
+  // de ponta a ponta saberem qual galho virá. No app publicado o parâmetro é ignorado.
+  const challengeRandom = import.meta.env.DEV ? parseTestRandom(searchParams.get('acaso')) : undefined
+  // Também só no desenvolvimento: `?etapa=desafio` abre a lição direto no Desafio, para o teste
+  // não precisar jogar todas as etapas antes (cada uma leva vários segundos).
+  const startAtChallenge = import.meta.env.DEV && searchParams.get('etapa') === 'desafio'
 
   // A etapa atual e, na etapa Assistir, quantos lances da linha já foram mostrados.
-  const [stageIndex, setStageIndex] = useState(0)
+  const [stageIndex, setStageIndex] = useState(startAtChallenge ? CHALLENGE_STAGE : 0)
   const [watchStep, setWatchStep] = useState(0)
 
   // Etapas de prática (com guia e sozinho): o estado do motor da lição (F15) e a última explicação.
-  const [practice, setPractice] = useState<LessonState | null>(null)
+  const [practice, setPractice] = useState<LessonState | null>(() =>
+    startAtChallenge && opening ? createLesson(opening) : null,
+  )
   const [correctText, setCorrectText] = useState<string | null>(null)
   // "Ver lance" (etapa sem guia): a posição (FEN) em que a pessoa pediu para ver o guia.
   // Quando a posição muda, o guia some sozinho, sem precisar limpar nada.
@@ -58,7 +69,9 @@ function LessonScreen() {
 
   const inVariations = stageIndex === VARIATIONS_STAGE
   const guidedStage = stageIndex === 2 || (inVariations && variationPos.phase === 'guided')
-  const soloStage = stageIndex === 3 || (inVariations && variationPos.phase === 'solo')
+  // O Desafio é uma prática sem guia (como "Praticar sozinho"), mas o adversário sorteia os galhos.
+  const challengeStage = stageIndex === CHALLENGE_STAGE
+  const soloStage = stageIndex === 3 || challengeStage || (inVariations && variationPos.phase === 'solo')
   const practicing = (guidedStage || soloStage) && practice !== null
   const practiceStatus = practice ? getStatus(practice) : null
 
@@ -67,10 +80,13 @@ function LessonScreen() {
   useEffect(() => {
     if (!practicing || !practice || practiceStatus !== 'opponent-turn') return
     const timer = setTimeout(() => {
-      setPractice(playOpponentTurn(practice, { kind: 'path', line: practiceLine }))
+      const mode = challengeStage
+        ? ({ kind: 'challenge', random: challengeRandom } as const)
+        : ({ kind: 'path', line: practiceLine } as const)
+      setPractice(playOpponentTurn(practice, mode))
     }, OPPONENT_DELAY_MS)
     return () => clearTimeout(timer)
-  }, [practicing, practice, practiceStatus, practiceLine])
+  }, [practicing, practice, practiceStatus, practiceLine, challengeStage, challengeRandom])
 
   if (!opening) return <NotFoundScreen />
 
@@ -116,22 +132,32 @@ function LessonScreen() {
     if (inVariations) {
       const next = nextVariationPosition(variationPos, variations.length)
       if (next) enterVariationPosition(next)
-      else setStageIndex(stageIndex + 1)
+      else {
+        // Última variação concluída: começa o Desafio, do zero.
+        startPractice(line)
+        setStageIndex(CHALLENGE_STAGE)
+      }
       return
     }
 
     const next = stageIndex + 1
     // Ao entrar numa etapa de prática, a linha principal começa do zero.
-    if (next === 2 || next === 3) startPractice(line)
+    if (next === 2 || next === 3 || next === CHALLENGE_STAGE) startPractice(line)
     if (next === VARIATIONS_STAGE) {
       // Conteúdo sem variações (o validador não deixa, mas não travamos): pula a etapa.
       if (variations.length === 0) {
-        setStageIndex(next + 1)
+        startPractice(line)
+        setStageIndex(CHALLENGE_STAGE)
         return
       }
       enterVariationPosition({ index: 0, phase: 'watch' })
     }
     setStageIndex(next)
+  }
+
+  // Concluir o Desafio leva à tela de conclusão (o progresso será salvo na F28).
+  function finishChallenge() {
+    navigate(`/abertura/${opening!.id}/conclusao`)
   }
 
   function handleUserMove(move: ClickMove) {
@@ -237,7 +263,7 @@ function LessonScreen() {
 
         {practicing && practice && (
           <div className="lesson-text" aria-live="polite">
-            <h2>{variation ? 'Variações' : guidedStage ? 'Praticar com guia' : 'Praticar sozinho'}</h2>
+            <h2>{variation ? 'Variações' : challengeStage ? 'Desafio' : guidedStage ? 'Praticar com guia' : 'Praticar sozinho'}</h2>
             {variation && (
               <>
                 <p className="lesson-hint" data-testid="variacao-atual">
@@ -250,12 +276,22 @@ function LessonScreen() {
             {practiceStatus === 'user-turn' && guidedStage && (
               <p className="lesson-hint">Sua vez: mova a peça marcada até a casa da seta.</p>
             )}
+            {challengeStage && practiceStatus === 'user-turn' && practice.moves.length === 0 && (
+              <p className="lesson-hint">
+                Uma partida do começo ao fim, sem ajuda. O adversário pode responder de jeitos diferentes: preste atenção
+                em cada lance.
+              </p>
+            )}
             {practiceStatus === 'user-turn' && soloStage && (
               <p className="lesson-hint">Sua vez: jogue o próximo lance da abertura. Se precisar, use "Ver lance".</p>
             )}
             {practiceStatus === 'opponent-turn' && <p className="lesson-hint">O adversário está respondendo…</p>}
             {practiceStatus === 'finished' && (
-              <p className="lesson-hint">Você chegou ao fim da linha. Clique em Continuar.</p>
+              <p className="lesson-hint">
+                {challengeStage
+                  ? 'Você chegou ao fim da linha. Clique em Concluir.'
+                  : 'Você chegou ao fim da linha. Clique em Continuar.'}
+              </p>
             )}
             {offScript && (
               <p className="lesson-narration lesson-offscript">
@@ -283,13 +319,6 @@ function LessonScreen() {
                 <strong>Lance correto.</strong> {correctText}
               </p>
             )}
-          </div>
-        )}
-
-        {stageIndex > VARIATIONS_STAGE && (
-          <div className="lesson-text">
-            <h2>{STAGES[stageIndex]}</h2>
-            <p className="lesson-hint">Esta etapa chega nas próximas funcionalidades.</p>
           </div>
         )}
 
@@ -356,10 +385,10 @@ function LessonScreen() {
               type="button"
               className="button-primary"
               // Na prática, só dá para continuar quando a linha chegou ao fim.
-              disabled={stageIndex === STAGES.length - 1 || (practicing && practiceStatus !== 'finished')}
-              onClick={goToNextStage}
+              disabled={practicing && practiceStatus !== 'finished'}
+              onClick={challengeStage ? finishChallenge : goToNextStage}
             >
-              Continuar
+              {challengeStage ? 'Concluir' : 'Continuar'}
             </button>
           )}
         </div>

@@ -615,3 +615,30 @@ indicador e a chegada à segunda variação. Capturas olhadas: `docs/capturas/f2
 - O servidor de desenvolvimento foi encerrado no fim do turno.
 **Próximo turno:** F23 · Etapa Desafio. Reaproveite `startPractice`, a prática sem guia e `playOpponentTurn` com `{ kind: 'challenge', random }`
 (F16); o acaso precisa poder ser controlado por um parâmetro de teste (por exemplo, na URL, só no servidor de desenvolvimento).
+
+## Turno 2026-11-16 00:40 · [F23] Etapa Desafio
+**Status:** concluída
+**O que fiz:** O "Continuar" da última variação agora leva à etapa **Desafio**: uma partida do começo ao fim da linha, sem
+guia, em que o adversário **sorteia** entre os galhos ensinados (linha principal ou variação) a cada resposta. Reaproveitei a
+prática sem guia da F21 (lance fora do roteiro com ícone e "Voltar", "Ver lance"); a única diferença é que o adversário usa o
+modo `challenge` do motor (F16). No fim da partida o botão vira **"Concluir"** e leva a `/abertura/:id/conclusao`. Criei uma
+versão mínima dessa tela (`src/screens/ConclusionScreen.tsx`, só título e link de volta) para o Desafio ter para onde ir; ela é
+completada na F27. Testes novos em `e2e/licao-desafio.spec.ts` (desktop e celular): Desafio com a linha principal sorteada até a
+conclusão, Desafio em que o adversário desvia para a variação `4...d6`, e lance fora do roteiro + "Ver lance" no Desafio. Mais um
+teste de unidade em `src/chess/testRandom.test.ts`. Capturas olhadas: `docs/capturas/f23-*.png` (1440 px e 375 px).
+**Decisões:**
+- **Acaso controlável por parâmetro de teste, só no desenvolvimento:** `?acaso=0` escolhe sempre o primeiro galho (linha
+  principal) e `?acaso=0.99` o último (`src/chess/testRandom.ts`). Em `import.meta.env.DEV` o parâmetro vale; no app publicado
+  ele é ignorado e o sorteio é o `Math.random` de verdade.
+- **`?etapa=desafio` (também só no desenvolvimento)** abre a lição direto no Desafio. Sem isso, cada teste teria de jogar as etapas
+  anteriores (mais de 1 minuto). Quando a F24 permitir clicar nas etapas, dá para trocar isso por cliques, se quiserem.
+- O Desafio recomeça do zero ao entrar na etapa, como as práticas.
+- "Concluir" só abre quando a linha acaba. O progresso (marcar a abertura como concluída) ainda **não** é salvo: é a F28.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- O caminho **Variações → Desafio** (clicar em Continuar na última variação) não tem teste e2e fixo, porque exigiria jogar tudo
+  (~35 s por tela). Conferi uma vez à mão com um script descartável do Playwright (passou) e apaguei o script.
+- No Desafio com uma variação, a lista de lances e a lógica seguem a árvore, mas a mensagem de "fim da linha" é a mesma da prática.
+- O servidor de desenvolvimento foi encerrado pelo próprio Playwright no fim de cada execução.
+**Próximo turno:** F24 · Navegação entre etapas (indicador clicável, etapas concluídas e "Reiniciar a linha"). Hoje o indicador é
+só uma lista; `stageIndex` e o estado de prática ficam em `LessonScreen.tsx`.

@@ -259,7 +259,7 @@
     "passos": [
       "Teste e2e (com o acaso controlado por um parâmetro de teste): completar o Desafio da Italiana leva à tela de conclusão"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F24",
