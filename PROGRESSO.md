@@ -781,3 +781,32 @@ e `e2e/progresso.spec.ts` (navegador, desktop e celular, incluindo o caso do pas
 - Subi o servidor de desenvolvimento para as capturas e o encerrei no fim do turno.
 **Próximo turno:** F29 · Tela inicial com a trilha. Use `TRAIL_ORDER`/`getNextOpening` (`src/content/trail.ts`), o catálogo
 (`src/content/openings/index.ts`), `getCharacteristicFen` (mini-tabuleiro com o `Board`) e `getOpeningStatus` (`src/progress/progress.ts`).
+
+## Turno 2026-11-16 02:40 · [F29] Tela inicial com a trilha
+**Status:** concluída
+**O que fiz:** A tela de Início (`src/screens/HomeScreen.tsx`) agora mostra o nome Aprendrez, a frase da proposta, o indicador geral
+("0 de 2 aberturas concluídas") e as aberturas agrupadas por nível ("1 Primeiros passos" etc.), na ordem da trilha. Cada cartão
+tem mini-tabuleiro na posição característica (com o lado da pessoa embaixo), nome com link para a lição, cor com ícone e texto
+(círculo vazio = brancas, cheio = pretas), status em texto (Não iniciada, Em andamento, Concluída com "✓") e a ideia em uma frase.
+Níveis sem aberturas com conteúdo nem aparecem. O status vem do progresso salvo (F28). Testes novos em `e2e/trilha.spec.ts` (desktop
+e celular) e em `src/chess/openingPosition.test.ts` (unidade, para o resumo da ideia). Capturas olhadas: `docs/capturas/f29-desktop.png`
+e `f29-celular.png`.
+**Decisões:**
+- **"A ideia em uma frase" = a primeira frase da ideia** do conteúdo (`getIdeaSummary`, em `openingPosition.ts`), para não inventar
+  um texto novo que precisaria de revisão humana.
+- **"Em andamento" continua valendo a regra da F28:** a pessoa precisa ter concluído pelo menos uma etapa (clicado "Continuar" em
+  "Conhecer"). Só abrir a lição não conta. O teste faz exatamente isso. Se preferirem que abrir já conte, é uma mudança pequena em F28.
+- O indicador geral conta só as aberturas **que têm conteúdo** ("0 de 2"), e não as 8 da SPEC, para não parecer que falta algo que
+  o cartão não mostra. Quando as 8 existirem, vira "x de 8" sozinho.
+- O `Board` ganhou a prop `showNotation` (padrão ligado); os mini-tabuleiros desligam as letras e números das bordas, que ficavam
+  ilegíveis e poluídos em tamanho pequeno.
+- Grade de cartões: 1 coluna no celular, 2 a partir de 768 px e 3 a partir de 1100 px. Só tokens de cor e espaçamento.
+- Os botões "Continuar de onde parei", filtro por cor e "Reiniciar progresso" **não** entram aqui: são F31, F30 e F32.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- O mini-tabuleiro é um grupo com nome acessível ("Tabuleiro de xadrez…"), repetido em cada cartão; para leitor de tela pode ser
+  ruído. A F40 (axe) vai dizer se há violação; se quiserem, dá para esconder o mini-tabuleiro de leitores de tela (o link já diz o nome).
+- Só o nome da abertura é link; o cartão inteiro não é clicável.
+- As capturas foram tiradas com um teste temporário, apagado em seguida (a F43 fará o script oficial de capturas).
+**Próximo turno:** F30 · Filtro por cor (Todas · Brancas · Pretas). Estado do filtro na `HomeScreen`; com o filtro "Pretas" só a Escandinava
+aparece hoje, e níveis sem aberturas visíveis devem sumir (já é assim). Considere o indicador geral: ele deve continuar contando todas.

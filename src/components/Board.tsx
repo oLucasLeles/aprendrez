@@ -31,6 +31,8 @@ type BoardProps = {
   playerColor?: PlayerColor
   /** Chamado quando a pessoa faz um lance legal, clicando ou arrastando. O pai atualiza o `fen`. */
   onMove?: (move: ClickMove) => void
+  /** Mostra as letras (a–h) e os números (1–8) nas bordas. Os mini-tabuleiros da trilha escondem. */
+  showNotation?: boolean
 }
 
 // Quem pediu "menos movimento" no sistema não vê as peças deslizando (SPEC, seção 9).
@@ -41,7 +43,7 @@ function prefersReducedMotion() {
 // Tabuleiro do Aprendrez. Mostra uma posição (F10) e aceita lances por clique
 // (F11), por arrastar (F12) e pelo teclado (F14). As cores das
 // casas vêm dos tokens (src/styles/tokens.css), nunca escritas aqui.
-function Board({ fen, orientation = 'white', lastMove = null, guide = null, playerColor, onMove }: BoardProps) {
+function Board({ fen, orientation = 'white', lastMove = null, guide = null, playerColor, onMove, showNotation = true }: BoardProps) {
   const label = `Tabuleiro de xadrez, ${orientation === 'white' ? 'brancas' : 'pretas'} embaixo`
   const interactive = playerColor !== undefined
 
@@ -149,6 +151,7 @@ function Board({ fen, orientation = 'white', lastMove = null, guide = null, play
           position: fen,
           boardOrientation: orientation,
           allowDragging: interactive,
+          showNotation,
           canDragPiece: ({ square }) => (square ? canMovePiece(fen, square, playerColor) : false),
           onPieceDrag,
           onPieceDrop,

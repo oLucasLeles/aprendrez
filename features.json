@@ -326,7 +326,7 @@
       "Teste e2e: o status de um cartão muda para 'em andamento' depois de começar a lição",
       "Capturas de tela em 1440 px e 375 px foram vistas e seguem o design suíço da SPEC"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F30",

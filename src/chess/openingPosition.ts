@@ -27,3 +27,12 @@ export function getCharacteristicFen(opening: Opening): string {
   }
   return game.fen()
 }
+
+/**
+ * A ideia da abertura em uma frase só (a primeira), para os cartões da trilha.
+ * O conteúdo guarda até 3 frases; aqui pegamos só até o primeiro ponto final.
+ */
+export function getIdeaSummary(opening: Opening): string {
+  const match = opening.idea.trim().match(/^.*?[.!?](?=\s|$)/s)
+  return match ? match[0] : opening.idea.trim()
+}

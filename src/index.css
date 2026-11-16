@@ -354,3 +354,104 @@ textarea {
   margin-top: var(--space-2);
   color: var(--color-text-secondary);
 }
+
+/* ---------- Tela de Início: a trilha (F29) ---------- */
+.trail-header {
+  margin-bottom: var(--space-6);
+}
+
+.trail-tagline {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-secondary);
+}
+
+.trail-progress {
+  margin-top: var(--space-3);
+  font-weight: var(--font-weight-medium);
+}
+
+.trail-level {
+  margin-bottom: var(--space-6);
+  padding-top: var(--space-2);
+  border-top: 2px solid var(--color-border-strong);
+}
+
+.trail-level-number {
+  color: var(--color-text-secondary);
+  margin-right: var(--space-1);
+}
+
+.trail-cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4) var(--grid-gutter);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trail-card {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: start;
+}
+
+.trail-card-board {
+  width: 100%;
+}
+
+.trail-card-title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+}
+
+.trail-card-title a {
+  color: var(--color-text);
+}
+
+.trail-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  margin: var(--space-1) 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.trail-color {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* O status é texto; a concluída ganha também o "✓" e um peso maior (não depende de cor). */
+.trail-status {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.trail-status[data-status='completed']::before {
+  content: '✓ ';
+}
+
+.trail-card-idea {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+@media (min-width: 768px) {
+  .trail-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .trail-card {
+    grid-template-columns: 10rem minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .trail-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

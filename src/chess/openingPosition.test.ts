@@ -2,7 +2,7 @@
 import { Chess } from 'chess.js'
 import { describe, expect, it } from 'vitest'
 import { getOpening, openings } from '../content/openings'
-import { COLOR_NAMES, getCharacteristicFen, LEVEL_NAMES } from './openingPosition'
+import { COLOR_NAMES, getCharacteristicFen, getIdeaSummary, LEVEL_NAMES } from './openingPosition'
 import { getMainLineMoves } from './openingTree'
 
 describe('getCharacteristicFen', () => {
@@ -37,5 +37,21 @@ describe('catálogo e nomes', () => {
     expect(LEVEL_NAMES[1]).toBe('Primeiros passos')
     expect(COLOR_NAMES.white).toBe('Brancas')
     expect(COLOR_NAMES.black).toBe('Pretas')
+  })
+})
+
+describe('getIdeaSummary', () => {
+  it('devolve só a primeira frase da ideia', () => {
+    const italiana = getOpening('italiana')!
+    const resumo = getIdeaSummary(italiana)
+    expect(resumo.endsWith('.')).toBe(true)
+    expect(resumo.length).toBeLessThan(italiana.idea.length)
+    expect(italiana.idea.startsWith(resumo)).toBe(true)
+    expect(resumo).not.toContain('. ')
+  })
+
+  it('se não há ponto final, devolve o texto inteiro', () => {
+    const aberta = { ...getOpening('italiana')!, idea: 'Uma ideia sem ponto' }
+    expect(getIdeaSummary(aberta)).toBe('Uma ideia sem ponto')
   })
 })
