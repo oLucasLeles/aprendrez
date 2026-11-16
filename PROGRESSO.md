@@ -952,3 +952,30 @@ abertura na trilha (nível 2). Capturas olhadas: `docs/capturas/f35-*.png` (1440
 - Os testes e2e reescrevem `docs/capturas/f27-*.png` a cada execução; restaurei esses dois arquivos para não sujar o commit.
 **Próximo turno:** F36 · a próxima funcionalidade com `passes: false` (provavelmente o conteúdo da Defesa Caro-Kann; id `caro-kann` em `TRAIL_ORDER`). Lembre de regenerar `docs/ABERTURAS.md`
 e de atualizar `e2e/trilha.spec.ts` (contagem "de 4" e lista de cartões), porque ele escreve o número de aberturas no código.
+
+## Turno 2026-11-16 05:00 · [F36] Conteúdo: Defesa Caro-Kann
+**Status:** concluída
+**O que fiz:** Criei `src/content/openings/caro-kann.ts`, a quinta abertura (pretas, nível 2, linha fixa, contra 1.e4). A linha principal é
+`1.e4 c6 2.d4 d5 3.Cd2 dxe4 4.Cxe4 Bf5 5.Cg3 Bg6 6.h4 h6 7.Cf3 Cd7 8.h5 Bh7 9.Bd3 Bxd3 10.Dxd3` (9 lances das pretas). Cada lance das pretas tem explicação e
+dica, e há erros comuns em 6 lances (`g5`, `e5`, `Qxd4`, `Bxc2`, `Bxh5` e `Bg6`). Há 2 variações das brancas: `6.Bc4` em vez de `6.h4` e `7.h5` antes de `7.Cf3`
+(esta chega à mesma posição da linha principal). O validador (F06) pegou o arquivo sozinho e passou, e `docs/ABERTURAS.md` foi regenerado (agora com 5 aberturas).
+Teste novo: `e2e/licao-caro-kann.spec.ts` (desktop e celular): linha principal inteira, lance legal fora do roteiro (`1...e5`) com "Voltar", erro comum `Bxh5` com a
+explicação específica, a etapa Variações e a abertura na trilha (nível 2). Capturas olhadas: `docs/capturas/f36-desktop.png` e `f36-celular.png`.
+**Decisões:**
+- **Nome na base do Lichess: `Caro-Kann Defense: Classical Variation`.** As entradas com esse nome vão de `3.Nd2 dxe4 4.Nxe4 Bf5` até `7...Nd7`, então a linha usa `3.Cd2`
+  (e não o `3.Cc3`, mais comum para quem joga contra, que chega à mesma posição mas que a base não chama de "Classical"). Por isso, as duas variações também ficam
+  dentro dessa família (`4...Bf5 5.Cg3 Bg6`).
+- A linha tem **9 lances das pretas** (a SPEC pede "cerca de 6 a 8"): terminei em `10.Dxd3` para a troca de bispos, que é o objetivo de `h6` e `Bh7`, não ficar pela metade.
+- **Um trecho final repetido** (`9.Bd3 Bxd3 10.Dxd3`) é montado por uma função, `bishopTrade()`, usada na linha principal e na variação 2, para cada galho ter os seus nós.
+- Erros comuns são só lances legais e claros (peça perdida ou peão a menos); não incluí lances "estranhos mas jogáveis" para não afirmar teoria que não conferi.
+- **Atualizei `e2e/trilha.spec.ts`** para acompanhar o conteúdo novo: "de 4" virou "de 5", o nível 2 agora tem dois cartões (Espanhola e Caro-Kann), o filtro "Pretas" mostra
+  Escandinava e Caro-Kann, o teste de "tudo concluído" marca também `caro-kann` e "Não iniciada" são 5. Não removi nem enfraqueci checagem nenhuma.
+- Nenhuma dependência nova.
+**Problemas e pendências:**
+- **Revisão humana do conteúdo** (SPEC, seção 15): os testes garantem lances legais e a ligação com a base, mas não que as explicações ensinam bem. Vale olhar a explicação de
+  `Nd7` (diz que evita peões dobrados se houver troca em f6) e a de `Bg6` (diz que o bispo continua vigiando a diagonal até c2).
+- As respostas das brancas depois do desvio das variações são curtas (a variação termina logo depois do lance da pessoa), como nas outras aberturas.
+- Os testes e2e reescrevem `docs/capturas/f27-*.png` a cada execução; restaurei esses dois arquivos para não sujar o commit.
+- Um `cd` para `data/lichess-openings` deslocou a pasta de trabalho do shell no meio do turno; voltei à raiz e nada foi alterado lá.
+**Próximo turno:** F37 · a próxima funcionalidade com `passes: false` (provavelmente o conteúdo do Gambito da Dama Recusado; id `gambito-da-dama-recusado`). Lembre de regenerar
+`docs/ABERTURAS.md` e de atualizar `e2e/trilha.spec.ts` (contagem "de 5", lista de cartões e filtros), porque ele escreve o número de aberturas no código.

@@ -206,6 +206,74 @@
 
 ---
 
+## Defesa Caro-Kann
+
+- **Cor:** Pretas
+- **Nível:** 2 · Construindo repertório
+- **Tipo:** Linha fixa
+- **Nome na base do Lichess:** Caro-Kann Defense: Classical Variation
+- **Assume que o adversário começa com:** 1. e4
+
+**Ideia:** Você prepara o ataque ao centro com um peão ao lado (o de c6) e só então avança o peão da dama. Antes de fechar a sua posição, você tira o bispo da dama para fora da cadeia de peões. O resultado é uma defesa muito sólida, sem pontos fracos.
+
+**Ideias-chave:**
+
+- O peão de c6 protege a casa d5: assim você avança o peão da dama sem depender da dama para protegê-lo.
+- O bispo da dama sai para f5 e g6 cedo, antes de você fechar a posição com o peão de e6. Esse é o grande trunfo da Caro-Kann.
+- Com h6 e Cd7, você prepara o recuo do bispo e o desenvolvimento do outro cavalo sem ficar com peões dobrados.
+
+### Linha principal
+
+`1. e4 c6 2. d4 d5 3. Cd2 dxe4 4. Cxe4 Bf5 5. Cg3 Bg6 6. h4 h6 7. Cf3 Cd7 8. h5 Bh7 9. Bd3 Bxd3 10. Dxd3`
+
+- **1... c6**: Esse peão prepara o avanço do peão da dama: no próximo lance, d5 chega com um peão ao lado para protegê-lo. É o lance que dá nome à abertura.
+  - Dica: Prepare o avanço do peão da dama movendo o peão de uma coluna ao lado dele, uma casa para a frente.
+  - Erro comum, g5: Esse avanço enfraquece as casas na frente do seu rei e não ajuda em nada no centro. Nas primeiras jogadas, vale mais cuidar do centro e do rei.
+- **2... d5**: Agora o peão da dama avança com a proteção do peão de c6 e ataca o peão branco de e4. Você disputa o centro (as casas do meio do tabuleiro) sem arriscar nada.
+  - Dica: Ataque o peão branco do rei avançando o peão da dama duas casas, agora que ele tem proteção.
+  - Erro comum, e5: O peão de e5 fica atacado pelo peão branco de d4 e você não tem como protegê-lo bem. As brancas capturam e ficam com um peão a mais.
+- **3... dxe4**: Você captura o peão de e4. Depois que as brancas recapturarem, o peão branco central some e a casa f5 fica livre para o seu bispo, o plano principal da abertura.
+  - Dica: Capture o peão branco do rei com o seu peão do centro.
+- **4... Bf5**: O bispo da dama sai para fora da cadeia de peões, e ainda ataca o cavalo de e4. Você o desenvolve agora porque, depois de e6, ele ficaria preso atrás dos peões.
+  - Dica: Desenvolva o bispo que ficaria trancado atrás dos peões, para uma casa em que ele ataque o cavalo branco.
+  - Erro comum, Dxd4: A dama captura um peão, mas ele é protegido pela dama branca. As brancas capturam a sua dama, a peça mais valiosa depois do rei.
+- **5... Bg6**: O cavalo branco ataca o bispo, então ele recua para g6. Nessa casa ele continua fora dos peões, protegido pelos peões de f7 e h7, e ainda vigia a diagonal até o peão de c2.
+  - Dica: Mantenha o bispo na mesma diagonal, mas recue-o para uma casa onde ele fique protegido pelos peões.
+  - Erro comum, Bxc2: O bispo captura um peão, mas a dama branca captura o bispo de volta. Você trocaria uma peça por um peão.
+- **6... h6**: As brancas ameaçam avançar o peão de h para atacar o seu bispo. O peão de h6 prepara a casa h7, para onde o bispo vai recuar em segurança, e impede o cavalo branco de pular para g5.
+  - Dica: Prepare uma casa de recuo para o bispo com um peão da borda do seu lado do rei.
+- **7... Cd7**: O cavalo da dama sai para d7 para deixar f6 livre para o outro cavalo. Se as brancas trocarem peças em f6, você recaptura com um cavalo e não fica com peões dobrados (dois peões na mesma coluna).
+  - Dica: Desenvolva o cavalo da dama para uma casa que deixe a casa f6 livre para o outro cavalo.
+- **8... Bh7**: O peão branco ataca o seu bispo, que recua para h7, a casa que você preparou com h6. Ali ele continua na mesma diagonal, protegido e fora de perigo.
+  - Dica: Recue o bispo para a casa de segurança que você preparou ao lado do peão de h.
+  - Erro comum, Bxh5: O bispo captura o peão, mas o cavalo branco de g3 captura o bispo. Você perderia uma peça por um peão.
+- **9... Bxd3**: Você troca o seu bispo, que já estava bem posicionado, pelo bispo branco. Trocar uma peça que dá trabalho para desenvolver por uma peça das brancas deixa você com mais espaço e sem nenhum bispo ruim.
+  - Dica: Troque o seu bispo pelo bispo branco que acabou de aparecer na mesma diagonal.
+  - Erro comum, Bg6: Voltar para g6 é um erro: o peão branco de h5 captura o bispo na hora, e você perde uma peça inteira sem receber nada em troca.
+
+### Variações
+
+#### Brancas jogam h5 antes de Cf3
+
+`1. e4 c6 2. d4 d5 3. Cd2 dxe4 4. Cxe4 Bf5 5. Cg3 Bg6 6. h4 h6 7. h5 Bh7 8. Cf3 Cd7 9. Bd3 Bxd3 10. Dxd3`
+
+- **7... Bh7**: O peão branco ataca o seu bispo, que recua para h7, a casa que você preparou com h6. A ordem dos lances das brancas mudou, mas a sua resposta é a mesma.
+  - Dica: Recue o bispo para a casa de segurança que você preparou ao lado do peão de h.
+- **8... Cd7**: Agora você chega à mesma posição da linha principal: o cavalo da dama sai para d7 e deixa f6 livre para o outro cavalo.
+  - Dica: Desenvolva o cavalo da dama para uma casa que deixe a casa f6 livre para o outro cavalo.
+- **9... Bxd3**: Você troca o seu bispo, que já estava bem posicionado, pelo bispo branco. Trocar uma peça que dá trabalho para desenvolver por uma peça das brancas deixa você com mais espaço e sem nenhum bispo ruim.
+  - Dica: Troque o seu bispo pelo bispo branco que acabou de aparecer na mesma diagonal.
+  - Erro comum, Bg6: Voltar para g6 é um erro: o peão branco de h5 captura o bispo na hora, e você perde uma peça inteira sem receber nada em troca.
+
+#### Brancas jogam Bc4 em vez de h4
+
+`1. e4 c6 2. d4 d5 3. Cd2 dxe4 4. Cxe4 Bf5 5. Cg3 Bg6 6. Bc4 e6 7. Cf3`
+
+- **6... e6**: O bispo branco de c4 mira o seu peão de f7. Com o bispo da dama já fora dos peões, agora é seguro jogar e6: o peão fecha a diagonal do bispo branco e abre caminho para o seu bispo do rei.
+  - Dica: Agora que o seu bispo está fora, feche a diagonal do bispo branco com um peão do centro.
+
+---
+
 ## Espanhola (Ruy Lopez)
 
 - **Cor:** Brancas
