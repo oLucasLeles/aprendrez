@@ -476,7 +476,7 @@
       "O script gera as imagens sem erros",
       "As imagens foram vistas, e qualquer problema visual encontrado foi corrigido ou registrado no PROGRESSO.md"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "F44",

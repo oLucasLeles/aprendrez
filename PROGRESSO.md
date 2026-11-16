@@ -1147,3 +1147,21 @@ discretos e que não há rolagem horizontal. Capturas olhadas: `docs/capturas/f4
 - Um `cd` para dentro de `node_modules` desviou a pasta de trabalho do shell no meio do turno (como nas F10 e F14); voltei à raiz e nada foi alterado lá.
 - Subi o servidor de desenvolvimento para as capturas e o encerrei no fim do turno.
 **Próximo turno:** F43 · Capturas de tela para revisão (`npm run capturas`, com o Playwright). Já existem várias capturas em `docs/capturas/`, de turnos anteriores.
+
+## Turno 2026-11-16 10:00 · [F43] Capturas de tela para revisão
+**Status:** concluída
+**O que fiz:** Criei o comando `npm run capturas` (`scripts/capturas.mjs`). Ele sobe sozinho o servidor de desenvolvimento, abre o app no Chromium com o Playwright e salva em `docs/capturas/revisao/` 25 telas em 1440 px e em 375 px (50 imagens, página inteira): tela inicial (primeira visita, filtro "Pretas", confirmação de reiniciar, com progresso), as 6 etapas da lição da Italiana (mais lance fora do roteiro, "Ver lance" e lance correto), a lição de pretas (Siciliana, tabuleiro invertido), a etapa Conhecer das 8 aberturas, a conclusão e a página não encontrada. O script também gera `docs/capturas/revisao/LEIA-ME.md`, um índice do que cada imagem mostra, e avisa no terminal se alguma tela tiver rolagem horizontal (nenhuma teve). A pasta é apagada e recriada a cada execução.
+**Decisões:**
+- As imagens ficam numa subpasta (`docs/capturas/revisao/`), para não misturar com as capturas antigas de cada turno (`f02-…` a `f42-…`), que continuam como estão.
+- Usei a API do Vite dentro do próprio script para subir o servidor (nenhuma dependência nova, e funciona no Windows sem processos soltos). As telas que dependem de ferramentas só do desenvolvimento (progresso salvo no navegador) usam o mesmo truque dos testes de acessibilidade.
+- Cada página define (ou apaga) o progresso salvo antes de carregar, porque todas dividem o mesmo armazenamento do navegador; sem isso, as capturas de uma abertura herdavam o progresso da anterior.
+- O navegador das capturas pede "movimento reduzido", como os testes, para nenhuma peça aparecer "no meio do caminho".
+- Corrigi um problema do próprio script: na primeira captura da Siciliana "Praticar com guia" a foto saiu antes de o app jogar o 1.e4 (sem seta). Agora o script espera aparecer "Sua vez".
+**Problemas e pendências (vistos nas imagens, não corrigidos, por não serem desta funcionalidade):**
+- **Letras e números das bordas do tabuleiro (a–h, 1–8) ficam minúsculos e, no celular, encostam nas peças** (por exemplo, o "1" sobre a torre de a1). Já estava anotado na F10; vale decidir se o tamanho/posição muda ou se somem no celular.
+- O título da tela de lição é só "Lição", com "Abertura: <nome>" embaixo em texto pequeno. Funciona, mas o nome da abertura poderia ser o título (os testes de rotas dependem do texto atual).
+- Os botões desativados ("Continuar" antes do primeiro lance) ficam rosa-claro; é claro que estão desativados, mas é um tom fraco. O axe (F40) não reclamou, porque elementos desativados ficam fora da regra de contraste.
+- Nas telas de lição o painel tem muito espaço vazio abaixo dos botões no desktop. É só estética e combina com a referência suíça.
+- Vi só uma parte das 50 imagens (tela inicial, Conhecer, Assistir, guia, fora do roteiro, desafio, pretas, conclusão); as de Conhecer das outras 7 aberturas foram conferidas só pelo script (sem erros nem rolagem horizontal).
+- As 50 imagens somam 5 MB no repositório; se isso incomodar, dá para tirar a pasta do git e gerar sob demanda.
+**Próximo turno:** F44 · Revisão final da definição de pronto (e2e que conclui o Desafio das 8 aberturas com o acaso controlado, `npm run build` sem avisos e uma entrada final no diário).
