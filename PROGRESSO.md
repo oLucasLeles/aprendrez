@@ -1241,3 +1241,25 @@ agora confere que ela começa na borda de e2. `npm run verificar` passou (201 de
 **features.json:** ficou como está, como histórico. As funcionalidades F28 (progresso), F31 (continuar de onde
 parei) e F32 (reiniciar progresso), e a parte de status de F29, foram substituídas por esta decisão. Se o motor
 de turnos rodar de novo, ele não volta a elas, porque todas já estão com `passes: true`.
+
+## Nota do supervisor · 2026-11-22 · navegação das etapas e visual (referências do Mobbin)
+**Pesquisa:** no Mobbin, olhei lições do Brilliant (barra de progresso em segmentos, botão principal que
+anda dentro da lição, "Start over" como link de texto), cursos do Turo e do Codecademy (rodapé com
+"Continue"/"Next"), steppers do Zillow e do Resend, e catálogos do Uxcel e do Skillshare (cartões com
+cantos arredondados e prévia num painel claro).
+**O que mudou na lição:**
+- **Indicador de etapas em segmentos:** "Etapa X de 6" e uma barra dividida em 6. Cada segmento é um botão;
+  a etapa atual fica vermelha e mais grossa (não depende só de cor). Os nomes curtos aparecem embaixo no desktop.
+- **Dois tipos de "seguir em frente", separados:** o botão principal (vermelho) anda só DENTRO da etapa:
+  "Próximo lance", "Voltar", "Praticar esta variação com guia/sozinho", "Próxima variação" e "Ver resumo".
+  Trocar de etapa virou um rodapé à parte ("← Etapa anterior" / "Próxima etapa →"), que só ganha o destaque
+  vermelho quando não sobra nada a fazer na etapa atual. A regra está em `src/chess/stageNavigation.ts` (com testes).
+- **"Reiniciar a linha" saiu:** virou "Voltar ao início" (no Assistir) e "Recomeçar a partida" (na prática),
+  com um ícone de seta em círculo, como botão de texto no fim da linha de ações.
+**Visual:** tokens novos `--radius-xl` (16 px) e `--radius-full`. Cartões da trilha agora são verticais, com
+borda fina, cantos de 16 px e o mini-tabuleiro num painel claro; o número do nível virou um selo redondo; o
+painel da lição é um cartão; o tabuleiro grande tem cantos arredondados.
+**Testes:** nomes de botão atualizados em vários arquivos de `e2e/` (por exemplo, "Continuar" → "Próxima
+etapa", "Concluir" → "Ver resumo", "Próximo" → "Próximo lance"). Onde antes um botão ficava desabilitado, o
+teste agora confere a ausência do botão ou se ele tem destaque. `npm run verificar` passou (209 de unidade,
+282 de ponta a ponta).

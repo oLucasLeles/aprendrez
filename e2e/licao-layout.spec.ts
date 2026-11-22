@@ -8,7 +8,7 @@ test('o tabuleiro e o painel aparecem e não há rolagem horizontal', async ({ p
   await expect(page.getByRole('region', { name: 'Painel da lição' })).toBeVisible()
   await expect(page.getByRole('navigation', { name: 'Etapas da lição' })).toBeVisible()
   await expect(page.getByRole('link', { name: 'Voltar à trilha' })).toBeVisible()
-  await expect(page.getByRole('button', { name: 'Continuar' })).toBeVisible()
+  await expect(page.getByRole('button', { name: /Próxima etapa/ })).toBeVisible()
 
   const scrolls = await page.evaluate(
     () => document.documentElement.scrollWidth > document.documentElement.clientWidth,

@@ -31,7 +31,7 @@ test('ao concluir a Italiana, a tela mostra a linha principal e "Próxima abertu
       MAIN_LINE.split(' ').slice(0, (index + 1) * 3).join(' '),
     )
   }
-  await panel.getByRole('button', { name: 'Concluir' }).click()
+  await panel.getByRole('button', { name: 'Ver resumo' }).click()
 
   await expect(page).toHaveURL(/\/abertura\/italiana\/conclusao$/)
   await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()

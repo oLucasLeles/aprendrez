@@ -10,8 +10,8 @@ const originHighlight = (page: Page, name: string) => square(page, name).locator
 async function openSoloPractice(page: Page) {
   await page.goto('/abertura/italiana')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: 'Continuar' }).click() // Conhecer → Assistir
-  await panel.getByRole('button', { name: 'Continuar' }).click() // Assistir → Praticar com guia
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Assistir → Praticar com guia
 
   // Joga a linha toda com guia (por clique) só para liberar o "Continuar".
   const steps = [
@@ -30,7 +30,7 @@ async function openSoloPractice(page: Page) {
     await square(page, to).click()
   }
   await expect(panel.getByText(/Você chegou ao fim da linha/)).toBeVisible()
-  await panel.getByRole('button', { name: 'Continuar' }).click() // → Praticar sozinho
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // → Praticar sozinho
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   return panel
 }
@@ -81,7 +81,7 @@ test('lance legal fora do roteiro: mensagem com ícone, texto e dica, e o botão
   expect(colors.messageBorder).not.toBe(colors.accentRgb)
 
   // O botão principal vira "Voltar" e usa a cor de destaque
-  await expect(panel.getByRole('button', { name: 'Continuar' })).toHaveCount(0)
+  await expect(panel.getByRole('button', { name: /Próxima etapa/ })).not.toHaveClass(/is-emphasized/)
   const back = panel.getByRole('button', { name: 'Voltar' })
   await expect(back).toBeVisible()
   const backBackground = await back.evaluate((el) => getComputedStyle(el).backgroundColor)

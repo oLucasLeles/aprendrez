@@ -23,23 +23,23 @@ test('Conhecer e Assistir: as pretas aparecem embaixo', async ({ page }) => {
   await expect(board(page)).toHaveAccessibleName(/pretas embaixo/)
   await expectBlackAtBottom(page)
 
-  await panel.getByRole('button', { name: 'Continuar' }).click() // Conhecer → Assistir
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
   await expect(panel.getByRole('heading', { name: 'Assistir' })).toBeVisible()
   await expect(board(page)).toHaveAccessibleName(/pretas embaixo/)
   await expectBlackAtBottom(page)
 
   // O primeiro lance da lista é o 1.e4 das brancas.
-  await panel.getByRole('button', { name: 'Próximo' }).click()
+  await panel.getByRole('button', { name: 'Próximo lance' }).click()
   await expect(panel.getByLabel('Lista de lances')).toHaveText('1. e4')
-  await panel.getByRole('button', { name: 'Próximo' }).click()
+  await panel.getByRole('button', { name: 'Próximo lance' }).click()
   await expect(panel.getByLabel('Lista de lances')).toHaveText('1. e4 d5')
 })
 
 test('Praticar com guia: o 1. e4 já aparece jogado e o guia aponta o lance das pretas', async ({ page }) => {
   await page.goto('/abertura/escandinava')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: 'Continuar' }).click() // Conhecer → Assistir
-  await panel.getByRole('button', { name: 'Continuar' }).click() // Assistir → Praticar com guia
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Assistir → Praticar com guia
   await expect(panel.getByRole('heading', { name: 'Praticar com guia' })).toBeVisible()
 
   await expect(board(page)).toHaveAccessibleName(/pretas embaixo/)
@@ -68,7 +68,7 @@ test('Praticar sozinho: sem guia, pretas embaixo e 1. e4 já jogado', async ({ p
   const panel = page.getByRole('region', { name: 'Painel da lição' })
 
   // O indicador deixa voltar a "Praticar sozinho" (no modo de desenvolvimento todas as etapas estão alcançadas).
-  await panel.getByRole('button', { name: /Praticar sozinho/ }).click()
+  await panel.getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   await expectBlackAtBottom(page)
   await expect(panel.getByLabel('Lista de lances')).toHaveText('1. e4')

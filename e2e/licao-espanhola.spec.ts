@@ -9,7 +9,7 @@ const square = (page: Page, name: string) => page.locator(`[data-square="${name}
 async function openSoloPractice(page: Page) {
   await page.goto('/abertura/espanhola?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: /Praticar sozinho/ }).click()
+  await panel.getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   await expect(panel.getByLabel('Lista de lances')).toContainText('Nenhum lance ainda')
   return panel
@@ -77,7 +77,7 @@ test('erro comum do conteúdo: Bxb5 depois de 6...b5 mostra a explicação espec
 test('a etapa Variações mostra as duas variações da Espanhola, cada uma com o nome do desvio', async ({ page }) => {
   await page.goto('/abertura/espanhola?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: /Variações/ }).click()
+  await panel.getByRole('button', { name: 'Variações', exact: true }).click()
   await expect(panel.getByRole('heading', { name: 'Variações' })).toBeVisible()
   // A primeira variação encontrada na árvore é a mais profunda (7...O-O), depois vem 6...d6.
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 1 de 2: Pretas rocam antes de d6 · Assistir')

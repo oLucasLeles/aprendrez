@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 
 // Navegação entre etapas (F24): o indicador mostra a etapa atual e deixa abrir qualquer
-// etapa a qualquer momento (exploração livre); "Reiniciar a linha" recomeça a etapa atual.
+// etapa a qualquer momento (exploração livre); "Voltar ao início" / "Recomeçar a partida" recomeçam a etapa atual.
 
 const square = (page: Page, name: string) => page.locator(`[data-square="${name}"]`)
 
@@ -14,14 +14,14 @@ async function openLesson(page: Page) {
 
 test('depois de chegar a "Praticar com guia", clicar em "Assistir" volta para aquela etapa', async ({ page }) => {
   const { panel, stages } = await openLesson(page)
-  await panel.getByRole('button', { name: 'Continuar' }).click() // Conhecer → Assistir
-  await panel.getByRole('button', { name: 'Continuar' }).click() // Assistir → Praticar com guia
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Assistir → Praticar com guia
   await expect(panel.getByRole('heading', { name: 'Praticar com guia' })).toBeVisible()
-  await expect(stages.locator('[aria-current="step"]')).toHaveText('Praticar com guia')
+  await expect(stages.locator('[aria-current="step"]')).toHaveAccessibleName('Praticar com guia')
 
   await stages.getByRole('button', { name: 'Assistir' }).click()
   await expect(panel.getByRole('heading', { name: 'Assistir' })).toBeVisible()
-  await expect(stages.locator('[aria-current="step"]')).toHaveText('Assistir')
+  await expect(stages.locator('[aria-current="step"]')).toHaveAccessibleName('Assistir')
   await expect(panel.getByLabel('Lista de lances')).toContainText('Nenhum lance ainda')
 
   // A etapa onde a pessoa já esteve continua acessível.
@@ -48,25 +48,25 @@ test('qualquer etapa pode ser aberta logo de início, sem marca de "concluída"'
   await expect(stages.getByText(/concluída/)).toHaveCount(0)
 })
 
-test('"Reiniciar a linha" volta o Assistir para o início', async ({ page }) => {
+test('"Voltar ao início" volta o Assistir para o primeiro lance', async ({ page }) => {
   const { panel } = await openLesson(page)
-  await panel.getByRole('button', { name: 'Continuar' }).click() // → Assistir
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // → Assistir
   const moves = panel.getByLabel('Lista de lances')
 
-  await panel.getByRole('button', { name: 'Próximo' }).click()
-  await panel.getByRole('button', { name: 'Próximo' }).click()
+  await panel.getByRole('button', { name: 'Próximo lance' }).click()
+  await panel.getByRole('button', { name: 'Próximo lance' }).click()
   // (a lista do Assistir termina com um espaço, por isso o \s*)
   await expect(moves).toHaveText(/^1\. e4 e5\s*$/)
 
-  await panel.getByRole('button', { name: 'Reiniciar a linha' }).click()
+  await panel.getByRole('button', { name: 'Voltar ao início' }).click()
   await expect(moves).toContainText('Nenhum lance ainda')
   await expect(panel.getByText('Lance 0 de')).toBeVisible()
 })
 
-test('"Reiniciar a linha" volta a posição para o início da prática', async ({ page }) => {
+test('"Recomeçar a partida" volta a posição para o início da prática', async ({ page }) => {
   const { panel } = await openLesson(page)
-  await panel.getByRole('button', { name: 'Continuar' }).click() // → Assistir
-  await panel.getByRole('button', { name: 'Continuar' }).click() // → Praticar com guia
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // → Assistir
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // → Praticar com guia
   const board = page.getByRole('group', { name: /Tabuleiro de xadrez/ })
   const moves = panel.getByLabel('Lista de lances')
 
@@ -75,7 +75,7 @@ test('"Reiniciar a linha" volta a posição para o início da prática', async (
   // O adversário responde sozinho (~400 ms): a partida já tem dois lances.
   await expect(moves).toHaveText(/^1\. e4 e5$/)
 
-  await panel.getByRole('button', { name: 'Reiniciar a linha' }).click()
+  await panel.getByRole('button', { name: 'Recomeçar a partida' }).click()
   await expect(moves).toContainText('Nenhum lance ainda')
   await expect(board.locator('[data-square="e2"] [data-piece="wP"]')).toBeVisible()
   await expect(board.locator('[data-square="e4"] [data-piece]')).toHaveCount(0)
@@ -87,7 +87,7 @@ test('"Reiniciar a linha" volta a posição para o início da prática', async (
   await expect(moves).toHaveText(/^1\. e4/)
 })
 
-test('"Reiniciar a linha" não aparece na etapa Conhecer', async ({ page }) => {
+test('"Recomeçar" não aparece na etapa Conhecer', async ({ page }) => {
   const { panel } = await openLesson(page)
-  await expect(panel.getByRole('button', { name: 'Reiniciar a linha' })).toHaveCount(0)
+  await expect(panel.getByRole('button', { name: /Recomeçar|Voltar ao início/ })).toHaveCount(0)
 })

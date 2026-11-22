@@ -23,13 +23,18 @@ import {
   type VariationPosition,
 } from '../chess/variationStage'
 import { parseTestRandom } from '../chess/testRandom'
+import {
+  CHALLENGE_STAGE,
+  getInnerAction,
+  getNeighbourStages,
+  isStageDone,
+  STAGES,
+  VARIATIONS_STAGE,
+  type InnerAction,
+  type StageMoment,
+} from '../chess/stageNavigation'
 import { clampStep, getWatchView } from '../chess/watchLine'
 import NotFoundScreen from './NotFoundScreen'
-
-// As etapas da lição, na ordem da SPEC (seção 6).
-const STAGES = ['Conhecer', 'Assistir', 'Praticar com guia', 'Praticar sozinho', 'Variações', 'Desafio']
-const VARIATIONS_STAGE = 4
-const CHALLENGE_STAGE = 5
 
 // Em quais etapas existe uma partida em andamento (o estado do motor da lição).
 function isPracticeStage(stage: number): boolean {
@@ -142,8 +147,8 @@ function LessonScreen() {
     else startPractice(target.line)
   }
 
-  // Entra numa etapa, sempre desde o começo dela. Serve tanto para o "Continuar" quanto
-  // para os cliques no indicador de etapas.
+  // Entra numa etapa, sempre desde o começo dela. Serve para o indicador de etapas
+  // e para os botões "Etapa anterior" / "Próxima etapa" do rodapé do painel.
   function enterStage(target: number) {
     if (target === 1) setWatchStep(0)
     // Ao entrar numa etapa de prática, a linha principal começa do zero.
@@ -160,21 +165,19 @@ function LessonScreen() {
     setStageIndex(target)
   }
 
-  function goToNextStage() {
-    // Dentro das Variações, "Continuar" anda pelos passos de cada variação.
-    if (inVariations) {
+  // A ação principal, sempre DENTRO da etapa atual (veja src/chess/stageNavigation.ts).
+  function runInnerAction(action: InnerAction) {
+    if (action.kind === 'next-move') setWatchStep(clampStep(watchStep + 1, watchLine))
+    else if (action.kind === 'undo') handleUndo()
+    else if (action.kind === 'summary') finishChallenge()
+    else {
+      // Passos da etapa Variações: com guia, sozinho, próxima variação.
       const next = nextVariationPosition(variationPos, variations.length)
       if (next) enterVariationPosition(next)
-      else {
-        // Depois da última variação, o Desafio começa, do zero.
-        enterStage(CHALLENGE_STAGE)
-      }
-      return
     }
-    enterStage(stageIndex + 1)
   }
 
-  // "Reiniciar a linha": recomeça a etapa atual (na prática, a partida volta ao início).
+  // "Recomeçar": volta a etapa atual para o primeiro lance (na prática, a partida recomeça).
   function restartLine() {
     if (watching) setWatchStep(variation ? getDeviationStep(variation) : 0)
     else if (practicing) startPractice(challengeStage ? line : practiceLine)
@@ -196,6 +199,25 @@ function LessonScreen() {
   function handleUndo() {
     if (practice) setPractice(undoOffScriptMove(practice))
   }
+
+  const lastVariation = variationPos.index === variations.length - 1
+  const variationPhase = inVariations ? variationPos.phase : undefined
+  const moment: StageMoment =
+    stageIndex === 0
+      ? { kind: 'intro' }
+      : watching
+        ? { kind: 'watch', atEnd: watchStep === watchLine.length, variationPhase, lastVariation }
+        : {
+            kind: 'practice',
+            finished: practiceStatus === 'finished',
+            offScript: offScript !== null,
+            variationPhase,
+            lastVariation,
+            challenge: challengeStage,
+          }
+  const innerAction = getInnerAction(moment)
+  const stageDone = isStageDone(moment)
+  const neighbours = getNeighbourStages(stageIndex)
 
   return (
     <main className="grid page lesson">
@@ -222,27 +244,30 @@ function LessonScreen() {
       </div>
 
       <section className="lesson-panel" aria-label="Painel da lição">
-        <nav aria-label="Etapas da lição">
-          <ol className="lesson-stages">
-            {STAGES.map((stage, index) => {
-              const isCurrent = index === stageIndex
-              return (
-                <li key={stage} aria-current={isCurrent ? 'step' : undefined}>
-                  {isCurrent ? (
-                    <>
-                      {stage}
-                      {/* Dentro das Variações, o indicador diz em qual delas a pessoa está. */}
-                      {inVariations && ` (${variationPos.index + 1} de ${variations.length})`}
-                    </>
-                  ) : (
-                    // Toda etapa pode ser aberta a qualquer momento: a exploração é livre.
-                    <button type="button" className="lesson-stage-button" onClick={() => enterStage(index)}>
-                      {stage}
-                    </button>
-                  )}
-                </li>
-              )
-            })}
+        {/* Indicador de etapas em segmentos (referência: Brilliant). Cada segmento é um botão:
+            a exploração é livre, então qualquer etapa abre a qualquer momento. Nada fica "concluído". */}
+        <nav className="lesson-stepper" aria-label="Etapas da lição">
+          <p className="lesson-step-count">
+            Etapa {stageIndex + 1} de {STAGES.length}
+          </p>
+          <ol className="lesson-stepper-list">
+            {STAGES.map((stage, index) => (
+              <li key={stage.name}>
+                <button
+                  type="button"
+                  className="lesson-stepper-button"
+                  aria-current={index === stageIndex ? 'step' : undefined}
+                  aria-label={stage.name}
+                  title={stage.name}
+                  onClick={() => enterStage(index)}
+                >
+                  <span className="lesson-stepper-bar" aria-hidden="true" />
+                  <span className="lesson-stepper-label" aria-hidden="true">
+                    {stage.short}
+                  </span>
+                </button>
+              </li>
+            ))}
           </ol>
         </nav>
 
@@ -293,7 +318,7 @@ function LessonScreen() {
             </p>
             <p className="lesson-narration">
               {atDeviation
-                ? 'Até aqui o jogo é igual ao da linha principal. Aperte "Próximo" para ver a resposta diferente.'
+                ? 'Até aqui o jogo é igual ao da linha principal. Aperte "Próximo lance" para ver a resposta diferente.'
                 : watchView.narration}
             </p>
           </div>
@@ -327,8 +352,10 @@ function LessonScreen() {
             {practiceStatus === 'finished' && (
               <p className="lesson-hint">
                 {challengeStage
-                  ? 'Você chegou ao fim da linha. Clique em Concluir.'
-                  : 'Você chegou ao fim da linha. Clique em Continuar.'}
+                  ? 'Você chegou ao fim da linha. Veja o resumo da abertura.'
+                  : inVariations
+                    ? 'Você chegou ao fim desta variação.'
+                    : 'Você chegou ao fim da linha. Jogue de novo ou siga para a próxima etapa.'}
               </p>
             )}
             {offScript && (
@@ -388,55 +415,72 @@ function LessonScreen() {
           )}
         </div>
 
+        {/* Ações DENTRO da etapa. O botão principal (vermelho) nunca troca de etapa. */}
         <div className="lesson-actions">
           {watching && (
-            <>
-              <button
-                type="button"
-                className="button-secondary"
-                disabled={watchStep === 0}
-                onClick={() => setWatchStep(clampStep(watchStep - 1, watchLine))}
-              >
-                Anterior
-              </button>
-              <button
-                type="button"
-                className="button-secondary"
-                disabled={watchStep === watchLine.length}
-                onClick={() => setWatchStep(clampStep(watchStep + 1, watchLine))}
-              >
-                Próximo
-              </button>
-            </>
+            <button
+              type="button"
+              className="button-secondary"
+              disabled={watchStep === 0}
+              onClick={() => setWatchStep(clampStep(watchStep - 1, watchLine))}
+            >
+              Lance anterior
+            </button>
           )}
           {soloStage && practicing && practiceStatus === 'user-turn' && !offScript && (
             <button type="button" className="button-secondary" onClick={() => setPeekFen(practice!.fen)}>
               Ver lance
             </button>
           )}
-          {stageIndex !== 0 && (
-            <button type="button" className="button-secondary" onClick={restartLine}>
-              Reiniciar a linha
+          {innerAction && (
+            <button type="button" className="button-primary" onClick={() => runInnerAction(innerAction)}>
+              {innerAction.label}
             </button>
           )}
-          {offScript ? (
-            <button type="button" className="button-primary" onClick={handleUndo}>
-              Voltar
-            </button>
-          ) : (
-            <button
-              type="button"
-              className="button-primary"
-              // Na prática, só dá para continuar quando a linha chegou ao fim.
-              disabled={practicing && practiceStatus !== 'finished'}
-              onClick={challengeStage ? finishChallenge : goToNextStage}
-            >
-              {challengeStage ? 'Concluir' : 'Continuar'}
+          {stageIndex !== 0 && (
+            <button type="button" className="button-tertiary button-with-icon" onClick={restartLine}>
+              <RestartIcon />
+              {watching ? 'Voltar ao início' : 'Recomeçar a partida'}
             </button>
           )}
         </div>
+
+        {/* Trocar de etapa: controle separado, no rodapé do painel. "Próxima etapa" só ganha o
+            destaque do botão principal quando não sobra nada para fazer na etapa atual. */}
+        <nav className="lesson-stage-nav" aria-label="Trocar de etapa">
+          {neighbours.previous !== null && (
+            <button
+              type="button"
+              className="lesson-stage-nav-button lesson-stage-nav-previous"
+              onClick={() => enterStage(neighbours.previous!)}
+            >
+              <span className="lesson-stage-nav-caption">← Etapa anterior</span>
+              <span className="lesson-stage-nav-name">{STAGES[neighbours.previous].name}</span>
+            </button>
+          )}
+          {neighbours.next !== null && (
+            <button
+              type="button"
+              className={`lesson-stage-nav-button lesson-stage-nav-next${stageDone ? ' is-emphasized' : ''}`}
+              onClick={() => enterStage(neighbours.next!)}
+            >
+              <span className="lesson-stage-nav-caption">Próxima etapa →</span>
+              <span className="lesson-stage-nav-name">{STAGES[neighbours.next].name}</span>
+            </button>
+          )}
+        </nav>
       </section>
     </main>
+  )
+}
+
+// Ícone de "recomeçar": uma seta em círculo. Decorativo: o texto do botão já diz o que ele faz.
+function RestartIcon() {
+  return (
+    <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" className="button-icon">
+      <path d="M3 8a5 5 0 1 0 1.5-3.6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M3 2.5v2.5h2.5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   )
 }
 

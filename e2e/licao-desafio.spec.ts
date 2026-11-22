@@ -47,15 +47,15 @@ test('completar o Desafio da Italiana (linha principal sorteada) leva à tela de
   const panel = page.getByRole('region', { name: 'Painel da lição' })
   const stages = page.getByRole('navigation', { name: 'Etapas da lição' })
 
-  await expect(stages.locator('[aria-current="step"]')).toHaveText('Desafio')
+  await expect(stages.locator('[aria-current="step"]')).toHaveAccessibleName('Desafio')
   await expect(panel.getByRole('heading', { name: 'Desafio' })).toBeVisible()
   // "Concluir" só abre quando a partida acaba
-  await expect(panel.getByRole('button', { name: 'Concluir' })).toBeDisabled()
+  await expect(panel.getByRole('button', { name: 'Ver resumo' })).toHaveCount(0)
 
   await playChallenge(page, MAIN_USER, MAIN_TOKENS)
   await expect(panel.getByText(/Você chegou ao fim da linha/)).toBeVisible()
 
-  await panel.getByRole('button', { name: 'Concluir' }).click()
+  await panel.getByRole('button', { name: 'Ver resumo' }).click()
   await expect(page).toHaveURL(/\/abertura\/italiana\/conclusao$/)
   await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
 })
@@ -67,7 +67,7 @@ test('o adversário pode desviar para uma variação ensinada e o Desafio també
 
   await playChallenge(page, D6_USER, D6_TOKENS)
   await expect(panel.getByText(/Você chegou ao fim da linha/)).toBeVisible()
-  await panel.getByRole('button', { name: 'Concluir' }).click()
+  await panel.getByRole('button', { name: 'Ver resumo' }).click()
   await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
 })
 

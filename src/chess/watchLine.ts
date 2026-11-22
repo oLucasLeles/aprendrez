@@ -16,7 +16,7 @@ export type WatchView = {
   narration: string
 }
 
-/** Quantos lances cabem na linha, para limitar "Próximo". */
+/** Quantos lances cabem na linha, para limitar "Próximo lance". */
 export function clampStep(step: number, line: OpeningNode[]): number {
   return Math.max(0, Math.min(step, line.length))
 }
@@ -48,6 +48,6 @@ export function getWatchView(line: OpeningNode[], step: number, openingColor: Op
     shownMoves: line.slice(0, count).map((node) => node.san),
     narration: current
       ? getNarration(current, openingColor)
-      : 'Esta é a posição inicial. Aperte "Próximo" para ver o primeiro lance.',
+      : 'Esta é a posição inicial. Aperte "Próximo lance" para ver o primeiro lance.',
   }
 }

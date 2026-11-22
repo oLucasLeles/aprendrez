@@ -9,7 +9,7 @@ const square = (page: Page, name: string) => page.locator(`[data-square="${name}
 async function openSoloPractice(page: Page) {
   await page.goto('/abertura/caro-kann?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: /Praticar sozinho/ }).click()
+  await panel.getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   // O app joga sozinho o 1.e4 das brancas.
   await expect(panel.getByLabel('Lista de lances')).toHaveText('1. e4')
@@ -77,7 +77,7 @@ test('erro comum do conteúdo: Bxh5 depois de 8.h5 mostra a explicação especí
 test('a etapa Variações mostra as duas variações da Caro-Kann, cada uma com o nome do desvio', async ({ page }) => {
   await page.goto('/abertura/caro-kann?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: /Variações/ }).click()
+  await panel.getByRole('button', { name: 'Variações', exact: true }).click()
   await expect(panel.getByRole('heading', { name: 'Variações' })).toBeVisible()
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 1 de 2: ')
   await expect(panel.getByTestId('variacao-atual')).toContainText(/Brancas jogam (h5 antes de Cf3|Bc4 em vez de h4)/)

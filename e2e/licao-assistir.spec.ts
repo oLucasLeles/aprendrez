@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test'
 async function openWatchStage(page: import('@playwright/test').Page) {
   await page.goto('/abertura/italiana')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: 'Continuar' }).click()
+  await panel.getByRole('button', { name: /Próxima etapa/ }).click()
   await expect(panel.getByRole('heading', { name: 'Assistir' })).toBeVisible()
   return panel
 }
@@ -13,13 +13,13 @@ test('avançar três lances mostra a narração do terceiro e a lista 1. e4 e5 2
   const panel = await openWatchStage(page)
   const board = page.getByRole('group', { name: /Tabuleiro de xadrez/ })
 
-  await expect(panel.getByRole('listitem').filter({ hasText: 'Assistir' }).first()).toHaveAttribute(
+  await expect(page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Assistir', exact: true })).toHaveAttribute(
     'aria-current',
     'step',
   )
   await expect(panel.getByLabel('Lista de lances')).toContainText('Nenhum lance ainda')
 
-  const next = panel.getByRole('button', { name: 'Próximo' })
+  const next = panel.getByRole('button', { name: 'Próximo lance' })
   await next.click()
   await next.click()
   await next.click()
@@ -37,8 +37,8 @@ test('avançar três lances mostra a narração do terceiro e a lista 1. e4 e5 2
 test('"Anterior" volta a posição e a narração', async ({ page }) => {
   const panel = await openWatchStage(page)
   const board = page.getByRole('group', { name: /Tabuleiro de xadrez/ })
-  const next = panel.getByRole('button', { name: 'Próximo' })
-  const previous = panel.getByRole('button', { name: 'Anterior' })
+  const next = panel.getByRole('button', { name: 'Próximo lance' })
+  const previous = panel.getByRole('button', { name: 'Lance anterior' })
 
   await expect(previous).toBeDisabled()
   await next.click()
@@ -54,12 +54,12 @@ test('"Anterior" volta a posição e a narração', async ({ page }) => {
 
 test('o Próximo acaba no último lance da linha e a página não rola para os lados', async ({ page }) => {
   const panel = await openWatchStage(page)
-  const next = panel.getByRole('button', { name: 'Próximo' })
+  const next = panel.getByRole('button', { name: 'Próximo lance' })
   for (let i = 0; i < 16; i++) {
     if (await next.isDisabled()) break
     await next.click()
   }
-  await expect(next).toBeDisabled()
+  await expect(next).toHaveCount(0)
   await expect(panel.getByLabel('Lista de lances')).toContainText('8. Bb3 Ba7')
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth)

@@ -142,7 +142,7 @@ Na etapa sem guia, um lance legal que não faz parte da abertura:
   entregar o lance, por exemplo: "Desenvolva uma peça que ajude a controlar o centro")
 - Se o conteúdo tiver uma explicação específica para aquele lance (um erro comum),
   ela aparece no lugar da mensagem genérica
-- O botão principal "Continuar" vira **"Voltar"**, que desfaz o lance para a pessoa tentar de novo
+- O botão principal passa a ser **"Voltar"**, que desfaz o lance para a pessoa tentar de novo
 - Não existe limite de tentativas nem penalidade
 
 ### 7.4 Lance correto
@@ -180,7 +180,7 @@ e cada lance é um galho que leva à posição seguinte.
 - O tabuleiro segue a paleta: as casas usam dois neutros com bom contraste entre si
 - O vermelho é **reservado ao destaque**. Ele não é usado para indicar erro (veja a seção 13, item 1)
 - Lance fora do roteiro e lance correto são indicados com **ícone discreto e texto**, nunca só com cor
-- O botão de ação principal usa sempre a cor de destaque, seja "Continuar" ou "Voltar"
+- O botão de ação principal usa sempre a cor de destaque, seja "Próximo lance" ou "Voltar"
 
 ### Referência visual: design suíço
 - **Grid** de 12 colunas no desktop e 4 no celular, invisível para quem usa o app, e espaçamentos em múltiplos de 8 px
@@ -212,10 +212,14 @@ e cada lance é um galho que leva à posição seguinte.
 
 ### 10.2 Lição da abertura
 - **Desktop:** tabuleiro à esquerda (o protagonista da tela), painel à direita com:
-  - indicador das etapas (Conhecer · Assistir · Praticar com guia · Praticar sozinho · Variações · Desafio), em que qualquer etapa pode ser aberta a qualquer momento
+  - indicador das etapas em segmentos ("Etapa 3 de 6"; Conhecer · Assistir · Praticar com guia · Praticar sozinho · Variações · Desafio), em que qualquer etapa pode ser aberta a qualquer momento
   - o texto da etapa atual (narração, explicação, dica ou mensagem)
   - a lista de lances da partida
-  - as ações (Continuar/Voltar, Ver lance, Reiniciar a linha)
+  - as ações **dentro da etapa**: o botão principal anda dentro da etapa atual ("Próximo lance",
+    "Voltar", "Praticar esta variação com guia", "Próxima variação", "Ver resumo"), mais "Lance anterior",
+    "Ver lance" e "Voltar ao início" / "Recomeçar a partida"
+  - um rodapé **separado** para trocar de etapa ("Etapa anterior" / "Próxima etapa"). A próxima etapa
+    só ganha o destaque do botão principal quando não sobra nada a fazer na etapa atual
 - **Telas estreitas:** tabuleiro em cima, painel embaixo
 - Um link para voltar à trilha
 
@@ -256,7 +260,7 @@ e cada lance é um galho que leva à posição seguinte.
 1. **Vermelho é só destaque.** As mensagens de lance fora do roteiro levam um
    **ícone discreto de erro** ao lado do texto, sem usar vermelho. O app não é
    punitivo: o botão de ação principal mantém sempre a cor de destaque, seja
-   "Continuar" (depois de um acerto) ou "Voltar" (depois de um lance fora do roteiro).
+   "Próximo lance" (no Assistir) ou "Voltar" (depois de um lance fora do roteiro). Trocar de etapa é um controle à parte.
    As cores são tokens e podem mudar depois.
 2. **"Ver lance"** fica disponível nas etapas sem guia, sem penalidade.
 

@@ -66,7 +66,7 @@ async function playWholeChallenge(page: Page, opening: Opening, random: number) 
 
   await page.goto(`/abertura/${opening.id}?etapa=desafio&acaso=${random}`)
   await expect(panel.getByRole('heading', { name: 'Desafio' })).toBeVisible()
-  await expect(panel.getByRole('button', { name: 'Concluir' })).toBeDisabled()
+  await expect(panel.getByRole('button', { name: 'Ver resumo' })).toHaveCount(0)
 
   for (const [index, node] of game.entries()) {
     const move = chess.move(node.san)
@@ -88,7 +88,7 @@ for (const opening of ALL_OPENINGS) {
     test.setTimeout(90_000)
     await playWholeChallenge(page, opening, 0)
     const panel = page.getByRole('region', { name: 'Painel da lição' })
-    await panel.getByRole('button', { name: 'Concluir' }).click()
+    await panel.getByRole('button', { name: 'Ver resumo' }).click()
     await expect(page).toHaveURL(new RegExp(`/abertura/${opening.id}/conclusao$`))
     await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
     await expect(page.getByLabel('Linha principal em notação')).toBeVisible()
@@ -99,7 +99,7 @@ for (const opening of ALL_OPENINGS) {
     test.setTimeout(90_000)
     await playWholeChallenge(page, opening, 0.99)
     const panel = page.getByRole('region', { name: 'Painel da lição' })
-    await panel.getByRole('button', { name: 'Concluir' }).click()
+    await panel.getByRole('button', { name: 'Ver resumo' }).click()
     await expect(page).toHaveURL(new RegExp(`/abertura/${opening.id}/conclusao$`))
     await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
   })

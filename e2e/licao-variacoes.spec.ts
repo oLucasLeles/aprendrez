@@ -31,7 +31,7 @@ const VAR1_TOKENS = ['e4', 'e5', 'Cf3', 'Cc6', 'Bc4', 'Bc5', 'c3', 'Cf6', 'd3', 
 /** Joga os lances da pessoa e espera cada resposta do adversário aparecer na lista. */
 async function playLine(page: Page, moves: Locator, userMoves: string[][], tokens: string[], guided: boolean) {
   // Espera a partida nova aparecer (lista vazia) antes do primeiro clique. Sem isso, um clique
-  // logo depois do "Continuar" podia cair na tela antiga e se perder, deixando o teste instável.
+  // logo depois de trocar de etapa ou de passo podia cair na tela antiga e se perder, deixando o teste instável.
   await expect(moves).toHaveText('Nenhum lance ainda.')
   for (const [index, [from, to]] of userMoves.entries()) {
     if (guided) await expect(originHighlight(page, from)).toHaveCount(1)
@@ -48,7 +48,7 @@ async function openVariations(page: Page) {
   await page.goto('/abertura/italiana')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
   const moves = panel.getByLabel('Lista de lances')
-  const next = panel.getByRole('button', { name: 'Continuar' })
+  const next = panel.getByRole('button', { name: /Próxima etapa/ })
 
   await next.click() // Conhecer → Assistir
   await next.click() // Assistir → Praticar com guia
@@ -70,38 +70,38 @@ test('completar a primeira variação da Italiana: assistir, praticar com guia e
   await expect(panel.getByRole('heading', { name: 'Variações' })).toBeVisible()
   await expect(panel.getByText('E se as pretas jogarem 5... a6?')).toBeVisible()
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 1 de 2: Pretas jogam a6 antes do roque · Assistir')
-  await expect(stages.locator('[aria-current="step"]')).toHaveText('Variações (1 de 2)')
+  await expect(stages.locator('[aria-current="step"]')).toHaveAccessibleName('Variações')
   await expect(moves).toHaveText(numbered(VAR1_TOKENS.slice(0, 9)))
 
   // a continuação, lance a lance
-  const forward = panel.getByRole('button', { name: 'Próximo' })
+  const forward = panel.getByRole('button', { name: 'Próximo lance' })
   await forward.click()
   await expect(board.locator('[data-square="a6"] [data-piece="bP"]')).toBeVisible()
   await expect(moves).toHaveText(numbered(VAR1_TOKENS.slice(0, 10)))
   await expect(panel.getByText('As pretas respondem com a6.')).toBeVisible()
   for (let i = 0; i < 4; i++) await forward.click()
   await expect(moves).toHaveText(numbered(VAR1_TOKENS))
-  await expect(forward).toBeDisabled()
+  await expect(forward).toHaveCount(0)
 
   // --- Praticar com guia: a pessoa joga a variação; o adversário desvia sozinho
-  await next.click()
+  await panel.getByRole('button', { name: 'Praticar esta variação com guia' }).click()
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 1 de 2: Pretas jogam a6 antes do roque · Praticar com guia')
   await expect(panel.getByLabel('Lista de lances')).toContainText('Nenhum lance ainda')
   await playLine(page, moves, VAR1_USER, VAR1_TOKENS, true)
-  await expect(panel.getByText(/Você chegou ao fim da linha/)).toBeVisible()
+  await expect(panel.getByText(/Você chegou ao fim desta variação/)).toBeVisible()
   await expect(arrow(page)).toHaveCount(0)
 
   // --- Praticar sozinho: a mesma variação, sem guia
-  await next.click()
+  await panel.getByRole('button', { name: 'Praticar esta variação sozinho' }).click()
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 1 de 2: Pretas jogam a6 antes do roque · Praticar sozinho')
   await expect(arrow(page)).toHaveCount(0)
   await expect(originHighlight(page, 'e2')).toHaveCount(0)
   await playLine(page, moves, VAR1_USER, VAR1_TOKENS, false)
-  await expect(panel.getByText(/Você chegou ao fim da linha/)).toBeVisible()
+  await expect(panel.getByText(/Você chegou ao fim desta variação/)).toBeVisible()
 
   // --- Segue para a segunda variação
-  await next.click()
-  await expect(stages.locator('[aria-current="step"]')).toHaveText('Variações (2 de 2)')
+  await panel.getByRole('button', { name: 'Próxima variação' }).click()
+  await expect(stages.locator('[aria-current="step"]')).toHaveAccessibleName('Variações')
   await expect(panel.getByText('E se as pretas jogarem 4... d6?')).toBeVisible()
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 2 de 2: Pretas jogam d6 cedo · Assistir')
 })
