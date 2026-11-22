@@ -45,7 +45,7 @@ Para cada abertura estudada, a pessoa deve conseguir:
 - Cada abertura com uma linha principal e de 1 a 2 variações
 - Lição de abertura em etapas: conhecer, assistir, praticar com guia, praticar sozinho e desafio (seção 6)
 - Tabuleiro interativo com as regras de interação da seção 7
-- Progresso salvo no navegador, sem login
+- Exploração livre: qualquer abertura e qualquer etapa podem ser abertas a qualquer momento, sem login
 - Interface só em português do Brasil, com a notação dos lances em português
 - Desktop primeiro, mas funcional em telas de até 375 px de largura
 - Publicado online na Vercel, no plano gratuito (seção 12)
@@ -55,7 +55,7 @@ Para cada abertura estudada, a pessoa deve conseguir:
 - Aberturas além das 8 do catálogo
 - Login, contas, sincronização entre aparelhos, qualquer servidor ou banco de dados
 - Outros idiomas
-- Gamificação além do progresso (sem pontos, sequências de dias ou rankings)
+- Progresso, status de "concluída"/"em andamento" e qualquer gamificação (pontos, sequências de dias, rankings)
 - Som e música
 
 ## 5. Catálogo de aberturas e trilha
@@ -111,7 +111,7 @@ cenário imprevisível**.
 | 5 | **Variações** | Para cada variação: o app mostra o momento em que o adversário desvia ("E se as pretas jogarem…?"), a pessoa assiste à continuação e depois pratica com guia e sozinha | Todos |
 | 6 | **Desafio** | Uma partida do começo até o fim da linha, sem guia. A cada resposta, o adversário escolhe **ao acaso** entre os ramos ensinados, e a pessoa não sabe qual virá | A pessoa (sem guia) e o app |
 
-- Concluir o **Desafio** marca a abertura como concluída.
+- Terminar o **Desafio** leva a um resumo da abertura. Nada é marcado como concluído.
 - Quando a pessoa joga de pretas, o tabuleiro fica **invertido** (pretas embaixo)
   e o app joga automaticamente o primeiro lance das brancas.
 - Uma lista de lances em notação portuguesa acompanha a partida em todas as
@@ -204,25 +204,22 @@ e cada lance é um galho que leva à posição seguinte.
 
 ### 10.1 Início (trilha)
 - Nome **Aprendrez** e uma frase explicando a proposta
-- Botão principal "Continuar de onde parei" (ou "Começar", na primeira visita),
-  que leva à próxima abertura não concluída na ordem da trilha
+- Botão principal "Começar", que leva à primeira abertura da trilha
 - Filtro: **Todas · Brancas · Pretas**
 - As aberturas agrupadas pelos 3 níveis. Cada cartão mostra: nome, cor (com
-  ícone e texto), um mini-tabuleiro na posição característica, a ideia em uma
-  frase e o status (*não iniciada*, *em andamento* ou *concluída*)
-- Indicador geral de progresso (por exemplo, "3 de 8 aberturas concluídas")
-- Opção "Reiniciar progresso", com confirmação
+  ícone e texto), um mini-tabuleiro na posição característica e a ideia em uma
+  frase. Não há status nem contagem de progresso
 
 ### 10.2 Lição da abertura
 - **Desktop:** tabuleiro à esquerda (o protagonista da tela), painel à direita com:
-  - indicador das etapas (Conhecer · Assistir · Praticar com guia · Praticar sozinho · Variações · Desafio), clicável para voltar a etapas já vistas
+  - indicador das etapas (Conhecer · Assistir · Praticar com guia · Praticar sozinho · Variações · Desafio), em que qualquer etapa pode ser aberta a qualquer momento
   - o texto da etapa atual (narração, explicação, dica ou mensagem)
   - a lista de lances da partida
   - as ações (Continuar/Voltar, Ver lance, Reiniciar a linha)
 - **Telas estreitas:** tabuleiro em cima, painel embaixo
 - Um link para voltar à trilha
 
-### 10.3 Conclusão da abertura
+### 10.3 Fim do Desafio (resumo da abertura)
 - Aparece ao terminar o Desafio
 - Mostra a posição final da linha principal, a ideia da abertura em uma frase e a linha principal em notação
 - Botões "Próxima abertura" (a próxima da trilha) e "Voltar à trilha"
@@ -230,12 +227,12 @@ e cada lance é um galho que leva à posição seguinte.
 ### 10.4 Página não encontrada
 - Mensagem simples e um link para o início
 
-## 11. Progresso
+## 11. Exploração livre (sem progresso)
 
-- Salvo no navegador (`localStorage`)
-- O que é salvo: as etapas concluídas em cada abertura e quais aberturas foram concluídas
-- Ao reabrir uma abertura em andamento, a lição continua na primeira etapa não concluída
-- Se o armazenamento falhar ou estiver vazio, o app funciona normalmente, como na primeira visita
+- Decisão do dono do projeto (2026-11-22): o app não guarda progresso nem mostra
+  "concluída" ou "em andamento". A pessoa explora livremente
+- Toda lição abre em "Conhecer", e qualquer etapa pode ser aberta pelo indicador
+- Nada é salvo no navegador
 
 ## 12. Restrições técnicas e publicação
 
@@ -267,7 +264,6 @@ e cada lance é um galho que leva à posição seguinte.
 
 - [ ] As 8 aberturas existem e cada uma pode ser concluída do começo ao fim, Desafio incluído
 - [ ] Todos os testes passam, incluindo a validação do conteúdo
-- [ ] O progresso sobrevive a um recarregamento da página
 - [ ] O app funciona em 1440 px e em 375 px de largura, sem rolagem horizontal
 - [ ] `npm run build` gera a pasta pronta para publicação
 - [ ] O app está publicado na Vercel com link público (feito por uma pessoa, fora da execução autônoma)

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 
-// Navegação entre etapas (F24): o indicador mostra a etapa atual e as concluídas, deixa
-// voltar a etapas já alcançadas e o botão "Reiniciar a linha" recomeça a etapa atual.
+// Navegação entre etapas (F24): o indicador mostra a etapa atual e deixa abrir qualquer
+// etapa a qualquer momento (exploração livre); "Reiniciar a linha" recomeça a etapa atual.
 
 const square = (page: Page, name: string) => page.locator(`[data-square="${name}"]`)
 
@@ -24,8 +24,6 @@ test('depois de chegar a "Praticar com guia", clicar em "Assistir" volta para aq
   await expect(stages.locator('[aria-current="step"]')).toHaveText('Assistir')
   await expect(panel.getByLabel('Lista de lances')).toContainText('Nenhum lance ainda')
 
-  // As etapas anteriores aparecem como concluídas (com texto, não só com cor).
-  await expect(stages.getByRole('button', { name: 'Conhecer (concluída)' })).toBeVisible()
   // A etapa onde a pessoa já esteve continua acessível.
   await stages.getByRole('button', { name: 'Praticar com guia' }).click()
   await expect(panel.getByRole('heading', { name: 'Praticar com guia' })).toBeVisible()
@@ -35,22 +33,19 @@ test('depois de chegar a "Praticar com guia", clicar em "Assistir" volta para aq
   await expect(panel.getByRole('heading', { name: 'Conhecer' })).toBeVisible()
 })
 
-test('etapas ainda não alcançadas não são clicáveis', async ({ page }) => {
+test('qualquer etapa pode ser aberta logo de início, sem marca de "concluída"', async ({ page }) => {
   const { panel, stages } = await openLesson(page)
-
-  // No começo, só a etapa atual existe como parada; todas as outras estão desabilitadas.
-  for (const name of ['Assistir', 'Praticar com guia', 'Praticar sozinho', 'Variações', 'Desafio']) {
-    await expect(stages.getByRole('button', { name })).toBeDisabled()
+  await stages.getByRole('button', { name: 'Desafio' }).click()
+  await expect(panel.getByRole('heading', { name: 'Desafio' })).toBeVisible()
+  await stages.getByRole('button', { name: 'Praticar sozinho' }).click()
+  await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
+  await stages.getByRole('button', { name: 'Variações' }).click()
+  await expect(panel.getByRole('heading', { name: 'Variações' })).toBeVisible()
+  // Nenhuma etapa fica desabilitada nem aparece como concluída.
+  for (const name of ['Conhecer', 'Assistir', 'Praticar com guia', 'Praticar sozinho', 'Desafio']) {
+    await expect(stages.getByRole('button', { name, exact: true })).toBeEnabled()
   }
-
-  await panel.getByRole('button', { name: 'Continuar' }).click() // → Assistir
-  await expect(stages.getByRole('button', { name: 'Conhecer' })).toBeEnabled()
-  await expect(stages.getByRole('button', { name: 'Praticar com guia' })).toBeDisabled()
-  await expect(stages.getByRole('button', { name: 'Desafio' })).toBeDisabled()
-
-  // Tentar clicar à força não muda de etapa.
-  await stages.getByRole('button', { name: 'Desafio' }).click({ force: true })
-  await expect(stages.locator('[aria-current="step"]')).toHaveText('Assistir')
+  await expect(stages.getByText(/concluída/)).toHaveCount(0)
 })
 
 test('"Reiniciar a linha" volta o Assistir para o início', async ({ page }) => {

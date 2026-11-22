@@ -34,7 +34,7 @@ test('ao concluir a Italiana, a tela mostra a linha principal e "Próxima abertu
   await panel.getByRole('button', { name: 'Concluir' }).click()
 
   await expect(page).toHaveURL(/\/abertura\/italiana\/conclusao$/)
-  await expect(page.getByRole('heading', { name: 'Abertura concluída' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
   await expect(page.getByLabel('Linha principal em notação')).toHaveText(MAIN_LINE)
   await expect(page.getByRole('heading', { name: 'A ideia' })).toBeVisible()
   await expect(page.getByText(/Você ocupa o centro do tabuleiro/)).toBeVisible()
@@ -61,7 +61,7 @@ test('abertura inexistente mostra a página não encontrada', async ({ page }) =
 
 test('a tela de conclusão não tem rolagem horizontal', async ({ page }) => {
   await page.goto('/abertura/italiana/conclusao')
-  await expect(page.getByRole('heading', { name: 'Abertura concluída' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)
   expect(overflow).toBe(false)
   // A captura vai para a pasta temporária dos testes (test-results), e não para docs/capturas:

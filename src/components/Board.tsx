@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent, type ReactNode } from 'react'
-import { Chessboard, defaultArrowOptions } from 'react-chessboard'
+import { Chessboard } from 'react-chessboard'
 import {
   canMovePiece,
   getTargets,
@@ -10,6 +10,7 @@ import {
 } from '../chess/squareClick'
 import { initialFocusSquare, isArrowKey, moveFocus, squareLabel } from '../chess/keyboard'
 import { getSquareStyles, type Guide, type LastMove } from './boardHighlights'
+import { getArrowShape, SHAFT_WIDTH } from './guideArrow'
 
 type BoardProps = {
   /** Posição no formato FEN (texto que descreve onde cada peça está). */
@@ -207,13 +208,10 @@ function Board({ fen, orientation = 'white', lastMove = null, guide = null, play
           darkSquareStyle: { backgroundColor: 'var(--color-board-dark)' },
           squareStyles,
           squareRenderer: interactive ? renderSquare : undefined,
-          // A seta do guia usa o token de destaque (o SVG aceita var() na cor).
+          // A seta do guia é desenhada por nós (GuideArrow, abaixo), não pela biblioteca.
           // Desligamos o desenho de setas com o botão direito: não faz parte do app.
-          arrows: guide
-            ? [{ startSquare: guide.from, endSquare: guide.to, color: 'var(--color-accent)' }]
-            : [],
+          arrows: [],
           allowDrawingArrows: false,
-          arrowOptions: { ...defaultArrowOptions, opacity: 0.85 },
           boardStyle: { borderRadius: 'var(--radius-sm)' },
           // As letras e números das bordas usam o texto padrão em todas as casas
           lightSquareNotationStyle: { color: 'var(--color-text)' },
@@ -224,7 +222,30 @@ function Board({ fen, orientation = 'white', lastMove = null, guide = null, play
           numericNotationStyle: { ...notationStyle, top: 1, left: 2 },
         }}
       />
+      {guide && <GuideArrow from={guide.from} to={guide.to} orientation={orientation} />}
     </div>
+  )
+}
+
+// Seta do guia, por cima do tabuleiro. Começa na borda da casa de origem (não cobre a
+// peça que vai se mover) e é levemente transparente, como no chess.com. Não recebe
+// cliques: eles passam direto para as casas embaixo.
+function GuideArrow({ from, to, orientation }: { from: string; to: string; orientation: 'white' | 'black' }) {
+  const { shaft, head } = getArrowShape(from, to, orientation)
+  // A haste é uma linha que passa pelos pontos ("M" = começa aqui, "L" = linha até aqui).
+  const shaftPath = 'M ' + shaft.map((p) => `${p.x} ${p.y}`).join(' L ')
+  const headPoints = head.map((p) => `${p.x},${p.y}`).join(' ')
+  return (
+    <svg className="board-arrow" viewBox="0 0 8 8" aria-hidden="true" data-arrow={`${from}-${to}`}>
+      <path
+        d={shaftPath}
+        fill="none"
+        stroke="var(--color-accent)"
+        strokeWidth={SHAFT_WIDTH}
+        strokeLinejoin="miter"
+      />
+      <polygon points={headPoints} fill="var(--color-accent)" />
+    </svg>
   )
 }
 

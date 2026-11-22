@@ -103,6 +103,7 @@
   --border-width-strong: 2px;
   --radius-sm: 2px; /* cantos retos ou levemente arredondados */
   --radius-md: 4px;
+  --radius-lg: 12px; /* botões: cantos bem arredondados, convidam ao clique */
   --focus-ring-width: 3px;
   --duration-fast: 150ms; /* animações sempre até 200 ms */
   --easing-standard: ease-out;

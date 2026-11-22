@@ -7,7 +7,8 @@ import { getOpening } from '../content/openings'
 import { getNextOpening } from '../content/trail'
 import NotFoundScreen from './NotFoundScreen'
 
-// Tela de conclusão da abertura (SPEC 10.3): aparece ao terminar o Desafio.
+// Tela de resumo da abertura (SPEC 10.3): aparece ao terminar o Desafio.
+// Não marca nada como "concluído": a exploração é livre.
 // Mostra a posição final da linha principal, a ideia da abertura e a linha em notação.
 function ConclusionScreen() {
   const { id } = useParams()
@@ -20,7 +21,7 @@ function ConclusionScreen() {
 
   return (
     <main className="grid page">
-      <title>{`${opening.name} concluída · Aprendrez`}</title>
+      <title>{`Resumo: ${opening.name} · Aprendrez`}</title>
 
       <div className="conclusion-board">
         {/* Tabuleiro só para olhar, na posição final, com o lado da pessoa embaixo */}
@@ -28,8 +29,8 @@ function ConclusionScreen() {
       </div>
 
       <div className="conclusion-text">
-        <h1>Abertura concluída</h1>
-        <p>Você completou o Desafio da abertura {opening.name}.</p>
+        <h1>Fim do Desafio</h1>
+        <p>Você jogou a {opening.name} do começo ao fim, sem ajuda.</p>
 
         <h2>A ideia</h2>
         <p>{opening.idea}</p>

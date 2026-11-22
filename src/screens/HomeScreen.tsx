@@ -1,20 +1,13 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router'
 import Board from '../components/Board'
 import { COLOR_NAMES, getCharacteristicFen, getIdeaSummary, LEVEL_NAMES } from '../chess/openingPosition'
 import type { Opening, OpeningLevel } from '../chess/openingTree'
 import { trailOpenings } from '../content/trail'
-import { CONTINUE_LABELS, getContinueTarget } from '../progress/continueTarget'
-import { emptyProgress, getOpeningStatus, loadProgress, resetProgress, type OpeningStatus } from '../progress/progress'
 
-// Tela de Início (SPEC 10.1): o nome do app, a trilha de aberturas agrupada por nível
-// e o indicador geral de progresso. Aberturas ainda sem conteúdo não aparecem.
-
-const STATUS_NAMES: Record<OpeningStatus, string> = {
-  'not-started': 'Não iniciada',
-  'in-progress': 'Em andamento',
-  completed: 'Concluída',
-}
+// Tela de Início (SPEC 10.1): o nome do app e a trilha de aberturas agrupada por nível.
+// A exploração é livre: não existe "concluída" nem "em andamento" (decisão do dono do projeto).
+// Aberturas ainda sem conteúdo não aparecem.
 
 const LEVELS: OpeningLevel[] = [1, 2, 3]
 
@@ -36,7 +29,7 @@ function ColorIcon({ color }: { color: Opening['color'] }) {
   )
 }
 
-function OpeningCard({ opening, status }: { opening: Opening; status: OpeningStatus }) {
+function OpeningCard({ opening }: { opening: Opening }) {
   return (
     <li className="trail-card">
       <div className="trail-card-board">
@@ -52,9 +45,6 @@ function OpeningCard({ opening, status }: { opening: Opening; status: OpeningSta
             <ColorIcon color={opening.color} />
             {COLOR_NAMES[opening.color]}
           </span>
-          <span className="trail-status" data-status={status}>
-            {STATUS_NAMES[status]}
-          </span>
         </p>
         <p className="trail-card-idea">{getIdeaSummary(opening)}</p>
       </div>
@@ -64,23 +54,8 @@ function OpeningCard({ opening, status }: { opening: Opening; status: OpeningSta
 
 function HomeScreen() {
   const [filter, setFilter] = useState<ColorFilter>('all')
-  // O progresso é lido uma vez ao abrir a tela e guardado no estado, para a tela
-  // se atualizar sozinha quando a pessoa reiniciar o progresso.
-  const [progress, setProgress] = useState(() => loadProgress())
-  // A janela de confirmação do "Reiniciar progresso" (o <dialog> nativo do navegador).
-  const confirmRef = useRef<HTMLDialogElement>(null)
-
-  function confirmReset() {
-    resetProgress()
-    setProgress(emptyProgress())
-    confirmRef.current?.close()
-  }
-  const statuses = new Map(trailOpenings.map((opening) => [opening.id, getOpeningStatus(progress, opening.id)]))
-  const completedCount = [...statuses.values()].filter((status) => status === 'completed').length
-  const continueTarget = getContinueTarget(
-    progress,
-    trailOpenings.map((opening) => opening.id),
-  )
+  // O botão principal leva à primeira abertura da trilha (a mais fácil). Dali, a pessoa vai aonde quiser.
+  const firstOpening = trailOpenings[0]
 
   return (
     <main className="grid page">
@@ -88,13 +63,10 @@ function HomeScreen() {
       <header className="grid-full trail-header">
         <h1>Aprendrez</h1>
         <p className="trail-tagline">Aprenda aberturas de xadrez jogando.</p>
-        <p className="trail-progress">
-          {completedCount} de {trailOpenings.length} {trailOpenings.length === 1 ? 'abertura concluída' : 'aberturas concluídas'}
-        </p>
         {/* Botão principal: é um link (leva a outra tela) com a aparência do botão de destaque */}
-        {continueTarget.openingId && (
-          <Link className="button-primary trail-continue" to={`/abertura/${continueTarget.openingId}`}>
-            {CONTINUE_LABELS[continueTarget.kind]}
+        {firstOpening && (
+          <Link className="button-primary trail-continue" to={`/abertura/${firstOpening.id}`}>
+            Começar
           </Link>
         )}
       </header>
@@ -127,40 +99,13 @@ function HomeScreen() {
             </h2>
             <ul className="trail-cards">
               {levelOpenings.map((opening) => (
-                <OpeningCard key={opening.id} opening={opening} status={statuses.get(opening.id)!} />
+                <OpeningCard key={opening.id} opening={opening} />
               ))}
             </ul>
           </section>
         )
       })}
 
-      {/* Reiniciar progresso (SPEC 10.1): pede confirmação antes de apagar. */}
-      <div className="grid-full trail-reset">
-        <button
-          type="button"
-          className="button-secondary"
-          onClick={() => confirmRef.current?.showModal()}
-        >
-          Reiniciar progresso
-        </button>
-      </div>
-
-      {/* O <dialog> aberto com showModal já prende o foco dentro dele, fecha com Esc
-          e devolve o foco ao botão que o abriu. O foco inicial vai para "Cancelar" (o lado seguro). */}
-      <dialog ref={confirmRef} className="confirm-dialog" aria-labelledby="reset-title" aria-describedby="reset-text">
-        <h2 id="reset-title">Reiniciar progresso?</h2>
-        <p id="reset-text">
-          Isso apaga todas as etapas e aberturas concluídas neste navegador. Não dá para desfazer.
-        </p>
-        <div className="confirm-dialog-actions">
-          <button type="button" className="button-secondary" autoFocus onClick={() => confirmRef.current?.close()}>
-            Cancelar
-          </button>
-          <button type="button" className="button-primary" onClick={confirmReset}>
-            Apagar progresso
-          </button>
-        </div>
-      </dialog>
     </main>
   )
 }

@@ -1219,3 +1219,25 @@ de lances não mudaram, só textos. As afirmações de xadrez duvidosas foram co
 **Testes:** os que procuravam o título "Lição" e o texto "Abertura: …" agora procuram o nome da abertura como título,
 uma checagem mais específica que a anterior. `npm run verificar` passou (217 de unidade, 310 de ponta a ponta).
 As capturas de `docs/capturas/revisao/` foram geradas de novo com `npm run capturas`.
+
+## Nota do supervisor · 2026-11-22 · exploração livre, botões e seta do guia
+**Pedido do dono do projeto.** Três mudanças desta rodada (as outras do pedido, sobre a navegação dentro das
+etapas e o visual, dependem de pesquisa de referências e ficam para a próxima nota):
+1. **Exploração livre:** saiu todo o conceito de "concluída" e "em andamento". Não há mais progresso salvo
+   (`src/progress/` foi apagado), contagem "X de 8", "Continuar de onde parei", "Reiniciar progresso" nem
+   etapas bloqueadas. A lição sempre abre em "Conhecer" e qualquer etapa abre pelo indicador. A tela do fim do
+   Desafio virou um resumo ("Fim do Desafio"), sem marcar nada. A SPEC foi atualizada (seções 3, 6, 10 e 11, e
+   um item a menos na definição de pronto).
+2. **Botões com cantos de 12 px:** novo token `--radius-lg` (12 px), usado nos botões principal, secundário e de filtro.
+3. **Seta do guia que não cobre as peças:** a seta da biblioteca saía do centro da casa e passava por cima da
+   peça. Agora o `Board` desenha a própria seta (`src/components/guideArrow.ts`, lógica pura com testes): ela
+   começa na borda da casa de origem, no lado para onde a peça vai, como no chess.com; o lance do cavalo vira
+   um "L".
+**Testes:** os testes que conferiam o progresso (`e2e/progresso.spec.ts`, partes de `trilha.spec.ts`,
+`licao-etapas.spec.ts`, `acessibilidade.spec.ts` e `definicao-de-pronto.spec.ts`) foram apagados ou trocados
+por checagens do comportamento novo (por exemplo, "qualquer etapa abre logo de início" e "a trilha não mostra
+status"). Não foi para fazer passar: a funcionalidade deixou de existir por decisão do dono. O teste da seta
+agora confere que ela começa na borda de e2. `npm run verificar` passou (201 de unidade, 282 de ponta a ponta).
+**features.json:** ficou como está, como histórico. As funcionalidades F28 (progresso), F31 (continuar de onde
+parei) e F32 (reiniciar progresso), e a parte de status de F29, foram substituídas por esta decisão. Se o motor
+de turnos rodar de novo, ele não volta a elas, porque todas já estão com `passes: true`.

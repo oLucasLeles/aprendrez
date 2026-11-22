@@ -23,15 +23,6 @@ import {
   type VariationPosition,
 } from '../chess/variationStage'
 import { parseTestRandom } from '../chess/testRandom'
-import {
-  getFirstIncompleteStage,
-  getOpeningProgress,
-  getReachedStage,
-  loadProgress,
-  saveProgress,
-  withOpeningCompleted,
-  withStageCompleted,
-} from '../progress/progress'
 import { clampStep, getWatchView } from '../chess/watchLine'
 import NotFoundScreen from './NotFoundScreen'
 
@@ -64,19 +55,9 @@ function LessonScreen() {
   // não precisar jogar todas as etapas antes (cada uma leva vários segundos).
   const startAtChallenge = import.meta.env.DEV && searchParams.get('etapa') === 'desafio'
 
-  // O progresso salvo (F28) é lido uma vez, ao abrir a tela. A lição abre na primeira etapa
-  // ainda não concluída; com `?etapa=desafio` (só no desenvolvimento), direto no Desafio.
-  const [initialStage] = useState(() => {
-    if (startAtChallenge) return CHALLENGE_STAGE
-    return opening ? getFirstIncompleteStage(getOpeningProgress(loadProgress(), opening.id)) : 0
-  })
-  const [initialReached] = useState(() => {
-    if (startAtChallenge) return CHALLENGE_STAGE
-    return opening ? getReachedStage(getOpeningProgress(loadProgress(), opening.id)) : 0
-  })
-
-  // Abertura já concluída antes (Desafio feito): todas as etapas aparecem como concluídas.
-  const [openingCompleted] = useState(() => (opening ? getOpeningProgress(loadProgress(), opening.id).completed : false))
+  // A exploração é livre: nada é salvo e todas as etapas ficam abertas o tempo todo.
+  // A lição sempre começa em "Conhecer"; com `?etapa=desafio` (só no desenvolvimento), no Desafio.
+  const [initialStage] = useState(() => (startAtChallenge ? CHALLENGE_STAGE : 0))
 
   // A etapa atual e, na etapa Assistir, quantos lances da linha já foram mostrados.
   const [stageIndex, setStageIndex] = useState(initialStage)
@@ -85,9 +66,6 @@ function LessonScreen() {
     const first = opening && initialStage === VARIATIONS_STAGE ? getVariations(opening)[0] : undefined
     return first ? getDeviationStep(first) : 0
   })
-  // A etapa mais avançada que a pessoa já alcançou. As etapas até ela podem ser revisitadas
-  // pelo indicador; as que vêm depois ficam desabilitadas.
-  const [reachedStage, setReachedStage] = useState(initialReached)
 
   // Etapas de prática (com guia e sozinho): o estado do motor da lição (F15) e a última explicação.
   const [practice, setPractice] = useState<LessonState | null>(() =>
@@ -180,13 +158,6 @@ function LessonScreen() {
       }
     }
     setStageIndex(target)
-    setReachedStage((reached) => Math.max(reached, target))
-  }
-
-  // Salva no navegador que a pessoa concluiu uma etapa. Lê o progresso de novo a cada vez,
-  // para não sobrescrever o que outra aba tenha salvo. Se o armazenamento falhar, segue sem salvar.
-  function saveStageDone(stage: number) {
-    saveProgress(withStageCompleted(loadProgress(), opening!.id, stage))
   }
 
   function goToNextStage() {
@@ -195,14 +166,11 @@ function LessonScreen() {
       const next = nextVariationPosition(variationPos, variations.length)
       if (next) enterVariationPosition(next)
       else {
-        // Última variação concluída: a etapa Variações está feita e o Desafio começa, do zero.
-        saveStageDone(stageIndex)
+        // Depois da última variação, o Desafio começa, do zero.
         enterStage(CHALLENGE_STAGE)
       }
       return
     }
-    // "Continuar" é o que marca a etapa como concluída (clicar no indicador não marca).
-    saveStageDone(stageIndex)
     enterStage(stageIndex + 1)
   }
 
@@ -212,9 +180,8 @@ function LessonScreen() {
     else if (practicing) startPractice(challengeStage ? line : practiceLine)
   }
 
-  // Concluir o Desafio marca a abertura como concluída e leva à tela de conclusão.
+  // No fim do Desafio, a tela de resumo da abertura.
   function finishChallenge() {
-    saveProgress(withOpeningCompleted(loadProgress(), opening!.id))
     navigate(`/abertura/${opening!.id}/conclusao`)
   }
 
@@ -259,7 +226,6 @@ function LessonScreen() {
           <ol className="lesson-stages">
             {STAGES.map((stage, index) => {
               const isCurrent = index === stageIndex
-              const isDone = (index < reachedStage || (openingCompleted && index === CHALLENGE_STAGE)) && !isCurrent
               return (
                 <li key={stage} aria-current={isCurrent ? 'step' : undefined}>
                   {isCurrent ? (
@@ -269,17 +235,9 @@ function LessonScreen() {
                       {inVariations && ` (${variationPos.index + 1} de ${variations.length})`}
                     </>
                   ) : (
-                    // Etapas já alcançadas são botões; as que ainda não foram alcançadas ficam desabilitadas.
-                    <button
-                      type="button"
-                      className="lesson-stage-button"
-                      disabled={index > reachedStage}
-                      onClick={() => enterStage(index)}
-                    >
-                      {/* O "✓" marca as etapas concluídas sem depender só de cor. */}
-                      {isDone && <span aria-hidden="true">✓ </span>}
+                    // Toda etapa pode ser aberta a qualquer momento: a exploração é livre.
+                    <button type="button" className="lesson-stage-button" onClick={() => enterStage(index)}>
                       {stage}
-                      {isDone && <span className="visually-hidden"> (concluída)</span>}
                     </button>
                   )}
                 </li>

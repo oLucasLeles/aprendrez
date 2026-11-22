@@ -4,7 +4,7 @@ import { expect, test, type Page } from '@playwright/test'
 
 const square = (page: Page, name: string) => page.locator(`[data-square="${name}"]`)
 
-// A seta é um <path> dentro do SVG que a biblioteca coloca por cima do tabuleiro
+// A seta é desenhada pelo nosso Board num SVG por cima do tabuleiro: a haste é o <path> com traço
 const arrow = (page: Page) => page.getByRole('group', { name: /Tabuleiro de xadrez/ }).locator('svg path[stroke]')
 
 // Centro de uma casa, em pixels da tela
@@ -21,7 +21,7 @@ test('com um guia de e2 para e4, e2 tem o destaque e existe uma seta de e2 para 
   await expect(square(page, 'e2').locator('> div[style*="box-shadow"]')).toHaveCount(1)
   await expect(square(page, 'e4').locator('> div[style*="box-shadow"]')).toHaveCount(0)
 
-  // uma seta, que começa no centro de e2 e termina perto do centro de e4
+  // uma seta, que começa na BORDA de e2 (sem cobrir a peça, como no chess.com) e termina perto do centro de e4
   await expect(arrow(page)).toHaveCount(1)
   const pts = await arrow(page).evaluate((path: SVGPathElement) => {
     const len = path.getTotalLength()
@@ -34,9 +34,11 @@ test('com um guia de e2 para e4, e2 tem o destaque e existe uma seta de e2 para 
   })
   const e2 = await center(page, 'e2')
   const e4 = await center(page, 'e4')
-  const tol = (await square(page, 'e2').boundingBox())!.width / 2
+  const side = (await square(page, 'e2').boundingBox())!.width
+  const tol = side / 2
   expect(Math.abs(pts.start.x - e2.x)).toBeLessThan(tol)
-  expect(Math.abs(pts.start.y - e2.y)).toBeLessThan(tol)
+  // o começo fica na borda de cima de e2 (meia casa acima do centro), fora do desenho da peça
+  expect(Math.abs(pts.start.y - (e2.y - side / 2))).toBeLessThan(side * 0.1)
   expect(Math.abs(pts.end.x - e4.x)).toBeLessThan(tol)
   expect(Math.abs(pts.end.y - e4.y)).toBeLessThan(tol)
 })

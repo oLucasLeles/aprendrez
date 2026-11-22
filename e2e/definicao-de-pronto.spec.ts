@@ -90,14 +90,9 @@ for (const opening of ALL_OPENINGS) {
     const panel = page.getByRole('region', { name: 'Painel da lição' })
     await panel.getByRole('button', { name: 'Concluir' }).click()
     await expect(page).toHaveURL(new RegExp(`/abertura/${opening.id}/conclusao$`))
-    await expect(page.getByRole('heading', { name: 'Abertura concluída' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
     await expect(page.getByLabel('Linha principal em notação')).toBeVisible()
 
-    // O progresso sobrevive a um recarregamento: na trilha, a contagem continua em "1 de 8".
-    await page.goto('/')
-    await expect(page.getByText('1 de 8 aberturas concluídas')).toBeVisible()
-    await page.reload()
-    await expect(page.getByText('1 de 8 aberturas concluídas')).toBeVisible()
   })
 
   test(`${opening.name}: o Desafio também termina quando o adversário escolhe o último galho`, async ({ page }) => {
@@ -106,7 +101,7 @@ for (const opening of ALL_OPENINGS) {
     const panel = page.getByRole('region', { name: 'Painel da lição' })
     await panel.getByRole('button', { name: 'Concluir' }).click()
     await expect(page).toHaveURL(new RegExp(`/abertura/${opening.id}/conclusao$`))
-    await expect(page.getByRole('heading', { name: 'Abertura concluída' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
   })
 }
 
@@ -127,7 +122,7 @@ test('as 8 aberturas do catálogo estão cobertas por este teste', () => {
 
 test('nas duas larguras de tela a conclusão não tem rolagem horizontal', async ({ page }) => {
   await page.goto('/abertura/escandinava/conclusao')
-  await expect(page.getByRole('heading', { name: 'Abertura concluída' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)
   expect(overflow).toBe(false)
 })

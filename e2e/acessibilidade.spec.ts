@@ -22,56 +22,41 @@ async function expectNoSeriousViolations(page: Page, onde: string) {
   expect(resumo, `Violações de acessibilidade em: ${onde}`).toEqual([])
 }
 
-/** Marca no navegador as etapas 0 a 4 como concluídas, para o indicador deixar visitar todas. */
-async function allStagesReached(page: Page, id: string) {
-  await page.addInitScript((openingId) => {
-    window.localStorage.setItem(
-      'aprendrez:progresso',
-      JSON.stringify({ version: 1, openings: { [openingId]: { stages: [0, 1, 2, 3, 4], completed: false } } }),
-    )
-  }, id)
-}
-
 test('tela inicial (trilha) não tem violações sérias', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'Aprendrez' })).toBeVisible()
   await expectNoSeriousViolations(page, 'tela inicial')
 })
 
-test('tela inicial com o filtro "Pretas" e com a confirmação de reiniciar aberta', async ({ page }) => {
+test('tela inicial com o filtro "Pretas"', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Pretas' }).click()
   await expectNoSeriousViolations(page, 'tela inicial com filtro Pretas')
 
-  await page.getByRole('button', { name: /Reiniciar progresso/ }).click()
-  await expect(page.getByRole('button', { name: 'Cancelar' })).toBeVisible()
-  await expectNoSeriousViolations(page, 'confirmação de reiniciar progresso')
 })
 
 const STAGES = ['Conhecer', 'Assistir', 'Praticar com guia', 'Praticar sozinho', 'Variações', 'Desafio']
 
 test('lição: cada uma das 6 etapas não tem violações sérias (abertura de brancas)', async ({ page }) => {
   test.setTimeout(60_000)
-  await allStagesReached(page, 'italiana')
   await page.goto('/abertura/italiana')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
   const stages = page.getByRole('navigation', { name: 'Etapas da lição' })
 
   for (const stage of STAGES) {
-    await stages.getByRole('button', { name: new RegExp(`^${stage}`) }).click()
+    // A lição abre em "Conhecer" (a etapa atual não é botão); as outras abrem pelo indicador.
+    if (stage !== 'Conhecer') await stages.getByRole('button', { name: new RegExp(`^${stage}`) }).click()
     await expect(panel.getByRole('heading', { name: stage })).toBeVisible()
     await expectNoSeriousViolations(page, `lição da Italiana, etapa ${stage}`)
   }
 })
 
 test('lição de pretas (tabuleiro invertido): primeira e última etapas', async ({ page }) => {
-  await allStagesReached(page, 'siciliana')
   await page.goto('/abertura/siciliana')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
   const stages = page.getByRole('navigation', { name: 'Etapas da lição' })
 
-  // Com as etapas 0 a 4 concluídas, a lição abre no Desafio; voltamos à primeira etapa pelo indicador.
-  await stages.getByRole('button', { name: /^Conhecer/ }).click()
+  // A lição abre em "Conhecer".
   await expect(panel.getByRole('heading', { name: 'Conhecer' })).toBeVisible()
   await expectNoSeriousViolations(page, 'Siciliana, etapa Conhecer')
   await stages.getByRole('button', { name: /^Desafio/ }).click()
@@ -80,7 +65,6 @@ test('lição de pretas (tabuleiro invertido): primeira e última etapas', async
 })
 
 test('lição: mensagens de acerto e de lance fora do roteiro também passam', async ({ page }) => {
-  await allStagesReached(page, 'italiana')
   await page.goto('/abertura/italiana')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
   const stages = page.getByRole('navigation', { name: 'Etapas da lição' })
@@ -104,7 +88,7 @@ test('lição: mensagens de acerto e de lance fora do roteiro também passam', a
 
 test('tela de conclusão não tem violações sérias', async ({ page }) => {
   await page.goto('/abertura/italiana/conclusao')
-  await expect(page.getByRole('heading', { name: 'Abertura concluída' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
   await expectNoSeriousViolations(page, 'tela de conclusão')
 })
 

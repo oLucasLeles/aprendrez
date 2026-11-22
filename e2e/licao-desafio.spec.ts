@@ -57,7 +57,7 @@ test('completar o Desafio da Italiana (linha principal sorteada) leva à tela de
 
   await panel.getByRole('button', { name: 'Concluir' }).click()
   await expect(page).toHaveURL(/\/abertura\/italiana\/conclusao$/)
-  await expect(page.getByRole('heading', { name: 'Abertura concluída' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
 })
 
 test('o adversário pode desviar para uma variação ensinada e o Desafio também termina', async ({ page }) => {
@@ -68,7 +68,7 @@ test('o adversário pode desviar para uma variação ensinada e o Desafio també
   await playChallenge(page, D6_USER, D6_TOKENS)
   await expect(panel.getByText(/Você chegou ao fim da linha/)).toBeVisible()
   await panel.getByRole('button', { name: 'Concluir' }).click()
-  await expect(page.getByRole('heading', { name: 'Abertura concluída' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
 })
 
 test('no Desafio vale o lance fora do roteiro e o "Ver lance"', async ({ page }) => {
