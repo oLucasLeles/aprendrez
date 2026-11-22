@@ -47,7 +47,7 @@ describe('CREDITOS.md', () => {
 
   it('credita as peças, a fonte e a base de aberturas', () => {
     expect(creditsText).toContain('Colin M.L. Burnett')
-    expect(creditsText).toContain('The Inter Project Authors')
+    expect(creditsText).toContain('vercel/geist-font')
     expect(creditsText).toContain('lichess-org/chess-openings')
   })
 })

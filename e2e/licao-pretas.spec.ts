@@ -68,7 +68,7 @@ test('Praticar sozinho: sem guia, pretas embaixo e 1. e4 já jogado', async ({ p
   const panel = page.getByRole('region', { name: 'Painel da lição' })
 
   // O indicador deixa voltar a "Praticar sozinho" (no modo de desenvolvimento todas as etapas estão alcançadas).
-  await panel.getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
+  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   await expectBlackAtBottom(page)
   await expect(panel.getByLabel('Lista de lances')).toHaveText('1. e4')

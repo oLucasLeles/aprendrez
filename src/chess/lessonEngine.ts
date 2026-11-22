@@ -2,7 +2,7 @@
 //
 // Ele sabe de quem é a vez, qual lance é esperado, avalia o lance da pessoa
 // (correto ou fora do roteiro), aplica a resposta do adversário, desfaz o lance
-// fora do roteiro ("Voltar") e entrega o guia do lance atual ("Ver lance").
+// fora do roteiro ("Voltar") e entrega o guia do lance atual ("Ver dica").
 //
 // Todas as funções são "puras": recebem um estado e devolvem um estado NOVO, sem
 // alterar o antigo. Assim a interface pode guardar o estado num `useState` e os
@@ -44,7 +44,7 @@ export type LessonStatus =
   | 'off-script' // a pessoa jogou fora do roteiro; falta "Voltar"
   | 'finished' // a linha terminou
 
-/** O guia de um lance ("Ver lance" e a prática com guia): a peça e a casa de destino. */
+/** O guia de um lance ("Ver dica" e a prática com guia): a peça e a casa de destino. */
 export interface MoveGuide {
   from: string
   to: string
@@ -240,7 +240,7 @@ export function undoOffScriptMove(state: LessonState): LessonState {
 }
 
 /**
- * "Ver lance": a peça e a casa de destino do lance esperado agora (o da linha
+ * "Ver dica": a peça e a casa de destino do lance esperado agora (o da linha
  * principal, se houver mais de um). `null` quando não é a vez da pessoa.
  */
 export function getGuide(state: LessonState): MoveGuide | null {

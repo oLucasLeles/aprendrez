@@ -18,6 +18,21 @@ export function parseRootVariables(css: string): Map<string, string> {
 }
 
 /**
+ * Variáveis do modo escuro: as do bloco principal, trocadas pelas do bloco
+ * `:root[data-theme='dark'] { }`.
+ */
+export function parseDarkThemeVariables(css: string): Map<string, string> {
+  const variables = parseRootVariables(css)
+  const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, '')
+  const darkBlock = withoutComments.match(/:root\[data-theme='dark'\]\s*\{([^}]*)\}/)
+  if (!darkBlock) return variables
+  for (const match of darkBlock[1].matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
+    variables.set(match[1], match[2].trim())
+  }
+  return variables
+}
+
+/**
  * Descobre o valor final de uma variável, seguindo as referências
  * `var(--outra)` até chegar num valor de verdade.
  */

@@ -41,8 +41,12 @@ test('o link tem a aparência do botão principal e o texto continua legível ao
 
 test('funciona pelo teclado e não tem rolagem horizontal', async ({ page }) => {
   await page.goto('/rota-que-nao-existe')
-  await page.keyboard.press('Tab')
-  await expect(page.getByRole('link', { name: 'Ir para o início' })).toBeFocused()
+  // Antes do link vêm o nome do app e os 3 botões de tema do header.
+  const link = page.getByRole('link', { name: 'Ir para o início' })
+  for (let i = 0; i < 10 && !(await link.evaluate((el) => el === document.activeElement)); i++) {
+    await page.keyboard.press('Tab')
+  }
+  await expect(link).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(page).toHaveURL('/')
 

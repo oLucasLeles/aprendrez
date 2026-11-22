@@ -12,7 +12,7 @@ instalado declara. Se você instalar um pacote novo, acrescente uma linha.
 
 | Pacote | Para que serve | Licença |
 |---|---|---|
-| `@fontsource-variable/inter` | Arquivos da fonte Inter, servidos pelo próprio app | OFL-1.1 |
+| `@fontsource-variable/geist` | Arquivos da fonte Geist, servidos pelo próprio app | OFL-1.1 |
 | `chess.js` | Regras do xadrez e geração de lances | BSD-2-Clause |
 | `react` | Biblioteca de interface | MIT |
 | `react-chessboard` | Tabuleiro interativo (e as imagens das peças, veja abaixo) | MIT |
@@ -24,7 +24,7 @@ instalado declara. Se você instalar um pacote novo, acrescente uma linha.
 | Material | Autoria | Licença | Onde aparece |
 |---|---|---|---|
 | Imagens das peças | Colin M.L. Burnett (conjunto "Cburnett"), embutidas no `react-chessboard` | CC BY-SA 3.0 (exige atribuição) | Crédito no rodapé |
-| Fonte Inter | The Inter Project Authors (https://github.com/rsms/inter) | SIL Open Font License 1.1 | Crédito no rodapé |
+| Fonte Geist | Vercel (https://github.com/vercel/geist-font) | SIL Open Font License 1.1 | Crédito no rodapé |
 | Base de aberturas (`data/lichess-openings/`) | Lichess (https://github.com/lichess-org/chess-openings) | CC0 1.0 (domínio público) | Crédito no rodapé |
 
 > **Precisa de conferência humana antes de publicar:** o pacote `react-chessboard` é

@@ -8,7 +8,7 @@ test('o rodapé aparece na tela inicial com os créditos de peças, fonte e aber
   await expect(footer).toBeVisible()
   await expect(footer).toContainText('Colin M.L. Burnett')
   await expect(footer).toContainText('CC BY-SA 3.0')
-  await expect(footer).toContainText('Inter')
+  await expect(footer).toContainText('Geist')
   await expect(footer).toContainText('SIL OFL 1.1')
   await expect(footer).toContainText('Lichess')
   await expect(footer).toContainText('CC0')

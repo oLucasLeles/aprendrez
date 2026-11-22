@@ -21,9 +21,11 @@ type BoardProps = {
   lastMove?: LastMove | null
   /**
    * Guia de lance: destaca a peça que deve se mover e desenha uma seta até a casa
-   * de destino, na cor de destaque. Serve para "Praticar com guia" e "Ver lance".
+   * de destino, na cor de destaque. Serve para "Praticar com guia" e "Ver dica".
    */
   guide?: Guide | null
+  /** Casa citada no texto sob o mouse (ex.: "e4" numa explicação): ganha um contorno tracejado. */
+  textHoverSquare?: string | null
   /**
    * Cor da pessoa que joga. Quando existe, o tabuleiro aceita cliques: só as
    * peças dessa cor, na vez dela, podem ser selecionadas. Sem ela, o tabuleiro
@@ -41,7 +43,7 @@ const PIECE_ANIMATION_MS = 150
 
 // Estilo comum das letras (a–h) e números (1–8) nas bordas do tabuleiro.
 const notationStyle = {
-  color: 'var(--color-text)',
+  color: 'var(--color-board-notation)',
   fontSize: 'var(--font-size-board-notation)',
   fontWeight: 'var(--font-weight-medium)',
   lineHeight: 1,
@@ -69,7 +71,7 @@ function usePrefersReducedMotion() {
 // Tabuleiro do Aprendrez. Mostra uma posição (F10) e aceita lances por clique
 // (F11), por arrastar (F12) e pelo teclado (F14). As cores das
 // casas vêm dos tokens (src/styles/tokens.css), nunca escritas aqui.
-function Board({ fen, orientation = 'white', lastMove = null, guide = null, playerColor, onMove, showNotation = true }: BoardProps) {
+function Board({ fen, orientation = 'white', lastMove = null, guide = null, textHoverSquare = null, playerColor, onMove, showNotation = true }: BoardProps) {
   const label = `Tabuleiro de xadrez, ${orientation === 'white' ? 'brancas' : 'pretas'} embaixo`
   const interactive = playerColor !== undefined
 
@@ -165,6 +167,7 @@ function Board({ fen, orientation = 'white', lastMove = null, guide = null, play
     lastMove,
     selectedSquare ? { square: selectedSquare, targets } : null,
     guide,
+    textHoverSquare,
   )
 
   // Cada casa vira um botão com nome acessível ("e2, peão branco"). Como este
@@ -214,8 +217,8 @@ function Board({ fen, orientation = 'white', lastMove = null, guide = null, play
           allowDrawingArrows: false,
           boardStyle: { borderRadius: 'var(--radius-sm)' },
           // As letras e números das bordas usam o texto padrão em todas as casas
-          lightSquareNotationStyle: { color: 'var(--color-text)' },
-          darkSquareNotationStyle: { color: 'var(--color-text)' },
+          lightSquareNotationStyle: { color: 'var(--color-board-notation)' },
+          darkSquareNotationStyle: { color: 'var(--color-board-notation)' },
           // Tamanho que acompanha as casas, peso médio para ler bem mesmo pequeno,
           // e encostadas no canto (2 px), para invadir o mínimo possível o desenho da peça.
           alphaNotationStyle: { ...notationStyle, bottom: 1, right: 2 },

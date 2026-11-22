@@ -9,7 +9,7 @@ const square = (page: Page, name: string) => page.locator(`[data-square="${name}
 async function openSoloPractice(page: Page) {
   await page.goto('/abertura/londres?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
+  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   await expect(panel.getByLabel('Lista de lances')).toContainText('Nenhum lance ainda')
   return panel

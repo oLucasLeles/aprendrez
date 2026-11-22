@@ -7,7 +7,7 @@ test('cada endereço mostra a tela certa', async ({ page }) => {
 
   await page.goto('/abertura/italiana')
   await expect(page.getByRole('heading', { level: 1, name: 'Italiana (Giuoco Piano)' })).toBeVisible()
-  await expect(page.getByText('Lição de abertura')).toBeVisible()
+  await expect(page.getByRole('navigation', { name: 'Etapas da lição' })).toBeVisible()
 
   await page.goto('/rota-que-nao-existe')
   await expect(page.getByRole('heading', { level: 1, name: 'Página não encontrada' })).toBeVisible()

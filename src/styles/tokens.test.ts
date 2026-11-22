@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest'
 import {
   contrastRatio,
   findHardcodedColors,
+  parseDarkThemeVariables,
   parseRootVariables,
   resolveVariable,
 } from './designChecks'
@@ -51,8 +52,8 @@ describe('tokens.css', () => {
     for (const name of required) expect(variables.has(name), `falta ${name}`).toBe(true)
   })
 
-  it('usa Inter como fonte principal', () => {
-    expect(resolveVariable(variables, '--font-family-base')).toMatch(/^'Inter Variable'/)
+  it('usa Geist como fonte principal', () => {
+    expect(resolveVariable(variables, '--font-family-base')).toMatch(/^'Geist Variable'/)
   })
 
   it('tem espaçamentos em múltiplos de 8 px', () => {
@@ -116,6 +117,23 @@ describe('contraste (WCAG AA, pelo menos 4,5:1)', () => {
   it.each(pairs)('%s sobre %s', (text, background) => {
     const ratio = contrastRatio(color(text), color(background))
     expect(ratio, `contraste de ${ratio.toFixed(2)}:1`).toBeGreaterThanOrEqual(4.5)
+  })
+
+  // Os mesmos pares no modo escuro, e a notação do tabuleiro sobre as casas (nos dois temas).
+  const darkVariables = parseDarkThemeVariables(tokensCss)
+  it.each(pairs)('modo escuro: %s sobre %s', (text, background) => {
+    const ratio = contrastRatio(resolveVariable(darkVariables, text), resolveVariable(darkVariables, background))
+    expect(ratio, `contraste de ${ratio.toFixed(2)}:1`).toBeGreaterThanOrEqual(4.5)
+  })
+
+  it.each([
+    ['claro', variables],
+    ['escuro', darkVariables],
+  ] as const)('tema %s: a notação do tabuleiro é legível nas duas cores de casa', (_tema, vars) => {
+    for (const square of ['--color-board-light', '--color-board-dark']) {
+      const ratio = contrastRatio(resolveVariable(vars, '--color-board-notation'), resolveVariable(vars, square))
+      expect(ratio, `notação sobre ${square}: ${ratio.toFixed(2)}:1`).toBeGreaterThanOrEqual(4.5)
+    }
   })
 
   it('a fórmula de contraste dá 21:1 entre preto e branco', () => {

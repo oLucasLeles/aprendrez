@@ -71,12 +71,12 @@ test('o adversário pode desviar para uma variação ensinada e o Desafio també
   await expect(page.getByRole('heading', { name: 'Fim do Desafio' })).toBeVisible()
 })
 
-test('no Desafio vale o lance fora do roteiro e o "Ver lance"', async ({ page }) => {
+test('no Desafio vale o lance fora do roteiro e o "Ver dica"', async ({ page }) => {
   await page.goto('/abertura/italiana?etapa=desafio&acaso=0')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
 
-  // "Ver lance" mostra a seta só para o lance atual
-  await panel.getByRole('button', { name: 'Ver lance' }).click()
+  // "Ver dica" mostra a seta só para o lance atual
+  await panel.getByRole('button', { name: 'Ver dica' }).click()
   await expect(arrow(page)).toHaveCount(1)
 
   // Lance legal fora do roteiro (1. d4): fica no tabuleiro, com aviso, e "Voltar" desfaz

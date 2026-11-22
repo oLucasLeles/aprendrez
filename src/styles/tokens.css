@@ -26,6 +26,14 @@
   --palette-red-50: #fbeaec;
   --palette-red-600: #c8102e;
   --palette-red-700: #a50d26;
+  /* Tons usados só no modo escuro */
+  --palette-gray-950: #121212;
+  --palette-gray-800: #2a2a2a;
+  --palette-gray-700: #3d3d3d;
+  --palette-gray-400: #b0b0b0;
+  --palette-red-950: #3b1219;
+  --palette-red-400: #ff4d64;
+  --palette-red-300: #ff7487;
 
   /* ---------- Cores: papéis ---------- */
   /* 60%: superfícies */
@@ -51,12 +59,13 @@
   --color-board-light: var(--palette-gray-100);
   --color-board-dark: var(--palette-gray-500);
   --color-board-last-move: var(--palette-gray-900); /* contorno do último lance */
+  --color-board-notation: var(--palette-gray-900); /* letras e números nas bordas do tabuleiro */
 
   /* ---------- Tipografia ---------- */
-  /* Inter: grotesca sem serifa, licença SIL Open Font License 1.1.
-     Os arquivos da fonte vêm do pacote @fontsource-variable/inter e são
+  /* Geist: grotesca sem serifa da Vercel, licença SIL Open Font License 1.1.
+     Os arquivos da fonte vêm do pacote @fontsource-variable/geist e são
      servidos pelo próprio app (nada de servidor externo). */
-  --font-family-base: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-family-base: 'Geist Variable', 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -109,6 +118,31 @@
   --focus-ring-width: 3px;
   --duration-fast: 150ms; /* animações sempre até 200 ms */
   --easing-standard: ease-out;
+}
+
+/* ---------- Modo escuro ----------
+   Vale quando o <html> tem data-theme="dark" (veja src/theme/theme.ts). Só os PAPÉIS mudam;
+   a paleta continua a mesma. No escuro, o vermelho fica mais claro para ter contraste com o
+   fundo escuro, e o texto em cima dele passa a ser escuro (pelo mesmo motivo). O tabuleiro
+   continua em cinzas médios, para as peças aparecerem bem nos dois temas. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --color-surface: var(--palette-gray-950);
+  --color-surface-subtle: var(--palette-gray-900);
+  --color-surface-muted: var(--palette-gray-800);
+  --color-text: var(--palette-gray-50);
+  --color-text-secondary: var(--palette-gray-400);
+  --color-border: var(--palette-gray-700);
+  --color-border-strong: var(--palette-gray-100);
+  --color-accent: var(--palette-red-400);
+  --color-accent-hover: var(--palette-red-300);
+  --color-accent-soft: var(--palette-red-950);
+  --color-on-accent: var(--palette-gray-950);
+  --color-focus: var(--palette-red-400);
+  --color-board-light: var(--palette-gray-300);
+  --color-board-dark: var(--palette-gray-500);
+  --color-board-last-move: var(--palette-gray-900);
+  --color-board-notation: var(--palette-gray-900);
 }
 
 @media (min-width: 768px) {

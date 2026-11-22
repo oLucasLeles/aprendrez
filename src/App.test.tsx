@@ -25,7 +25,7 @@ describe('rotas', () => {
   it('/abertura/italiana mostra a Lição com o nome da abertura', () => {
     renderAt('/abertura/italiana')
     expect(screen.getByRole('heading', { level: 1, name: 'Italiana (Giuoco Piano)' })).toBeInTheDocument()
-    expect(screen.getByText('Lição de abertura')).toBeInTheDocument()
+    expect(screen.queryByText('Lição de abertura')).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Voltar à trilha' })).toHaveAttribute('href', '/')
   })
 

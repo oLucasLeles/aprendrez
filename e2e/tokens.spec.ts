@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 // Confere, num navegador de verdade, que os tokens de design estão em uso
 // e que a fonte vem do próprio app, sem depender de servidor externo.
-test('a fonte Inter é carregada do próprio app', async ({ page, baseURL }) => {
+test('a fonte Geist é carregada do próprio app', async ({ page, baseURL }) => {
   const externalRequests: string[] = []
   page.on('request', (request) => {
     if (!request.url().startsWith(baseURL!)) externalRequests.push(request.url())
@@ -11,11 +11,11 @@ test('a fonte Inter é carregada do próprio app', async ({ page, baseURL }) => 
   await page.goto('/')
   await page.evaluate(() => document.fonts.ready)
 
-  const fontLoaded = await page.evaluate(() => document.fonts.check('16px "Inter Variable"'))
+  const fontLoaded = await page.evaluate(() => document.fonts.check('16px "Geist Variable"'))
   expect(fontLoaded).toBe(true)
 
   const bodyFont = await page.evaluate(() => getComputedStyle(document.body).fontFamily)
-  expect(bodyFont).toContain('Inter Variable')
+  expect(bodyFont).toContain('Geist Variable')
   expect(externalRequests).toEqual([])
 })
 

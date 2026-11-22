@@ -1263,3 +1263,25 @@ painel da lição é um cartão; o tabuleiro grande tem cantos arredondados.
 etapa", "Concluir" → "Ver resumo", "Próximo" → "Próximo lance"). Onde antes um botão ficava desabilitado, o
 teste agora confere a ausência do botão ou se ele tem destaque. `npm run verificar` passou (209 de unidade,
 282 de ponta a ponta).
+
+## Nota do supervisor · 2026-11-22 · header, modo escuro, Geist e casas no texto
+**Pedido do dono do projeto**, com referências do Mobbin (seletor de tema de três ícones da Vercel e o
+"Light / Dark / System" do Sketch):
+- **Header em todas as telas** (`src/components/Header.tsx`): nome do app (leva ao início) e seletor de tema
+  sistema · claro · escuro. A escolha fica no navegador (`aprendrez:tema`); sem escolha, segue o sistema.
+  A lógica fica em `src/theme/theme.ts` (com testes).
+- **Modo escuro** em `src/styles/tokens.css`, no bloco `:root[data-theme='dark']`: só os papéis mudam. No escuro,
+  o vermelho do destaque fica mais claro (#ff4d64) e o texto sobre ele fica escuro, porque com texto branco não
+  dava para ter contraste AA nos dois sentidos. Novo token `--color-board-notation` para as letras do tabuleiro.
+  O teste de contraste agora confere também o tema escuro.
+- **Fonte Geist** no lugar da Inter. Pacote `@fontsource-variable/geist` (licença OFL-1.1; a fonte é da Vercel);
+  saiu `@fontsource-variable/inter`. Créditos e `CREDITOS.md` atualizados.
+- **Lição:** o indicador de etapas foi para baixo do título, fora do painel, com o nome completo de cada etapa;
+  "Voltar à trilha" virou um botão "Voltar" (o nome completo continua para leitores de tela); saiu a etiqueta
+  "Lição de abertura"; no desktop, o painel da direita acompanha a altura do tabuleiro, então não muda de tamanho
+  a cada lance, e o rodapé de etapas fica sempre no pé dele; "Ver lance" virou "Ver dica".
+- **Casas no texto:** `src/chess/squareRefs.ts` (com testes) acha casas e lances em português no texto; elas
+  ganham sublinhado pontilhado e, no hover, um contorno tracejado na casa do tabuleiro.
+**Testes:** novo `e2e/tema-e-texto.spec.ts`. Ajustes por causa do header: os testes de teclado agora apertam Tab
+até chegar ao tabuleiro (antes ele era a primeira parada), e as contagens de botões olham só o tabuleiro.
+`npm run verificar` passou (229 de unidade, 290 de ponta a ponta).

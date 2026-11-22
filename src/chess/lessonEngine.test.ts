@@ -182,7 +182,7 @@ describe('motor da lição: lance fora do roteiro', () => {
   })
 })
 
-describe('motor da lição: "Ver lance" (guia)', () => {
+describe('motor da lição: "Ver dica" (guia)', () => {
   it('entrega a peça e a casa de destino do lance esperado', () => {
     let state = createLesson(italiana)
     expect(getGuide(state)).toEqual({ from: 'e2', to: 'e4', san: 'e4' })

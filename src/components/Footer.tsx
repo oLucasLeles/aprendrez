@@ -5,7 +5,7 @@ function Footer() {
     <footer className="site-footer grid">
       <p className="grid-full site-footer-text">
         <span>Peças de xadrez: Colin M.L. Burnett (CC BY-SA 3.0).</span>{' '}
-        <span>Fonte Inter: The Inter Project Authors (SIL OFL 1.1).</span>{' '}
+        <span>Fonte Geist: Vercel (SIL OFL 1.1).</span>{' '}
         <span>Base de aberturas: Lichess (CC0).</span>
       </p>
     </footer>

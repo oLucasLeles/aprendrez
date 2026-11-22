@@ -9,7 +9,7 @@ const square = (page: Page, name: string) => page.locator(`[data-square="${name}
 async function openSoloPractice(page: Page) {
   await page.goto('/abertura/siciliana?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
+  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   // O app joga sozinho o 1.e4 das brancas.
   await expect(panel.getByLabel('Lista de lances')).toHaveText('1. e4')
@@ -71,7 +71,7 @@ test('erro comum do conteúdo: 3...e5 em vez de 3...cxd4 mostra a explicação e
 test('a etapa Variações mostra as duas variações da Siciliana, cada uma com o nome do desvio', async ({ page }) => {
   await page.goto('/abertura/siciliana?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: 'Variações', exact: true }).click()
+  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Variações', exact: true }).click()
   await expect(panel.getByRole('heading', { name: 'Variações' })).toBeVisible()
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 1 de 2: ')
   await expect(panel.getByTestId('variacao-atual')).toContainText(/Brancas (jogam Bg5 em vez de Be2|trocam os cavalos)/)

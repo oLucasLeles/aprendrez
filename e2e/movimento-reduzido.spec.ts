@@ -23,7 +23,7 @@ async function playE4AndCollectTransitions(page: Page) {
   await page.evaluate(() => {
     const seen: number[] = []
     ;(window as unknown as { __transitions: number[] }).__transitions = seen
-    const board = document.querySelector('[role="group"]')!
+    const board = document.querySelector('.board')!
     const read = (el: Element) => {
       const duration = getComputedStyle(el).transitionDuration
       for (const part of duration.split(',')) {

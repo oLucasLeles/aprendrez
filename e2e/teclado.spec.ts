@@ -11,13 +11,25 @@ const marked = (page: Page) =>
 const selected = (page: Page) =>
   page.locator('[data-square] > div[style*="box-shadow"]:not([style*="border-radius: 50%"])')
 
+
+/**
+ * Aperta Tab até o foco chegar no elemento (como uma pessoa faria). Antes do conteúdo
+ * vêm o nome do app e os 3 botões de tema do header.
+ */
+async function tabTo(page: Page, target: import('@playwright/test').Locator) {
+  for (let i = 0; i < 10; i++) {
+    await page.keyboard.press('Tab')
+    if (await target.evaluate((el) => el === document.activeElement).catch(() => false)) return
+  }
+  await expect(target).toBeFocused()
+}
+
 const AFTER_E4 = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR%20b%20KQkq%20-%200%201'
 
 test('fazer 1. e4 usando só o teclado', async ({ page }) => {
   await page.goto('/dev/tabuleiro?jogar=brancas')
 
-  await page.keyboard.press('Tab') // o foco chega ao tabuleiro, na casa e2
-  await expect(casa(page, 'e2, peão branco')).toBeFocused()
+  await tabTo(page, casa(page, 'e2, peão branco')) // o foco chega ao tabuleiro (depois do header)
 
   await page.keyboard.press('Enter') // seleciona o peão
   await expect(selected(page)).toHaveCount(1)
@@ -39,7 +51,7 @@ test('fazer 1. e4 usando só o teclado', async ({ page }) => {
 
 test('a casa com foco tem um indicador visível (contorno)', async ({ page }) => {
   await page.goto('/dev/tabuleiro?jogar=brancas')
-  await page.keyboard.press('Tab')
+  await tabTo(page, casa(page, 'e2, peão branco'))
   const focada = casa(page, 'e2, peão branco')
   await expect(focada).toBeFocused()
   await expect(focada).toHaveCSS('outline-style', 'solid')
@@ -54,7 +66,7 @@ test('a casa com foco tem um indicador visível (contorno)', async ({ page }) =>
 
 test('Esc desfaz a seleção', async ({ page }) => {
   await page.goto('/dev/tabuleiro?jogar=brancas')
-  await page.keyboard.press('Tab')
+  await tabTo(page, casa(page, 'e2, peão branco'))
   await page.keyboard.press('Enter')
   await expect(marked(page)).toHaveCount(2)
 
@@ -66,7 +78,7 @@ test('Esc desfaz a seleção', async ({ page }) => {
 
 test('Enter numa casa que não é destino não faz lance e desfaz a seleção', async ({ page }) => {
   await page.goto('/dev/tabuleiro?jogar=brancas')
-  await page.keyboard.press('Tab')
+  await tabTo(page, casa(page, 'e2, peão branco'))
   await page.keyboard.press('Enter') // seleciona e2
   await page.keyboard.press('ArrowRight') // f2: não é destino do peão de e2
   await page.keyboard.press('Enter')
@@ -88,14 +100,13 @@ test('cada casa tem um nome acessível e só uma casa fica no caminho do Tab', a
   await expect(casa(page, 'g1, cavalo branco')).toBeVisible()
   await expect(casa(page, 'd8, dama preta')).toBeVisible()
   await expect(casa(page, 'e4, vazia')).toBeVisible()
-  await expect(page.getByRole('button')).toHaveCount(64)
+  await expect(page.getByRole('group', { name: /Tabuleiro de xadrez/ }).getByRole('button')).toHaveCount(64)
   await expect(page.locator('.board [tabindex="0"]')).toHaveCount(1)
 })
 
 test('com as pretas embaixo, as setas seguem o tabuleiro invertido', async ({ page }) => {
   await page.goto(`/dev/tabuleiro?jogar=pretas&cor=pretas&fen=${AFTER_E4}`)
-  await page.keyboard.press('Tab')
-  await expect(casa(page, 'e7, peão preto')).toBeFocused()
+  await tabTo(page, casa(page, 'e7, peão preto')) // o foco chega ao tabuleiro (depois do header)
   await page.keyboard.press('Enter')
   await page.keyboard.press('ArrowUp') // para cima, na tela, é em direção às brancas
   await page.keyboard.press('ArrowUp')
@@ -106,6 +117,6 @@ test('com as pretas embaixo, as setas seguem o tabuleiro invertido', async ({ pa
 
 test('o tabuleiro só para olhar não entra no caminho do teclado', async ({ page }) => {
   await page.goto('/dev/tabuleiro')
-  await expect(page.getByRole('button')).toHaveCount(0)
+  await expect(page.getByRole('group', { name: /Tabuleiro de xadrez/ }).getByRole('button')).toHaveCount(0)
   await expect(page.locator('.board [tabindex="0"]')).toHaveCount(0) // -1 não entra no caminho do Tab
 })

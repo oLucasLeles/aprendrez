@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import Board from '../components/Board'
+import BoardText from '../components/BoardText'
 import { getOpening } from '../content/openings'
 import {
   createLesson,
@@ -77,9 +78,11 @@ function LessonScreen() {
     opening && isPracticeStage(initialStage) ? createLesson(opening) : null,
   )
   const [correctText, setCorrectText] = useState<string | null>(null)
-  // "Ver lance" (etapa sem guia): a posição (FEN) em que a pessoa pediu para ver o guia.
+  // "Ver dica" (etapa sem guia): a posição (FEN) em que a pessoa pediu para ver o guia.
   // Quando a posição muda, o guia some sozinho, sem precisar limpar nada.
   const [peekFen, setPeekFen] = useState<string | null>(null)
+  // Casa citada no texto que está sob o mouse (ex.: "e4"): fica destacada no tabuleiro.
+  const [hoverSquare, setHoverSquare] = useState<string | null>(null)
   // A linha que o adversário segue na prática: a principal ou a de uma variação.
   const [practiceLine, setPracticeLine] = useState<OpeningNode[]>(() =>
     opening && isPracticeStage(initialStage) ? getMainLine(opening) : [],
@@ -126,7 +129,7 @@ function LessonScreen() {
   // Etapa 3 · Praticar com guia: a posição do motor, com o guia no lance esperado.
   const boardFen = practicing ? practice.fen : watching ? watchView.fen : getCharacteristicFen(opening)
   const boardLastMove = practicing ? practice.lastMove : watching ? watchView.lastMove : null
-  // Com guia: sempre visível. Sozinho: só depois de "Ver lance", e só para o lance atual.
+  // Com guia: sempre visível. Sozinho: só depois de "Ver dica", e só para o lance atual.
   const showGuide = practicing && practiceStatus === 'user-turn' && (guidedStage || peekFen === practice.fen)
   const guide = showGuide ? getGuide(practice) : null
   const offScript = practicing ? practice.offScript : null
@@ -224,26 +227,14 @@ function LessonScreen() {
       <title>{`${opening.name} · Aprendrez`}</title>
 
       <div className="grid-full lesson-header">
-        <p>
-          <Link to="/">Voltar à trilha</Link>
-        </p>
-        {/* O nome da abertura é o título da tela; "Lição" vira uma etiqueta pequena acima dele. */}
-        <p className="lesson-eyebrow">Lição de abertura</p>
+        {/* Botão "Voltar": leva à trilha. O nome completo fica para os leitores de tela. */}
+        <Link to="/" className="button-secondary button-with-icon lesson-back" aria-label="Voltar à trilha">
+          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" className="button-icon">
+            <path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Voltar
+        </Link>
         <h1 className="lesson-title">{opening.name}</h1>
-      </div>
-
-      <div className="lesson-board">
-        <Board
-          fen={boardFen}
-          orientation={opening.color}
-          lastMove={boardLastMove}
-          guide={guide}
-          playerColor={practicing ? opening.color : undefined}
-          onMove={practicing ? handleUserMove : undefined}
-        />
-      </div>
-
-      <section className="lesson-panel" aria-label="Painel da lição">
         {/* Indicador de etapas em segmentos (referência: Brilliant). Cada segmento é um botão:
             a exploração é livre, então qualquer etapa abre a qualquer momento. Nada fica "concluído". */}
         <nav className="lesson-stepper" aria-label="Etapas da lição">
@@ -263,14 +254,28 @@ function LessonScreen() {
                 >
                   <span className="lesson-stepper-bar" aria-hidden="true" />
                   <span className="lesson-stepper-label" aria-hidden="true">
-                    {stage.short}
+                    {stage.name}
                   </span>
                 </button>
               </li>
             ))}
           </ol>
         </nav>
+      </div>
 
+      <div className="lesson-board">
+        <Board
+          fen={boardFen}
+          orientation={opening.color}
+          lastMove={boardLastMove}
+          guide={guide}
+          textHoverSquare={hoverSquare}
+          playerColor={practicing ? opening.color : undefined}
+          onMove={practicing ? handleUserMove : undefined}
+        />
+      </div>
+
+      <section className="lesson-panel" aria-label="Painel da lição">
         {stageIndex === 0 && (
         <div className="lesson-text" aria-live="polite">
           <h2>Conhecer</h2>
@@ -291,11 +296,11 @@ function LessonScreen() {
             </div>
           </dl>
           <h3>A ideia</h3>
-          <p>{opening.idea}</p>
+          <p><BoardText text={opening.idea} onHoverSquare={setHoverSquare} /></p>
           <h3>Ideias-chave</h3>
           <ul className="lesson-key-ideas">
             {opening.keyIdeas.map((keyIdea) => (
-              <li key={keyIdea}>{keyIdea}</li>
+              <li key={keyIdea}><BoardText text={keyIdea} onHoverSquare={setHoverSquare} /></li>
             ))}
           </ul>
           <p className="lesson-hint">O tabuleiro mostra a posição que você vai alcançar no fim da linha.</p>
@@ -310,7 +315,7 @@ function LessonScreen() {
                 <p className="lesson-hint" data-testid="variacao-atual">
                   Variação {variationPos.index + 1} de {variations.length}: {variation.name} · Assistir
                 </p>
-                <p className="lesson-question">{getVariationQuestion(variation, opening.color)}</p>
+                <p className="lesson-question"><BoardText text={getVariationQuestion(variation, opening.color)} onHoverSquare={setHoverSquare} /></p>
               </>
             )}
             <p className="lesson-hint">
@@ -319,7 +324,7 @@ function LessonScreen() {
             <p className="lesson-narration">
               {atDeviation
                 ? 'Até aqui o jogo é igual ao da linha principal. Aperte "Próximo lance" para ver a resposta diferente.'
-                : watchView.narration}
+                : <BoardText text={watchView.narration} onHoverSquare={setHoverSquare} />}
             </p>
           </div>
         )}
@@ -333,7 +338,7 @@ function LessonScreen() {
                   Variação {variationPos.index + 1} de {variations.length}: {variation.name} ·{' '}
                   {VARIATION_PHASE_LABELS[variationPos.phase]}
                 </p>
-                <p className="lesson-question">{getVariationQuestion(variation, opening.color)}</p>
+                <p className="lesson-question"><BoardText text={getVariationQuestion(variation, opening.color)} onHoverSquare={setHoverSquare} /></p>
               </>
             )}
             {practiceStatus === 'user-turn' && guidedStage && (
@@ -346,7 +351,7 @@ function LessonScreen() {
               </p>
             )}
             {practiceStatus === 'user-turn' && soloStage && (
-              <p className="lesson-hint">Sua vez: jogue o próximo lance da abertura. Se precisar, use "Ver lance".</p>
+              <p className="lesson-hint">Sua vez: jogue o próximo lance da abertura. Se precisar, use "Ver dica".</p>
             )}
             {practiceStatus === 'opponent-turn' && <p className="lesson-hint">O adversário está respondendo…</p>}
             {practiceStatus === 'finished' && (
@@ -374,14 +379,14 @@ function LessonScreen() {
                   <circle cx="8" cy="11.5" r="0.9" fill="currentColor" />
                 </svg>
                 <span>
-                  <strong>Lance fora do roteiro.</strong> {offScript.message}
+                  <strong>Lance fora do roteiro.</strong> <BoardText text={offScript.message} onHoverSquare={setHoverSquare} />
                 </span>
               </p>
             )}
             {!offScript && correctText !== null && (
               <p className="lesson-narration">
                 <span aria-hidden="true">✓ </span>
-                <strong>Lance correto.</strong> {correctText}
+                <strong>Lance correto.</strong> <BoardText text={correctText} onHoverSquare={setHoverSquare} />
               </p>
             )}
           </div>
@@ -399,18 +404,18 @@ function LessonScreen() {
                     className={index === watchStep - 1 ? 'lesson-move-current' : undefined}
                     aria-current={index === watchStep - 1 ? 'step' : undefined}
                   >
-                    {toPortugueseSan(san)}
+                    <BoardText text={toPortugueseSan(san)} onHoverSquare={setHoverSquare} />
                   </span>{' '}
                 </span>
               ))}
             </p>
           ) : practicing && practice ? (
             <p className="lesson-moves-list" aria-label="Lista de lances">
-              {practice.moves.length === 0 ? 'Nenhum lance ainda.' : formatMoveList(practice.moves, 'white')}
+              {practice.moves.length === 0 ? 'Nenhum lance ainda.' : <BoardText text={formatMoveList(practice.moves, 'white')} onHoverSquare={setHoverSquare} />}
             </p>
           ) : (
             <p className="lesson-moves-list" aria-label="Lista de lances">
-              {formatMoveList(mainLine, 'white')}
+              <BoardText text={formatMoveList(mainLine, 'white')} onHoverSquare={setHoverSquare} />
             </p>
           )}
         </div>
@@ -429,7 +434,7 @@ function LessonScreen() {
           )}
           {soloStage && practicing && practiceStatus === 'user-turn' && !offScript && (
             <button type="button" className="button-secondary" onClick={() => setPeekFen(practice!.fen)}>
-              Ver lance
+              Ver dica
             </button>
           )}
           {innerAction && (

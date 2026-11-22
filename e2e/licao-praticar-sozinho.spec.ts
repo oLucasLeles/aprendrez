@@ -1,7 +1,7 @@
 import { expect, test, type Page } from '@playwright/test'
 
 // Etapa 4 · Praticar sozinho (F21): a mesma linha da Italiana, sem guia.
-// Lance fora do roteiro (SPEC 7.3) e botão "Ver lance".
+// Lance fora do roteiro (SPEC 7.3) e botão "Ver dica".
 
 const square = (page: Page, name: string) => page.locator(`[data-square="${name}"]`)
 const arrow = (page: Page) => page.getByRole('group', { name: /Tabuleiro de xadrez/ }).locator('svg path[stroke]')
@@ -123,12 +123,12 @@ test('"Voltar" desfaz o lance e permite jogar o correto', async ({ page }) => {
   await expect(moves).toHaveText(/^1\. e4 e5$/)
 })
 
-test('"Ver lance" mostra o guia só do lance atual, sem penalidade', async ({ page }) => {
+test('"Ver dica" mostra o guia só do lance atual, sem penalidade', async ({ page }) => {
   const panel = await openSoloPractice(page)
   const moves = panel.getByLabel('Lista de lances')
 
   await expect(arrow(page)).toHaveCount(0)
-  await panel.getByRole('button', { name: 'Ver lance' }).click()
+  await panel.getByRole('button', { name: 'Ver dica' }).click()
 
   // o guia do lance atual (e2 → e4)
   await expect(originHighlight(page, 'e2')).toHaveCount(1)
@@ -143,7 +143,7 @@ test('"Ver lance" mostra o guia só do lance atual, sem penalidade', async ({ pa
   await expect(panel.getByText('Lance correto.')).toBeVisible() // sem penalidade
 
   // pedindo de novo, mostra o guia do novo lance (g1 → f3)
-  await panel.getByRole('button', { name: 'Ver lance' }).click()
+  await panel.getByRole('button', { name: 'Ver dica' }).click()
   await expect(originHighlight(page, 'g1')).toHaveCount(1)
   await expect(arrow(page)).toHaveCount(1)
 })

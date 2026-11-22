@@ -44,10 +44,19 @@ const captureTargetStyle: CSSProperties = {
   borderRadius: '50%',
 }
 
+// Casa citada no texto (a pessoa passou o mouse sobre "e4", "Cf6"…): contorno tracejado, que
+// combina com o sublinhado pontilhado do texto. É um contorno (outline), então soma com os
+// outros destaques da casa em vez de substituí-los.
+const textHoverStyle: CSSProperties = {
+  outline: '3px dashed var(--color-accent)',
+  outlineOffset: '-3px',
+}
+
 export function getSquareStyles(
   lastMove?: LastMove | null,
   selection?: Selection | null,
   guide?: Guide | null,
+  textHover?: string | null,
 ): Record<string, CSSProperties> {
   const styles: Record<string, CSSProperties> = {}
   if (lastMove) {
@@ -62,6 +71,9 @@ export function getSquareStyles(
       styles[square] = capture ? captureTargetStyle : targetStyle
     }
     styles[selection.square] = selectedStyle
+  }
+  if (textHover) {
+    styles[textHover] = { ...styles[textHover], ...textHoverStyle }
   }
   return styles
 }

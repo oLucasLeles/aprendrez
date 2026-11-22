@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router'
 import Footer from './components/Footer'
+import Header from './components/Header'
 import DevBoardScreen from './screens/DevBoardScreen'
 import ConclusionScreen from './screens/ConclusionScreen'
 import HomeScreen from './screens/HomeScreen'
@@ -26,6 +27,7 @@ export function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
+      <Header />
       <AppRoutes />
       <Footer />
     </BrowserRouter>

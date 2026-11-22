@@ -117,7 +117,7 @@ cenário imprevisível**.
 - Uma lista de lances em notação portuguesa acompanha a partida em todas as
   etapas (por exemplo, `1. e4 e5 2. Cf3 Cc6`). As letras das peças são:
   R (rei), D (dama), T (torre), B (bispo), C (cavalo).
-- O botão **"Ver lance"** fica disponível nas etapas sem guia: ele mostra o guia
+- O botão **"Ver dica"** fica disponível nas etapas sem guia: ele mostra o guia
   (peça e seta) só para o lance atual, sem nenhuma penalidade.
 
 ## 7. Regras de interação do tabuleiro
@@ -185,10 +185,15 @@ e cada lance é um galho que leva à posição seguinte.
 ### Referência visual: design suíço
 - **Grid** de 12 colunas no desktop e 4 no celular, invisível para quem usa o app, e espaçamentos em múltiplos de 8 px
 - **Hierarquia pela tipografia:** uma família sem serifa do tipo grotesca
-  (por exemplo, Inter), com grande contraste entre os tamanhos dos títulos e do texto
+  (**Geist**, decisão do dono do projeto em 2026-11-22), com grande contraste entre os tamanhos dos títulos e do texto
 - Texto alinhado à esquerda, layouts que podem ser assimétricos, sem ornamentos,
   sombras discretas ou nenhuma, cantos retos ou levemente arredondados
 - Alto contraste entre os neutros
+- **Tema claro e escuro:** um header em todas as telas tem o nome do app e um seletor de tema
+  (sistema · claro · escuro). A escolha fica lembrada no navegador. No escuro, o destaque
+  vermelho fica mais claro e o texto sobre ele, escuro, para manter o contraste AA
+- **Casas citadas no texto** da lição (como "e4" ou "Cf6") têm sublinhado pontilhado; ao passar
+  o mouse, a casa ganha um contorno tracejado no tabuleiro
 
 ### Os outros princípios
 - **Tom de voz:** encorajador, direto e sem jargão. Um termo técnico, quando aparece, é explicado na primeira vez.
@@ -217,7 +222,7 @@ e cada lance é um galho que leva à posição seguinte.
   - a lista de lances da partida
   - as ações **dentro da etapa**: o botão principal anda dentro da etapa atual ("Próximo lance",
     "Voltar", "Praticar esta variação com guia", "Próxima variação", "Ver resumo"), mais "Lance anterior",
-    "Ver lance" e "Voltar ao início" / "Recomeçar a partida"
+    "Ver dica" e "Voltar ao início" / "Recomeçar a partida"
   - um rodapé **separado** para trocar de etapa ("Etapa anterior" / "Próxima etapa"). A próxima etapa
     só ganha o destaque do botão principal quando não sobra nada a fazer na etapa atual
 - **Telas estreitas:** tabuleiro em cima, painel embaixo
@@ -262,7 +267,7 @@ e cada lance é um galho que leva à posição seguinte.
    punitivo: o botão de ação principal mantém sempre a cor de destaque, seja
    "Próximo lance" (no Assistir) ou "Voltar" (depois de um lance fora do roteiro). Trocar de etapa é um controle à parte.
    As cores são tokens e podem mudar depois.
-2. **"Ver lance"** fica disponível nas etapas sem guia, sem penalidade.
+2. **"Ver dica"** fica disponível nas etapas sem guia, sem penalidade.
 
 ## 14. Definição de pronto do MVP
 
