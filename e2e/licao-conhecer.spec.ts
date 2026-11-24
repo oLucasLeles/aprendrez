@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { expectStage } from './etapas'
 
 // Etapa 1 · Conhecer (F18): nome, cor, nível, ideia, ideias-chave e tabuleiro estático.
 test('em /abertura/italiana aparecem o nome, a ideia e as ideias-chave', async ({ page }) => {
@@ -17,10 +18,7 @@ test('em /abertura/italiana aparecem o nome, a ideia e as ideias-chave', async (
 
   await expect(panel.getByLabel('Lista de lances')).toContainText('1. e4 e5 2. Cf3 Cc6 3. Bc4 Bc5')
   await expect(panel.getByRole('button', { name: /Próxima etapa/ })).toBeVisible()
-  await expect(page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Conhecer', exact: true })).toHaveAttribute(
-    'aria-current',
-    'step',
-  )
+  await expectStage(page, 'Conhecer')
 })
 
 test('o tabuleiro mostra a posição do fim da linha e não aceita lances', async ({ page }) => {

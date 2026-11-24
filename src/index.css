@@ -116,10 +116,17 @@ textarea {
 }
 
 .site-header-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   letter-spacing: var(--letter-spacing-tight);
   text-decoration: none;
+}
+
+:root[data-theme='dark'] .site-header-logo-mark {
+  filter: invert(1);
 }
 
 /* Seletor de tema: três ícones num trilho arredondado (referência: Vercel). */
@@ -200,14 +207,19 @@ textarea {
 }
 
 /* ---------- Tela da Lição (F17) ---------- */
-/* Celular: tudo empilhado, tabuleiro em cima e painel embaixo. */
+/* Celular: tudo empilhado, tabuleiro em cima e painel embaixo.
+   Espaços (Figma): 16 px entre "Voltar" e o título; 32 px entre o cabeçalho e o tabuleiro. */
 .lesson-header {
-  margin-bottom: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
 }
 
-/* Botão "Voltar" (é um link com cara de botão secundário). */
-.lesson-back {
-  margin-bottom: var(--space-3);
+/* Botão "Voltar" (é um link com cara de botão secundário), em seminegrito. */
+.button-secondary.lesson-back {
+  font-weight: var(--font-weight-semibold);
   text-decoration: none;
 }
 
@@ -215,16 +227,18 @@ a.button-secondary:hover {
   color: var(--color-text);
 }
 
-.lesson-header {
+/* Título à esquerda e indicador de etapas à direita (no celular, um embaixo do outro). */
+.lesson-title-row {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+  align-self: stretch;
 }
 
-/* O indicador de etapas, abaixo do título, ocupa a largura toda. */
-.lesson-header .lesson-stepper {
-  align-self: stretch;
-  margin-bottom: var(--space-2);
+.lesson-title {
+  margin: 0;
 }
 
 /* O título da lição é o nome da abertura. Alguns nomes são longos, por isso ele é
@@ -276,82 +290,106 @@ a.button-secondary:hover {
   }
 }
 
-/* Indicador de etapas em segmentos (referência: Brilliant, no Mobbin). Uma barra dividida em 6:
-   o segmento da etapa atual fica na cor de destaque e mais alto; os outros, em cinza. Cada segmento
-   é um botão (exploração livre). Os nomes curtos aparecem embaixo só no desktop; no celular, o
-   título da etapa e o "Etapa X de 6" já dizem onde a pessoa está. */
+/* Indicador de etapas (Figma, 2026-11-23): anel de 6 partes + "Etapa X de 6" e o nome da etapa.
+   É um botão que abre a lista de etapas (a exploração continua livre). */
 .lesson-stepper {
+  position: relative;
+}
+
+.lesson-stepper-trigger {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.lesson-step-count {
-  margin: 0;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-}
-
-.lesson-stepper-list {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 6px;
-  margin: 0;
+  align-items: center;
+  gap: var(--space-2);
   padding: 0;
-  list-style: none;
-}
-
-.lesson-stepper-button {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-  min-height: 24px; /* área de toque confortável, mesmo com a barra fina */
-  padding: var(--space-1) 0 0;
   border: 0;
   background: none;
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
+  color: var(--color-text);
   text-align: left;
   cursor: pointer;
 }
 
-.lesson-stepper-bar {
-  display: block;
-  height: 6px;
+.stage-ring-part {
+  stroke: var(--color-border);
+  transition: stroke var(--duration-fast) var(--easing-standard);
+}
+
+.stage-ring-part.is-on {
+  stroke: var(--color-accent);
+}
+
+.lesson-stepper-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.lesson-step-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.lesson-step-name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.lesson-stepper-trigger:hover .lesson-step-name {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* Lista de etapas, aberta embaixo do indicador. */
+.lesson-stage-menu {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  z-index: 5;
+  min-width: 14rem;
+  margin: 0;
+  padding: var(--space-1);
+  border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-lg);
-  background: var(--color-border);
-  transition: background-color var(--duration-fast) var(--easing-standard);
+  background: var(--color-surface);
+  list-style: none;
 }
 
-.lesson-stepper-button:hover .lesson-stepper-bar {
-  background: var(--color-text-secondary);
-}
-
-.lesson-stepper-button[aria-current='step'] {
+.lesson-stage-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  width: 100%;
+  padding: var(--space-1);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
   color: var(--color-text);
-  font-weight: var(--font-weight-bold);
+  text-align: left;
+  cursor: pointer;
 }
 
-/* A etapa atual não depende só de cor: a barra também fica mais grossa. */
-.lesson-stepper-button[aria-current='step'] .lesson-stepper-bar {
-  height: 10px;
-  margin-top: -4px;
+.lesson-stage-menu-item:hover {
+  background: var(--color-surface-subtle);
+}
+
+/* A etapa atual: negrito e número na cor de destaque (não depende só de cor). */
+.lesson-stage-menu-item[aria-current='step'] {
+  font-weight: var(--font-weight-semibold);
+}
+
+.lesson-stage-menu-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--space-3);
+  height: var(--space-3);
+  border-radius: var(--radius-full);
+  background: var(--color-surface-muted);
+  font-size: var(--font-size-sm);
+}
+
+.lesson-stage-menu-item[aria-current='step'] .lesson-stage-menu-number {
   background: var(--color-accent);
-}
-
-.lesson-stepper-label {
-  display: none;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-@media (min-width: 768px) {
-  .lesson-stepper-label {
-    display: block;
-  }
+  color: var(--color-on-accent);
 }
 
 /* Rodapé "Trocar de etapa": separado das ações da etapa por uma linha, com a etapa anterior
@@ -412,7 +450,6 @@ a.button-secondary:hover {
 
 /* Botão de texto, sem borda, para ações de apoio (ex.: "Recomeçar"). Fica no fim da linha de ações. */
 .button-tertiary {
-  margin-left: auto;
   padding: var(--space-1) 0;
   border: 0;
   background: none;
@@ -430,11 +467,6 @@ a.button-secondary:hover {
   .lesson-actions .button-primary,
   .lesson-actions .button-secondary {
     padding-inline: var(--space-2);
-  }
-
-  .button-tertiary {
-    flex-basis: 100%;
-    justify-content: flex-start;
   }
 
   .lesson-stage-nav-button {
@@ -484,16 +516,23 @@ a.button-secondary:hover {
 
 .lesson-actions {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.lesson-actions-row {
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 /* Botão de ação principal: sempre na cor de destaque (SPEC, seção 9). */
 .button-primary {
-  padding: var(--space-1) var(--space-3);
+  padding: var(--space-1) var(--space-2);
   border: 0;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-full);
   background: var(--color-accent);
   color: var(--color-on-accent);
   font-weight: var(--font-weight-medium);
@@ -559,9 +598,9 @@ a.button-primary:hover {
 
 /* Botão secundário: contorno neutro, sem preenchimento (o vermelho é só da ação principal). */
 .button-secondary {
-  padding: var(--space-1) var(--space-3);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-lg);
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width) solid var(--color-border-subtle);
+  border-radius: var(--radius-full);
   background: var(--color-surface);
   color: var(--color-text);
   font-weight: var(--font-weight-medium);
@@ -569,7 +608,7 @@ a.button-primary:hover {
 }
 
 .button-secondary:hover:not(:disabled) {
-  background: var(--color-surface-muted);
+  background: var(--color-surface-subtle);
 }
 
 /* Botão desativado: cinza neutro, sem vermelho. O vermelho fica reservado para o que a
@@ -687,9 +726,9 @@ a.button-primary:hover {
 }
 
 .trail-filter-button {
-  padding: var(--space-1) var(--space-3);
-  border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-lg);
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width) solid var(--color-border-subtle);
+  border-radius: var(--radius-full);
   background: var(--color-surface);
   color: var(--color-text);
   font-weight: var(--font-weight-medium);
@@ -697,7 +736,7 @@ a.button-primary:hover {
 }
 
 .trail-filter-button:hover {
-  background: var(--color-surface-muted);
+  background: var(--color-surface-subtle);
 }
 
 .trail-filter-button[aria-pressed='true'] {

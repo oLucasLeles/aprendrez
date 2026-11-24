@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { goToStage } from './etapas'
 
 // Sistema Londres (F34): é um SISTEMA, então aceita uma alternativa de ordem escrita no conteúdo.
 // Depois de 4...Cc6 a pessoa pode jogar 5.c3 antes de 5.Cbd2 e chega à mesma posição.
@@ -9,7 +10,7 @@ const square = (page: Page, name: string) => page.locator(`[data-square="${name}
 async function openSoloPractice(page: Page) {
   await page.goto('/abertura/londres?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
+  await goToStage(page, 'Praticar sozinho')
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   await expect(panel.getByLabel('Lista de lances')).toContainText('Nenhum lance ainda')
   return panel

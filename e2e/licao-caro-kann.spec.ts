@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { goToStage } from './etapas'
 
 // Defesa Caro-Kann (F36): linha fixa, pretas, nível 2, contra 1.e4.
 // Linha principal: 1.e4 c6 2.d4 d5 3.Cd2 dxe4 4.Cxe4 Bf5 5.Cg3 Bg6 6.h4 h6 7.Cf3 Cd7 8.h5 Bh7 9.Bd3 Bxd3 10.Dxd3
@@ -9,7 +10,7 @@ const square = (page: Page, name: string) => page.locator(`[data-square="${name}
 async function openSoloPractice(page: Page) {
   await page.goto('/abertura/caro-kann?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
+  await goToStage(page, 'Praticar sozinho')
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   // O app joga sozinho o 1.e4 das brancas.
   await expect(panel.getByLabel('Lista de lances')).toHaveText('1. e4')
@@ -77,7 +78,7 @@ test('erro comum do conteúdo: Bxh5 depois de 8.h5 mostra a explicação especí
 test('a etapa Variações mostra as duas variações da Caro-Kann, cada uma com o nome do desvio', async ({ page }) => {
   await page.goto('/abertura/caro-kann?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Variações', exact: true }).click()
+  await goToStage(page, 'Variações')
   await expect(panel.getByRole('heading', { name: 'Variações' })).toBeVisible()
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 1 de 2: ')
   await expect(panel.getByTestId('variacao-atual')).toContainText(/Brancas jogam (h5 antes de Cf3|Bc4 em vez de h4)/)

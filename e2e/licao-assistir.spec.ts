@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test'
+import { expectStage } from './etapas'
 
 // Etapa 2 · Assistir (F19): a linha principal lance a lance, com narração.
 async function openWatchStage(page: import('@playwright/test').Page) {
@@ -13,10 +14,7 @@ test('avançar três lances mostra a narração do terceiro e a lista 1. e4 e5 2
   const panel = await openWatchStage(page)
   const board = page.getByRole('group', { name: /Tabuleiro de xadrez/ })
 
-  await expect(page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Assistir', exact: true })).toHaveAttribute(
-    'aria-current',
-    'step',
-  )
+  await expectStage(page, 'Assistir')
   await expect(panel.getByLabel('Lista de lances')).toContainText('Nenhum lance ainda')
 
   const next = panel.getByRole('button', { name: 'Próximo lance' })

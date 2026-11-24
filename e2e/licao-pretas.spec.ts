@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { goToStage } from './etapas'
 
 // Aberturas de pretas (F25): o tabuleiro fica invertido (pretas embaixo) em todas as etapas
 // e o app joga sozinho o primeiro lance das brancas (1.e4 na Defesa Escandinava).
@@ -68,7 +69,7 @@ test('Praticar sozinho: sem guia, pretas embaixo e 1. e4 já jogado', async ({ p
   const panel = page.getByRole('region', { name: 'Painel da lição' })
 
   // O indicador deixa voltar a "Praticar sozinho" (no modo de desenvolvimento todas as etapas estão alcançadas).
-  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
+  await goToStage(page, 'Praticar sozinho')
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   await expectBlackAtBottom(page)
   await expect(panel.getByLabel('Lista de lances')).toHaveText('1. e4')

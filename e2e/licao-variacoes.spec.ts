@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
+import { expectStage } from './etapas'
 
 // Etapa 5 · Variações (F22): para cada variação da Italiana, assistir, praticar com guia
 // e praticar sozinho. A primeira variação da árvore é 5...a6: 6.O-O d6 7.Te1 O-O. A segunda é 4...d6.
@@ -70,7 +71,7 @@ test('completar a primeira variação da Italiana: assistir, praticar com guia e
   await expect(panel.getByRole('heading', { name: 'Variações' })).toBeVisible()
   await expect(panel.getByText('E se as pretas jogarem 5... a6?')).toBeVisible()
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 1 de 2: Pretas jogam a6 antes do roque · Assistir')
-  await expect(stages.locator('[aria-current="step"]')).toHaveAccessibleName('Variações')
+  await expectStage(page, 'Variações')
   await expect(moves).toHaveText(numbered(VAR1_TOKENS.slice(0, 9)))
 
   // a continuação, lance a lance
@@ -101,7 +102,7 @@ test('completar a primeira variação da Italiana: assistir, praticar com guia e
 
   // --- Segue para a segunda variação
   await panel.getByRole('button', { name: 'Próxima variação' }).click()
-  await expect(stages.locator('[aria-current="step"]')).toHaveAccessibleName('Variações')
+  await expectStage(page, 'Variações')
   await expect(panel.getByText('E se as pretas jogarem 4... d6?')).toBeVisible()
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 2 de 2: Pretas jogam d6 cedo · Assistir')
 })

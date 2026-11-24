@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { goToStage } from './etapas'
 
 // Gambito da Dama Recusado (F37): linha fixa, pretas, nível 2, contra 1.d4.
 // Linha principal: 1.d4 d5 2.c4 e6 3.Cc3 Cf6 4.Bg5 Be7 5.e3 O-O 6.Cf3 Cbd7 7.Tc1 c6 8.Bd3 dxc4 9.Bxc4 Cd5 10.Bxe7 Dxe7 11.O-O
@@ -9,7 +10,7 @@ const square = (page: Page, name: string) => page.locator(`[data-square="${name}
 async function openSoloPractice(page: Page) {
   await page.goto('/abertura/gambito-da-dama-recusado?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
+  await goToStage(page, 'Praticar sozinho')
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   // O app joga sozinho o 1.d4 das brancas.
   await expect(panel.getByLabel('Lista de lances')).toHaveText('1. d4')
@@ -78,7 +79,7 @@ test('erro comum do conteúdo: dxc4 no segundo lance mostra a explicação espec
 test('a etapa Variações mostra as duas variações, cada uma com o nome do desvio', async ({ page }) => {
   await page.goto('/abertura/gambito-da-dama-recusado?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Variações', exact: true }).click()
+  await goToStage(page, 'Variações')
   await expect(panel.getByRole('heading', { name: 'Variações' })).toBeVisible()
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 1 de 2: ')
   await expect(panel.getByTestId('variacao-atual')).toContainText(/Brancas jogam (Cf3 antes de e3|Dc2 em vez de Tc1)/)

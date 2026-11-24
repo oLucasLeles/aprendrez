@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { goToStage } from './etapas'
 
 // Espanhola / Ruy Lopez (F35): linha fixa, brancas, nível 2.
 // Linha principal: 1.e4 e5 2.Cf3 Cc6 3.Bb5 a6 4.Ba4 Cf6 5.O-O Be7 6.Te1 b5 7.Bb3 d6 8.c3 O-O
@@ -9,7 +10,7 @@ const square = (page: Page, name: string) => page.locator(`[data-square="${name}
 async function openSoloPractice(page: Page) {
   await page.goto('/abertura/espanhola?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
+  await goToStage(page, 'Praticar sozinho')
   await expect(panel.getByRole('heading', { name: 'Praticar sozinho' })).toBeVisible()
   await expect(panel.getByLabel('Lista de lances')).toContainText('Nenhum lance ainda')
   return panel
@@ -77,7 +78,7 @@ test('erro comum do conteúdo: Bxb5 depois de 6...b5 mostra a explicação espec
 test('a etapa Variações mostra as duas variações da Espanhola, cada uma com o nome do desvio', async ({ page }) => {
   await page.goto('/abertura/espanhola?etapa=desafio')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await page.getByRole('navigation', { name: 'Etapas da lição' }).getByRole('button', { name: 'Variações', exact: true }).click()
+  await goToStage(page, 'Variações')
   await expect(panel.getByRole('heading', { name: 'Variações' })).toBeVisible()
   // A primeira variação encontrada na árvore é a mais profunda (7...O-O), depois vem 6...d6.
   await expect(panel.getByTestId('variacao-atual')).toContainText('Variação 1 de 2: Pretas rocam antes de d6 · Assistir')

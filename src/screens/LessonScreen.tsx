@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router'
 import Board from '../components/Board'
 import BoardText from '../components/BoardText'
+import StageMenu from '../components/StageMenu'
 import { getOpening } from '../content/openings'
 import {
   createLesson,
@@ -230,37 +231,14 @@ function LessonScreen() {
         {/* Botão "Voltar": leva à trilha. O nome completo fica para os leitores de tela. */}
         <Link to="/" className="button-secondary button-with-icon lesson-back" aria-label="Voltar à trilha">
           <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" className="button-icon">
-            <path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Voltar
         </Link>
-        <h1 className="lesson-title">{opening.name}</h1>
-        {/* Indicador de etapas em segmentos (referência: Brilliant). Cada segmento é um botão:
-            a exploração é livre, então qualquer etapa abre a qualquer momento. Nada fica "concluído". */}
-        <nav className="lesson-stepper" aria-label="Etapas da lição">
-          <p className="lesson-step-count">
-            Etapa {stageIndex + 1} de {STAGES.length}
-          </p>
-          <ol className="lesson-stepper-list">
-            {STAGES.map((stage, index) => (
-              <li key={stage.name}>
-                <button
-                  type="button"
-                  className="lesson-stepper-button"
-                  aria-current={index === stageIndex ? 'step' : undefined}
-                  aria-label={stage.name}
-                  title={stage.name}
-                  onClick={() => enterStage(index)}
-                >
-                  <span className="lesson-stepper-bar" aria-hidden="true" />
-                  <span className="lesson-stepper-label" aria-hidden="true">
-                    {stage.name}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ol>
-        </nav>
+        <div className="lesson-title-row">
+          <h1 className="lesson-title">{opening.name}</h1>
+          <StageMenu stages={STAGES} current={stageIndex} onSelect={enterStage} />
+        </div>
       </div>
 
       <div className="lesson-board">
@@ -422,26 +400,28 @@ function LessonScreen() {
 
         {/* Ações DENTRO da etapa. O botão principal (vermelho) nunca troca de etapa. */}
         <div className="lesson-actions">
-          {watching && (
-            <button
-              type="button"
-              className="button-secondary"
-              disabled={watchStep === 0}
-              onClick={() => setWatchStep(clampStep(watchStep - 1, watchLine))}
-            >
-              Lance anterior
-            </button>
-          )}
-          {soloStage && practicing && practiceStatus === 'user-turn' && !offScript && (
-            <button type="button" className="button-secondary" onClick={() => setPeekFen(practice!.fen)}>
-              Ver dica
-            </button>
-          )}
-          {innerAction && (
-            <button type="button" className="button-primary" onClick={() => runInnerAction(innerAction)}>
-              {innerAction.label}
-            </button>
-          )}
+          <div className="lesson-actions-row">
+            {watching && (
+              <button
+                type="button"
+                className="button-secondary"
+                disabled={watchStep === 0}
+                onClick={() => setWatchStep(clampStep(watchStep - 1, watchLine))}
+              >
+                Lance anterior
+              </button>
+            )}
+            {soloStage && practicing && practiceStatus === 'user-turn' && !offScript && (
+              <button type="button" className="button-secondary" onClick={() => setPeekFen(practice!.fen)}>
+                Ver dica
+              </button>
+            )}
+            {innerAction && (
+              <button type="button" className="button-primary" onClick={() => runInnerAction(innerAction)}>
+                {innerAction.label}
+              </button>
+            )}
+          </div>
           {stageIndex !== 0 && (
             <button type="button" className="button-tertiary button-with-icon" onClick={restartLine}>
               <RestartIcon />

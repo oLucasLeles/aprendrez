@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
+import { goToStage } from './etapas'
 
 // Acessibilidade automática (F40). O axe-core é um verificador que lê a página e aponta
 // problemas conhecidos (contraste, nomes que faltam em botões, papéis errados…).
@@ -45,7 +46,7 @@ test('lição: cada uma das 6 etapas não tem violações sérias (abertura de b
 
   for (const stage of STAGES) {
     // A lição abre em "Conhecer" (a etapa atual não é botão); as outras abrem pelo indicador.
-    if (stage !== 'Conhecer') await stages.getByRole('button', { name: stage, exact: true }).click()
+    if (stage !== 'Conhecer') await goToStage(page, stage)
     await expect(panel.getByRole('heading', { name: stage })).toBeVisible()
     await expectNoSeriousViolations(page, `lição da Italiana, etapa ${stage}`)
   }
@@ -59,7 +60,7 @@ test('lição de pretas (tabuleiro invertido): primeira e última etapas', async
   // A lição abre em "Conhecer".
   await expect(panel.getByRole('heading', { name: 'Conhecer' })).toBeVisible()
   await expectNoSeriousViolations(page, 'Siciliana, etapa Conhecer')
-  await stages.getByRole('button', { name: 'Desafio', exact: true }).click()
+  await goToStage(page, 'Desafio')
   await expect(panel.getByRole('heading', { name: 'Desafio' })).toBeVisible()
   await expectNoSeriousViolations(page, 'Siciliana, etapa Desafio')
 })
@@ -69,7 +70,7 @@ test('lição: mensagens de acerto e de lance fora do roteiro também passam', a
   const panel = page.getByRole('region', { name: 'Painel da lição' })
   const stages = page.getByRole('navigation', { name: 'Etapas da lição' })
 
-  await stages.getByRole('button', { name: 'Praticar sozinho', exact: true }).click()
+  await goToStage(page, 'Praticar sozinho')
   await expect(panel.getByLabel('Lista de lances')).toHaveText('Nenhum lance ainda.')
 
   // Lance fora do roteiro: 1.d4 (legal, mas não é o da Italiana).

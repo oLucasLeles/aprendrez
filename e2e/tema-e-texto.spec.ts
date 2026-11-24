@@ -57,3 +57,29 @@ test('na lição, o indicador de etapas fica abaixo do título, fora do painel, 
   await voltar.click()
   await expect(page).toHaveURL('/')
 })
+
+test('o indicador de etapas mostra "Etapa X de 6" e abre a lista das 6 etapas', async ({ page }) => {
+  await page.goto('/abertura/italiana')
+  const nav = page.getByRole('navigation', { name: 'Etapas da lição' })
+  const trigger = nav.getByRole('button', { name: 'Etapa 1 de 6 Conhecer' })
+  await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+  await trigger.click()
+  await expect(trigger).toHaveAttribute('aria-expanded', 'true')
+  await expect(nav.getByRole('listitem')).toHaveCount(6)
+  await expect(nav.getByRole('button', { name: 'Conhecer', exact: true })).toHaveAttribute('aria-current', 'step')
+  // Esc fecha a lista.
+  await page.keyboard.press('Escape')
+  await expect(nav.getByRole('listitem')).toHaveCount(0)
+  // Escolher uma etapa troca de etapa e fecha a lista.
+  await trigger.click()
+  await nav.getByRole('button', { name: 'Assistir', exact: true }).click()
+  await expect(nav.getByRole('button', { name: 'Etapa 2 de 6 Assistir' })).toBeVisible()
+  await expect(nav.getByRole('listitem')).toHaveCount(0)
+})
+
+test('o header mostra o logo ao lado do nome', async ({ page }) => {
+  await page.goto('/')
+  const logo = page.getByRole('banner').locator('img.site-header-logo-mark')
+  await expect(logo).toBeVisible()
+  expect(await logo.evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0)
+})

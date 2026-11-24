@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { expectStage } from './etapas'
 
 // Etapa 6 · Desafio (F23): partida do começo ao fim, sem guia, e o adversário sorteia os galhos.
 // O parâmetro `?acaso=` (só no servidor de desenvolvimento) fixa o sorteio: 0 = primeiro galho
@@ -47,7 +48,7 @@ test('completar o Desafio da Italiana (linha principal sorteada) leva à tela de
   const panel = page.getByRole('region', { name: 'Painel da lição' })
   const stages = page.getByRole('navigation', { name: 'Etapas da lição' })
 
-  await expect(stages.locator('[aria-current="step"]')).toHaveAccessibleName('Desafio')
+  await expectStage(page, 'Desafio')
   await expect(panel.getByRole('heading', { name: 'Desafio' })).toBeVisible()
   // "Concluir" só abre quando a partida acaba
   await expect(panel.getByRole('button', { name: 'Ver resumo' })).toHaveCount(0)

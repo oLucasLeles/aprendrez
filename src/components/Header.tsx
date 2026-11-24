@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router'
+import logoUrl from '../assets/logo.svg'
 import { applyTheme, loadThemePreference, saveThemePreference, type ThemePreference } from '../theme/theme'
 
 // Barra do topo, em todas as telas: o nome do app (leva ao início) e o seletor de tema.
@@ -83,6 +84,8 @@ function Header() {
     <header className="site-header">
       <div className="site-header-inner">
         <Link to="/" className="site-header-logo">
+          {/* Logo desenhado pelo dono do projeto no Figma. É decorativo: o nome ao lado já diz tudo. */}
+          <img src={logoUrl} alt="" width="24" height="24" className="site-header-logo-mark" />
           Aprendrez
         </Link>
         <ThemeSwitcher />
