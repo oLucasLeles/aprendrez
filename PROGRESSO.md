@@ -1304,4 +1304,4 @@ até chegar ao tabuleiro (antes ele era a primeira parada), e as contagens de bo
 **Testes:** novo ajudante `e2e/etapas.ts` (abrir a lista de etapas e escolher uma; conferir a etapa atual), usado
 nos testes de lição. O botão do anel tem como nome acessível o próprio texto visível ("Etapa 2 de 6 Assistir"),
 como pede a regra de acessibilidade "label in name". `npm run verificar` passou (229 de unidade, 294 de ponta a ponta).
-**Observação:** no Figma, a cor de texto também aparece como #151a1d em alguns lugares; o código continua com #1a1a1a.
+**Cor do texto:** a pedido do dono, o primitivo `--palette-gray-900` passou de #1a1a1a para #151a1d (o tom do logo e do Figma). Isso muda o texto, as bordas fortes e, no escuro, a superfície sutil. Contraste conferido nos dois temas.

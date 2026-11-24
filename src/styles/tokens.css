@@ -22,7 +22,7 @@
   --palette-gray-300: #c8c8c8;
   --palette-gray-500: #9e9e9e;
   --palette-gray-600: #5c5c5c;
-  --palette-gray-900: #1a1a1a;
+  --palette-gray-900: #151a1d; /* mesmo tom do logo e do Figma (2026-11-23) */
   --palette-red-50: #fbeaec;
   --palette-red-600: #c8102e;
   --palette-red-700: #a50d26;
