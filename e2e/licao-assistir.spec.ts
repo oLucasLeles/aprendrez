@@ -5,7 +5,7 @@ import { expectStage } from './etapas'
 async function openWatchStage(page: import('@playwright/test').Page) {
   await page.goto('/abertura/italiana')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click()
+  await page.getByRole('button', { name: /Próxima etapa/ }).click()
   await expect(panel.getByRole('heading', { name: 'Assistir' })).toBeVisible()
   return panel
 }

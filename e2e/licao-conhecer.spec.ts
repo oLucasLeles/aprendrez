@@ -17,7 +17,7 @@ test('em /abertura/italiana aparecem o nome, a ideia e as ideias-chave', async (
   expect(await panel.locator('.lesson-key-ideas li').count()).toBeGreaterThanOrEqual(2)
 
   await expect(panel.getByLabel('Lista de lances')).toContainText('1. e4 e5 2. Cf3 Cc6 3. Bc4 Bc5')
-  await expect(panel.getByRole('button', { name: /Próxima etapa/ })).toBeVisible()
+  await expect(page.getByRole('button', { name: /Próxima etapa/ })).toBeVisible()
   await expectStage(page, 'Conhecer')
 })
 

@@ -21,8 +21,8 @@ const USER_MOVES: Array<{ from: string; to: string; list: RegExp }> = [
 async function openGuidedPractice(page: Page) {
   await page.goto('/abertura/italiana')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Assistir → Praticar com guia
+  await page.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
+  await page.getByRole('button', { name: /Próxima etapa/ }).click() // Assistir → Praticar com guia
   await expect(panel.getByRole('heading', { name: 'Praticar com guia' })).toBeVisible()
   return panel
 }
@@ -33,7 +33,7 @@ test('jogar a linha principal da Italiana inteira seguindo o guia, por clique', 
 
   await expect(moves).toContainText('Nenhum lance ainda')
   // "Continuar" só abre no fim da linha
-  await expect(panel.getByRole('button', { name: /Próxima etapa/ })).not.toHaveClass(/is-emphasized/)
+  await expect(page.getByRole('button', { name: /Próxima etapa/ })).not.toHaveClass(/is-emphasized/)
 
   for (const move of USER_MOVES) {
     // o guia aponta a peça certa (destaque na origem) e existe uma seta
@@ -51,7 +51,7 @@ test('jogar a linha principal da Italiana inteira seguindo o guia, por clique', 
   await expect(moves).toContainText('8. Bb3 Ba7')
   await expect(panel.getByText(/Você chegou ao fim da linha/)).toBeVisible()
   await expect(arrow(page)).toHaveCount(0)
-  await expect(panel.getByRole('button', { name: /Próxima etapa/ })).toHaveClass(/is-emphasized/)
+  await expect(page.getByRole('button', { name: /Próxima etapa/ })).toHaveClass(/is-emphasized/)
 })
 
 test('o lance do adversário aparece sozinho depois de cada lance correto', async ({ page }) => {
@@ -84,7 +84,7 @@ test('um lance legal fora da linha fica no tabuleiro e o botão "Voltar" o desfa
 
   await expect(panel.getByText(/possível, mas não é o da abertura/)).toBeVisible()
   await expect(board.locator('[data-square="d4"] [data-piece="wP"]')).toBeVisible()
-  await expect(panel.getByRole('button', { name: /Próxima etapa/ })).not.toHaveClass(/is-emphasized/)
+  await expect(page.getByRole('button', { name: /Próxima etapa/ })).not.toHaveClass(/is-emphasized/)
 
   await panel.getByRole('button', { name: 'Voltar' }).click()
   await expect(board.locator('[data-square="d2"] [data-piece="wP"]')).toBeVisible()

@@ -49,7 +49,7 @@ async function openVariations(page: Page) {
   await page.goto('/abertura/italiana')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
   const moves = panel.getByLabel('Lista de lances')
-  const next = panel.getByRole('button', { name: /Próxima etapa/ })
+  const next = page.getByRole('button', { name: /Próxima etapa/ })
 
   await next.click() // Conhecer → Assistir
   await next.click() // Assistir → Praticar com guia

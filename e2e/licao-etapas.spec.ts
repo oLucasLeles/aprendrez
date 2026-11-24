@@ -15,8 +15,8 @@ async function openLesson(page: Page) {
 
 test('depois de chegar a "Praticar com guia", clicar em "Assistir" volta para aquela etapa', async ({ page }) => {
   const { panel, stages } = await openLesson(page)
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Assistir → Praticar com guia
+  await page.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
+  await page.getByRole('button', { name: /Próxima etapa/ }).click() // Assistir → Praticar com guia
   await expect(panel.getByRole('heading', { name: 'Praticar com guia' })).toBeVisible()
   await expectStage(page, 'Praticar com guia')
 
@@ -52,7 +52,7 @@ test('qualquer etapa pode ser aberta logo de início, sem marca de "concluída"'
 
 test('"Voltar ao início" volta o Assistir para o primeiro lance', async ({ page }) => {
   const { panel } = await openLesson(page)
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // → Assistir
+  await page.getByRole('button', { name: /Próxima etapa/ }).click() // → Assistir
   const moves = panel.getByLabel('Lista de lances')
 
   await panel.getByRole('button', { name: 'Próximo lance' }).click()
@@ -67,8 +67,8 @@ test('"Voltar ao início" volta o Assistir para o primeiro lance', async ({ page
 
 test('"Recomeçar a partida" volta a posição para o início da prática', async ({ page }) => {
   const { panel } = await openLesson(page)
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // → Assistir
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // → Praticar com guia
+  await page.getByRole('button', { name: /Próxima etapa/ }).click() // → Assistir
+  await page.getByRole('button', { name: /Próxima etapa/ }).click() // → Praticar com guia
   const board = page.getByRole('group', { name: /Tabuleiro de xadrez/ })
   const moves = panel.getByLabel('Lista de lances')
 

@@ -45,9 +45,9 @@
   /* 30%: texto e estrutura */
   --color-text: var(--palette-gray-900); /* neutro primário */
   --color-text-secondary: var(--palette-gray-600);
-  --color-border: var(--palette-gray-300); /* neutro secundário */
+  --color-border: var(--palette-slate-200); /* neutro secundário (mais claro desde 2026-11-23, Figma) */
   --color-border-strong: var(--palette-gray-900);
-  --color-border-subtle: var(--palette-slate-200); /* contorno dos botões secundários */
+  --color-border-subtle: var(--color-border); /* contorno dos botões secundários */
 
   /* 10%: destaque (nunca usado para indicar erro, veja SPEC seção 13) */
   --color-accent: var(--palette-red-600);
@@ -75,6 +75,7 @@
   --font-weight-bold: 700;
 
   /* Escala com grande contraste entre títulos e texto (design suíço) */
+  --font-size-xs: 0.75rem; /* 12 px: rótulos pequenos (ex.: "Próxima etapa →") */
   --font-size-sm: 0.875rem; /* 14 px: legendas, notação */
   --font-size-md: 1rem; /* 16 px: texto corrido */
   --font-size-lg: 1.25rem; /* 20 px: destaque de parágrafo */

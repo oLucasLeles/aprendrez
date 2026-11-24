@@ -24,7 +24,7 @@ test('Conhecer e Assistir: as pretas aparecem embaixo', async ({ page }) => {
   await expect(board(page)).toHaveAccessibleName(/pretas embaixo/)
   await expectBlackAtBottom(page)
 
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
+  await page.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
   await expect(panel.getByRole('heading', { name: 'Assistir' })).toBeVisible()
   await expect(board(page)).toHaveAccessibleName(/pretas embaixo/)
   await expectBlackAtBottom(page)
@@ -39,8 +39,8 @@ test('Conhecer e Assistir: as pretas aparecem embaixo', async ({ page }) => {
 test('Praticar com guia: o 1. e4 já aparece jogado e o guia aponta o lance das pretas', async ({ page }) => {
   await page.goto('/abertura/escandinava')
   const panel = page.getByRole('region', { name: 'Painel da lição' })
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
-  await panel.getByRole('button', { name: /Próxima etapa/ }).click() // Assistir → Praticar com guia
+  await page.getByRole('button', { name: /Próxima etapa/ }).click() // Conhecer → Assistir
+  await page.getByRole('button', { name: /Próxima etapa/ }).click() // Assistir → Praticar com guia
   await expect(panel.getByRole('heading', { name: 'Praticar com guia' })).toBeVisible()
 
   await expect(board(page)).toHaveAccessibleName(/pretas embaixo/)

@@ -217,14 +217,15 @@ e cada lance é um galho que leva à posição seguinte.
 
 ### 10.2 Lição da abertura
 - **Desktop:** tabuleiro à esquerda (o protagonista da tela), painel à direita com:
-  - indicador das etapas em segmentos ("Etapa 3 de 6"; Conhecer · Assistir · Praticar com guia · Praticar sozinho · Variações · Desafio), em que qualquer etapa pode ser aberta a qualquer momento
+  - à direita do título: indicador das etapas (um anel de 6 partes com "Etapa 3 de 6" e o nome da
+    etapa), que abre a lista das etapas (Conhecer · Assistir · Praticar com guia · Praticar sozinho ·
+    Variações · Desafio); qualquer etapa pode ser aberta a qualquer momento. Ao lado, o botão
+    "Próxima etapa", que só ganha o destaque do botão principal quando não sobra nada a fazer na etapa atual
   - o texto da etapa atual (narração, explicação, dica ou mensagem)
   - a lista de lances da partida
   - as ações **dentro da etapa**: o botão principal anda dentro da etapa atual ("Próximo lance",
     "Voltar", "Praticar esta variação com guia", "Próxima variação", "Ver resumo"), mais "Lance anterior",
     "Ver dica" e "Voltar ao início" / "Recomeçar a partida"
-  - um rodapé **separado** para trocar de etapa ("Etapa anterior" / "Próxima etapa"). A próxima etapa
-    só ganha o destaque do botão principal quando não sobra nada a fazer na etapa atual
 - **Telas estreitas:** tabuleiro em cima, painel embaixo
 - Um link para voltar à trilha
 

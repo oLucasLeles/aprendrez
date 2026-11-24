@@ -1285,3 +1285,23 @@ teste agora confere a ausência do botão ou se ele tem destaque. `npm run verif
 **Testes:** novo `e2e/tema-e-texto.spec.ts`. Ajustes por causa do header: os testes de teclado agora apertam Tab
 até chegar ao tabuleiro (antes ele era a primeira parada), e as contagens de botões olham só o tabuleiro.
 `npm run verificar` passou (229 de unidade, 290 de ponta a ponta).
+
+## Nota do supervisor · 2026-11-23 · ajustes do Figma na tela da lição
+**O dono do projeto ajustou a lição no Figma** (frame 29:38) e pediu para aplicar no código e replicar no modo escuro:
+- **Botões** totalmente arredondados (`--radius-full`), 16 px de respiro nas laterais. O secundário tem borda sutil e
+  fundo branco; o cinza claro aparece só no hover. "Voltar" em seminegrito (token novo `--font-weight-semibold`) e
+  seta com traço 0,5 px mais grosso.
+- **Cor da borda:** o primitivo ficou mais claro no Figma; no código, `--color-border` agora usa `--palette-slate-200`
+  (#dbe0e4). No escuro continua `gray-700`.
+- **Logo** (desenho do dono no Figma) no header e como favicon (`src/assets/logo.svg`, `public/favicon.svg`). No escuro,
+  o desenho é invertido por CSS para aparecer no fundo escuro (o arquivo não foi editado).
+- **Indicador de etapas** virou um anel de 6 partes, com pontas arredondadas, e "Etapa X de 6" com o nome da etapa, à
+  direita do título (`src/components/StageMenu.tsx`). Clicar abre a lista das etapas (exploração livre). Ao lado, a
+  24 px, fica o botão **"Próxima etapa"** (12/16 px de respiro, legenda 12 px e nome 16 px, os dois com altura de
+  linha 130%). O rodapé "Etapa anterior / Próxima etapa" saiu do painel.
+- **Ações da etapa:** botões numa linha (16 px entre eles) e "Voltar ao início" embaixo, alinhado à esquerda.
+- **Espaços:** 16 px entre "Voltar" e o título; 32 px entre o cabeçalho e o tabuleiro.
+**Testes:** novo ajudante `e2e/etapas.ts` (abrir a lista de etapas e escolher uma; conferir a etapa atual), usado
+nos testes de lição. O botão do anel tem como nome acessível o próprio texto visível ("Etapa 2 de 6 Assistir"),
+como pede a regra de acessibilidade "label in name". `npm run verificar` passou (229 de unidade, 294 de ponta a ponta).
+**Observação:** no Figma, a cor de texto também aparece como #151a1d em alguns lugares; o código continua com #1a1a1a.

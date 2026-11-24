@@ -237,7 +237,21 @@ function LessonScreen() {
         </Link>
         <div className="lesson-title-row">
           <h1 className="lesson-title">{opening.name}</h1>
-          <StageMenu stages={STAGES} current={stageIndex} onSelect={enterStage} />
+          <div className="lesson-title-actions">
+            <StageMenu stages={STAGES} current={stageIndex} onSelect={enterStage} />
+            {/* Ir para a próxima etapa. Fica neutro enquanto há o que fazer na etapa atual e ganha o
+                destaque do botão principal quando ela termina (src/chess/stageNavigation.ts). */}
+            {neighbours.next !== null && (
+              <button
+                type="button"
+                className={`lesson-next-stage${stageDone ? ' is-emphasized' : ''}`}
+                onClick={() => enterStage(neighbours.next!)}
+              >
+                <span className="lesson-next-stage-caption">Próxima etapa →</span>
+                <span className="lesson-next-stage-name">{STAGES[neighbours.next].name}</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -430,30 +444,6 @@ function LessonScreen() {
           )}
         </div>
 
-        {/* Trocar de etapa: controle separado, no rodapé do painel. "Próxima etapa" só ganha o
-            destaque do botão principal quando não sobra nada para fazer na etapa atual. */}
-        <nav className="lesson-stage-nav" aria-label="Trocar de etapa">
-          {neighbours.previous !== null && (
-            <button
-              type="button"
-              className="lesson-stage-nav-button lesson-stage-nav-previous"
-              onClick={() => enterStage(neighbours.previous!)}
-            >
-              <span className="lesson-stage-nav-caption">← Etapa anterior</span>
-              <span className="lesson-stage-nav-name">{STAGES[neighbours.previous].name}</span>
-            </button>
-          )}
-          {neighbours.next !== null && (
-            <button
-              type="button"
-              className={`lesson-stage-nav-button lesson-stage-nav-next${stageDone ? ' is-emphasized' : ''}`}
-              onClick={() => enterStage(neighbours.next!)}
-            >
-              <span className="lesson-stage-nav-caption">Próxima etapa →</span>
-              <span className="lesson-stage-nav-name">{STAGES[neighbours.next].name}</span>
-            </button>
-          )}
-        </nav>
       </section>
     </main>
   )

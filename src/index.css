@@ -392,59 +392,55 @@ a.button-secondary:hover {
   color: var(--color-on-accent);
 }
 
-/* Rodapé "Trocar de etapa": separado das ações da etapa por uma linha, com a etapa anterior
-   à esquerda e a próxima à direita. A próxima só vira botão de destaque quando a etapa acabou. */
-.lesson-stage-nav {
+/* Ao lado do indicador de etapas: o botão "Próxima etapa" (Figma, 2026-11-23).
+   Espaço de 24 px entre os dois; no celular, eles descem para baixo do título. */
+.lesson-title-actions {
   display: flex;
-  margin-top: auto; /* fica sempre no pé do painel, mesmo com pouco texto */
-  justify-content: space-between;
-  gap: var(--space-2);
-  padding-top: var(--space-3);
-  border-top: var(--border-width) solid var(--color-border);
+  align-items: center;
+  gap: var(--space-3);
 }
 
-.lesson-stage-nav-button {
+/* "Próxima etapa": 12 px em cima e embaixo, 16 px nas laterais, texto à direita.
+   Fica neutro e só ganha o vermelho quando a etapa atual termina. */
+.lesson-next-stage {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: var(--space-1) var(--space-2);
+  align-items: flex-end;
+  padding: 12px var(--space-2);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-text);
-  text-align: left;
+  line-height: var(--line-height-snug);
+  text-align: right;
   cursor: pointer;
 }
 
-.lesson-stage-nav-button:hover {
+.lesson-next-stage:hover {
   border-color: var(--color-border-strong);
 }
 
-.lesson-stage-nav-next {
-  margin-left: auto;
-  text-align: right;
-}
-
-.lesson-stage-nav-caption {
-  font-size: var(--font-size-sm);
+.lesson-next-stage-caption {
+  font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
 }
 
-.lesson-stage-nav-name {
+.lesson-next-stage-name {
+  font-size: var(--font-size-md);
   font-weight: var(--font-weight-bold);
 }
 
-.lesson-stage-nav-next.is-emphasized {
+.lesson-next-stage.is-emphasized {
   border-color: var(--color-accent);
   background: var(--color-accent);
   color: var(--color-on-accent);
 }
 
-.lesson-stage-nav-next.is-emphasized .lesson-stage-nav-caption {
+.lesson-next-stage.is-emphasized .lesson-next-stage-caption {
   color: var(--color-on-accent);
 }
 
-.lesson-stage-nav-next.is-emphasized:hover {
+.lesson-next-stage.is-emphasized:hover {
   background: var(--color-accent-hover);
 }
 
@@ -468,15 +464,6 @@ a.button-secondary:hover {
   .lesson-actions .button-secondary {
     padding-inline: var(--space-2);
   }
-
-  .lesson-stage-nav-button {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-}
-
-.lesson-stage-nav-caption {
-  white-space: nowrap;
 }
 
 /* Botão com ícone à esquerda do texto (ex.: "Recomeçar a partida"). */
