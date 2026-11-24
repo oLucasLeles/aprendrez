@@ -416,8 +416,9 @@ a.button-secondary:hover {
   cursor: pointer;
 }
 
+/* Hover igual ao dos botões secundários: a borda fica, o fundo ganha o cinza claro. */
 .lesson-next-stage:hover {
-  border-color: var(--color-border-strong);
+  background: var(--color-surface-subtle);
 }
 
 .lesson-next-stage-caption {
